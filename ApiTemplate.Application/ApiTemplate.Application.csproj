@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj" />
+      <ProjectReference Include="..\ApiTemplate.Shared\ApiTemplate.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="10.4.0" />
+    </ItemGroup>
+
+</Project>
