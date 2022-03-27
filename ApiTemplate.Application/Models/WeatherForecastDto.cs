@@ -1,5 +1,5 @@
-﻿using System;
-using ApiTemplate.Shared.Extensions;
+﻿using ApiTemplate.Shared.Extensions;
+using System;
 
 namespace ApiTemplate.Application.Models;
 
@@ -10,5 +10,5 @@ public class WeatherForecastDto
     public int TemperatureC { get; set; }
     public int TemperatureF => TemperatureC.ToFahrenheit();
 
-    public string? Summary { get; set; }
+    public string Summary { get; set; }
 }

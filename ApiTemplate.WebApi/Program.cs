@@ -2,9 +2,10 @@ using ApiTemplate.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Logging.Configure();
 
-builder.Services.Configure();
+// Add services to the container.
+builder.Services.Configure(builder.Configuration);
 
 var app = builder.Build();
 

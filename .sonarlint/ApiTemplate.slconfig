@@ -1,0 +1,15 @@
+{
+  "ServerUri": "https://sonarcloud.io/",
+  "Organization": {
+    "Key": "rodabarbosa",
+    "Name": "rodabarbosa"
+  },
+  "ProjectKey": "rodabarbosa_apitemplate",
+  "ProjectName": "apitemplate",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AX-FfFf5nTk2GEVJ9O6S",
+      "ProfileTimestamp": "2021-11-22T10:44:23Z"
+    }
+  }
+}

@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
-using ApiTemplate.Domain.Entities;
+﻿using ApiTemplate.Domain.Entities;
 using ApiTemplate.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace ApiTemplate.Infra.Data.Repositories;
 
@@ -13,7 +13,7 @@ public class WeatherForecastRepository : IWeatherForecastRepository
         _context = context;
     }
 
-    public IQueryable<WeatherForecast> Get(Expression<Func<WeatherForecast, bool>> predicate = null)
+    public IQueryable<WeatherForecast> Get(Expression<Func<WeatherForecast, bool>>? predicate = default)
     {
         if (predicate == null)
             return _context.WeatherForecasts;
@@ -21,7 +21,7 @@ public class WeatherForecastRepository : IWeatherForecastRepository
         return _context.WeatherForecasts.Where(predicate);
     }
 
-    public WeatherForecast Get(Guid id) => _context.WeatherForecasts.SingleOrDefault(x => x.Id == id);
+    public WeatherForecast? Get(Guid id) => _context.WeatherForecasts.SingleOrDefault(x => x.Id == id);
 
     public WeatherForecast Add(WeatherForecast weatherForecast)
     {
@@ -40,7 +40,7 @@ public class WeatherForecastRepository : IWeatherForecastRepository
 
     public void Delete(Guid id)
     {
-        var weather = _context.WeatherForecasts.SingleOrDefault(x => x.Id == id);
+        WeatherForecast? weather = _context.WeatherForecasts.SingleOrDefault(x => x.Id == id);
         if (weather == null) return;
 
         Delete(weather);
