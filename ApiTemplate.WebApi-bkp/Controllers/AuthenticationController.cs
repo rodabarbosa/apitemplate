@@ -1,8 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
 using ApiTemplate.Application.Interfaces;
 using ApiTemplate.Application.Models;
+using ApiTemplate.Shared.Models;
 using ApiTemplate.WebApi.Controllers.Base;
 using ApiTemplate.WebApi.Jwt.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,12 +12,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ApiTemplate.WebApi.Controllers;
 
-public class AuthenticationController : BaseController
+/// <summary>
+///     Authentication resource
+/// </summary>
+[ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
+public class AuthenticationController : BaseApiController
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly ISigningConfiguration _signingConfiguration;
     private readonly ITokenConfiguration _tokenConfiguration;
-    private const string DateFormat = "yyyy-MM-dd HH:mm:ss";
 
     /// <summary>
     /// </summary>
@@ -42,7 +46,8 @@ public class AuthenticationController : BaseController
     public async Task<object> PostAsync([FromBody] AuthenticationModel input)
     {
         bool credentialsValidates = await _authenticationService.Authenticate(input.Username, input.Password);
-        if (!credentialsValidates) return new TokenModel();
+        if (!credentialsValidates)
+            return new TokenModel();
 
         ClaimsIdentity identity = new ClaimsIdentity(
             new GenericIdentity(Guid.NewGuid().ToString("N"), "Login"),
@@ -71,8 +76,8 @@ public class AuthenticationController : BaseController
         return new TokenModel
         {
             Authenticated = true,
-            Created = createDate.ToString(DateFormat),
-            Expires = expireDate.ToString(DateFormat),
+            Created = createDate.ToString("yyyy-MM-dd HH:mm:ss"),
+            Expires = expireDate.ToString("yyyy-MM-dd HH:mm:ss"),
             AccessToken = token,
             Username = input.Username
         };

@@ -7,7 +7,12 @@ public class WeatherForecastValidator : AbstractValidator<WeatherForecastDto>
 {
     public WeatherForecastValidator()
     {
-        RuleFor(x => x.Date).NotEmpty();
-        RuleFor(x => x.TemperatureC).NotEmpty().LessThanOrEqualTo(100);
+        RuleFor(x => x.Date)
+            .NotEmpty()
+            .NotNull();
+
+        RuleFor(x => x.TemperatureC)
+            .NotEmpty()
+            .NotNull();
     }
 }

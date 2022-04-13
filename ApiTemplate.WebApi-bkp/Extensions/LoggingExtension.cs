@@ -1,10 +1,11 @@
 ﻿using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace ApiTemplate.WebApi.Extensions;
 
 public static class LoggingExtension
 {
-    public static void Configure(this ILoggingBuilder logging)
+    public static ILogger Configure(this ILoggingBuilder logging)
     {
         var logger = new LoggerConfiguration()
             .WriteTo.Console()
@@ -12,5 +13,7 @@ public static class LoggingExtension
 
         logging.ClearProviders();
         logging.AddSerilog(logger);
+
+        return logger;
     }
 }

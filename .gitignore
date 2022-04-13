@@ -340,5 +340,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 
-*/.sonarqube
-/.sarif/
+.sonarqube/
+.sonarlint/
+.sarif/

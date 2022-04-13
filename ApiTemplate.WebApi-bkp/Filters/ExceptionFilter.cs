@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using ApiTemplate.Shared.Exceptions;
 using ApiTemplate.Shared.Extensions;
 using ApiTemplate.Shared.Models;

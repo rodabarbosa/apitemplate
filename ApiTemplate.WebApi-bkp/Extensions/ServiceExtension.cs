@@ -71,8 +71,21 @@ public static class ServiceExtension
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+            .AddCookie(options =>
+            {
+                options.Events.OnRedirectToAccessDenied =
+                    options.Events.OnRedirectToLogin = c =>
+                    {
+                        c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.FromResult<object>(null);
+                    };
+            })
             .AddJwtBearer(options =>
             {
+                options.IncludeErrorDetails = true;
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+
                 var paramsValidation = options.TokenValidationParameters;
                 paramsValidation.IssuerSigningKey = signingConfigurations.Key;
                 paramsValidation.ValidAudience = tokenConfigurations.Audience;
@@ -96,7 +109,12 @@ public static class ServiceExtension
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiTemplate", Version = "v1"});
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "ApiTemplate",
+                Version = "v1"
+            });
+
             string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
@@ -105,7 +123,7 @@ public static class ServiceExtension
                 Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
+                Type = SecuritySchemeType.Http,
                 Scheme = "Bearer"
             });
 
@@ -120,7 +138,7 @@ public static class ServiceExtension
                             Id = "Bearer"
                         }
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 }
             });
         });

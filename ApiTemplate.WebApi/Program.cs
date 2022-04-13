@@ -1,14 +1,41 @@
 using ApiTemplate.WebApi.Extensions;
+using ApiTemplate.WebApi.Filters;
+using ApiTemplate.WebApi.Middlewares;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Logging.Configure();
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.Configure(builder.Configuration);
+builder.Services.ConfigureDefaultErrorHandler();
 
-var app = builder.Build();
+builder.Services.AddResponseCompression();
 
-app.Configure();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ExceptionFilter));
+    options.RespectBrowserAcceptHeader = true;
+});
+
+builder.Services.AddJwtService(builder.Configuration);
+
+builder.Services.ConfigureSwagger();
+
+builder.Services.AddDataProviders();
+
+WebApplication? app = builder.Build();
+
+// Configure the HTTP request pipeline.
+_ = app.UseSwagger();
+_ = app.UseSwaggerUI(c => c.DocExpansion(DocExpansion.None));
+
+app.UseMiddleware<RequestHandlerMiddleware>();
+
+app.UseHttpsRedirection();
+
+app.UseResponseCompression();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
