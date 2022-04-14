@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTemplate.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTemplate.Infra.Data", "ApiTemplate.Infra.Data\ApiTemplate.Infra.Data.csproj", "{9147D41A-D13E-4F01-B943-56F3CE3DFA0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTemplate.Tests", "ApiTemplate.Tests\ApiTemplate.Tests.csproj", "{DE64AE90-5CD1-4373-8955-878E9B192416}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{9147D41A-D13E-4F01-B943-56F3CE3DFA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9147D41A-D13E-4F01-B943-56F3CE3DFA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9147D41A-D13E-4F01-B943-56F3CE3DFA0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE64AE90-5CD1-4373-8955-878E9B192416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE64AE90-5CD1-4373-8955-878E9B192416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE64AE90-5CD1-4373-8955-878E9B192416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE64AE90-5CD1-4373-8955-878E9B192416}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
