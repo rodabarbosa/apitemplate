@@ -12,7 +12,7 @@ builder.Services.AddResponseCompression();
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add(typeof(ExceptionFilter));
+    options.Filters.Add(typeof(CustomExceptionFilterAttribute));
     options.RespectBrowserAcceptHeader = true;
 });
 

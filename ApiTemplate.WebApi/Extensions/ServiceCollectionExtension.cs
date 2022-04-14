@@ -145,16 +145,6 @@ public static class ServiceCollectionExtension
     public static void AddDataProviders(this IServiceCollection services)
     {
         services.AddDbContext<ApiTemplateContext>(o => o.UseInMemoryDatabase("ApiTemplate"));
-        // services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-        //     {
-        //         options.Password.RequireDigit = false;
-        //         options.Password.RequiredLength = 3;
-        //         options.Password.RequireLowercase = false;
-        //         options.Password.RequireUppercase = false;
-        //         options.Password.RequireNonAlphanumeric = false;
-        //     })
-        //     .AddEntityFrameworkStores<ApiTemplateContext>()
-        //     .AddDefaultTokenProviders();
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();

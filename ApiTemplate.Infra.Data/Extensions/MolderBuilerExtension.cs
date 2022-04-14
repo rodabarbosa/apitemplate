@@ -20,7 +20,7 @@ public static class ModelBuilderExtension
             .GetTypes()
             .Select(t => (t, i: Array.Find(t.GetInterfaces(), i => i.Name.Equals(typeof(IEntityTypeConfiguration<>).Name, StringComparison.Ordinal))))
             .Where(it => it.i != null)
-            .Select(it => (et: it.i.GetGenericArguments()[0], cfgObj: Activator.CreateInstance(it.t)))
+            .Select(it => (et: it.i?.GetGenericArguments()[0], cfgObj: Activator.CreateInstance(it.t)))
             .Select(it => applyConfigurationMethodInfo.MakeGenericMethod(it.et).Invoke(modelBuilder, new[] {it.cfgObj}))
             .ToList();
     }

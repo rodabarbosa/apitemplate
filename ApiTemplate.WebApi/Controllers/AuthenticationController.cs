@@ -28,8 +28,5 @@ public class AuthenticationController : BaseController
     /// <returns></returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<object> PostAsync([FromBody] AuthenticationModel input)
-    {
-        return await _authenticationService.Authenticate(input.Username, input.Password);
-    }
+    public async Task<object> PostAsync([FromBody] AuthenticationModel input) => await _authenticationService.Authenticate(input.Username, input.Password);
 }

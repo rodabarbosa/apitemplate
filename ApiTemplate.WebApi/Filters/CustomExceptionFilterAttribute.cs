@@ -11,7 +11,7 @@ namespace ApiTemplate.WebApi.Filters;
 /// This class is used to handle exceptions thrown by the application.
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
-public class ExceptionFilter : ExceptionFilterAttribute
+public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
 {
     private const string MediaType = "application/json";
 
