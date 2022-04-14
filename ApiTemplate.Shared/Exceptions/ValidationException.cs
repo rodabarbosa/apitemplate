@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using FluentValidation.Results;
 
 namespace ApiTemplate.Shared.Exceptions;
 
+[Serializable]
 public class ValidationException : Exception
 {
     private const string DefaultMessage = "One or more validation failure have occurred.";
@@ -23,19 +25,24 @@ public class ValidationException : Exception
 
     public ValidationException(IEnumerable<ValidationFailure> failures) : this()
     {
-        IEnumerable<string> propertyNames = failures
+        IEnumerable<ValidationFailure> validationFailures = failures.ToList();
+        IEnumerable<string> propertyNames = validationFailures
             .Select(e => e.PropertyName)
             .Distinct();
 
         foreach (string propertyName in propertyNames)
         {
-            string[] propertyFailures = failures
+            string[] propertyFailures = validationFailures
                 .Where(e => e.PropertyName == propertyName)
                 .Select(e => e.ErrorMessage)
                 .ToArray();
 
             Failures.Add(propertyName, propertyFailures);
         }
+    }
+
+    protected ValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 
     public IDictionary<string, string[]> Failures { get; } = new Dictionary<string, string[]>();

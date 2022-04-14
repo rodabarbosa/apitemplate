@@ -32,8 +32,8 @@ public class WeatherForecastService : IWeatherForecastService
     {
         var weathers = _weatherForecastRepository.Get();
         weathers = FilterByDate(weathers, date);
-        weathers = FilterByTemperatureC(weathers, temperatureCelsius);
-        weathers = FilterByTemperatureF(weathers, temperatureFahrenheit);
+        weathers = FilterByTemperatureCelsius(weathers, temperatureCelsius);
+        weathers = FilterByTemperatureFahrenheit(weathers, temperatureFahrenheit);
 
         return weathers.Select(x => x.ToDto());
     }
@@ -71,7 +71,7 @@ public class WeatherForecastService : IWeatherForecastService
         return weather.ToDto();
     }
 
-    private void Validate(WeatherForecastDto weatherForecast)
+    private static void Validate(WeatherForecastDto weatherForecast)
     {
         var validator = new WeatherForecastValidator();
         var validationResult = validator.Validate(weatherForecast);
@@ -87,7 +87,7 @@ public class WeatherForecastService : IWeatherForecastService
         _weatherForecastRepository.Delete(weather.Id);
     }
 
-    private IQueryable<WeatherForecast> FilterByDate(IQueryable<WeatherForecast> weathers, OperationParam<DateTime>? filter)
+    private static IQueryable<WeatherForecast> FilterByDate(IQueryable<WeatherForecast> weathers, OperationParam<DateTime> filter)
     {
         if (filter == null)
             return weathers;
@@ -104,7 +104,7 @@ public class WeatherForecastService : IWeatherForecastService
         };
     }
 
-    private IQueryable<WeatherForecast> FilterByTemperatureC(IQueryable<WeatherForecast> weathers, OperationParam<int>? filter)
+    private static IQueryable<WeatherForecast> FilterByTemperatureCelsius(IQueryable<WeatherForecast> weathers, OperationParam<int> filter)
     {
         if (filter == null)
             return weathers;
@@ -121,7 +121,7 @@ public class WeatherForecastService : IWeatherForecastService
         };
     }
 
-    private IQueryable<WeatherForecast> FilterByTemperatureF(IQueryable<WeatherForecast> weathers, OperationParam<int> filter)
+    private static IQueryable<WeatherForecast> FilterByTemperatureFahrenheit(IQueryable<WeatherForecast> weathers, OperationParam<int> filter)
     {
         if (filter == null)
             return weathers;

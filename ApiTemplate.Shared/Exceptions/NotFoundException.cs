@@ -1,27 +1,32 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
-namespace ApiTemplate.Shared.Exceptions
+namespace ApiTemplate.Shared.Exceptions;
+
+[Serializable]
+public class NotFoundException : Exception
 {
-    public class NotFoundException : Exception
+    private const string DefaultMessage = "Not Found Exception";
+
+    public NotFoundException(string message = DefaultMessage) : this(message, null)
     {
-        private const string DefaultMessage = "Not Found Exception";
+    }
 
-        public NotFoundException(string message = DefaultMessage) : this(message, null)
-        {
-        }
+    public NotFoundException(Exception innerException) : this(DefaultMessage, innerException)
+    {
+    }
 
-        public NotFoundException(Exception innerException) : this(DefaultMessage, innerException)
-        {
-        }
+    public NotFoundException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    {
+    }
 
-        public NotFoundException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
-        {
-        }
+    protected NotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        public static void When(bool condition, string message = DefaultMessage, Exception innerException = null)
-        {
-            if (condition)
-                throw new DeleteFailureException(message, innerException);
-        }
+    public static void When(bool condition, string message = DefaultMessage, Exception innerException = null)
+    {
+        if (condition)
+            throw new DeleteFailureException(message, innerException);
     }
 }

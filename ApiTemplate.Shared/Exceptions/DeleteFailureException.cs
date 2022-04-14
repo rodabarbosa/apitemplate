@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ApiTemplate.Shared.Exceptions;
 
@@ -16,6 +17,10 @@ public class DeleteFailureException : Exception
     }
 
     public DeleteFailureException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    {
+    }
+
+    protected DeleteFailureException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

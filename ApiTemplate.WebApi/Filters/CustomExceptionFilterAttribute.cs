@@ -66,7 +66,7 @@ public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
         BuildContext(context, (int) code, content);
     }
 
-    private void BuildContext(ExceptionContext context, int code, object content)
+    private static void BuildContext(ExceptionContext context, int code, object content)
     {
         context.HttpContext.Response.ContentType = MediaType;
         context.HttpContext.Response.StatusCode = code;

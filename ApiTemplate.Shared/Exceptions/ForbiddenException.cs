@@ -1,27 +1,32 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
-namespace ApiTemplate.Shared.Exceptions
+namespace ApiTemplate.Shared.Exceptions;
+
+[Serializable]
+public class ForbiddenException : Exception
 {
-    public class ForbiddenException : Exception
+    private const string DefaultMessage = "Access Forbidden";
+
+    public ForbiddenException(string message = DefaultMessage) : this(message, null)
     {
-        private const string DefaultMessage = "Access Forbidden";
+    }
 
-        public ForbiddenException(string message = DefaultMessage) : this(message, null)
-        {
-        }
+    public ForbiddenException(Exception innerException) : this(DefaultMessage, innerException)
+    {
+    }
 
-        public ForbiddenException(Exception innerException) : this(DefaultMessage, innerException)
-        {
-        }
+    public ForbiddenException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    {
+    }
 
-        public ForbiddenException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
-        {
-        }
+    protected ForbiddenException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        public static void When(bool condition, string message = DefaultMessage, Exception innerException = null)
-        {
-            if (condition)
-                throw new ForbiddenException(message, innerException);
-        }
+    public static void When(bool condition, string message = DefaultMessage, Exception innerException = null)
+    {
+        if (condition)
+            throw new ForbiddenException(message, innerException);
     }
 }
