@@ -13,31 +13,39 @@ using ApiTemplate.Shared.Extensions;
 
 namespace ApiTemplate.Application.Services;
 
+/// <inheritdoc />
 public class WeatherForecastService : IWeatherForecastService
 {
     private readonly IWeatherForecastRepository _weatherForecastRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WeatherForecastService"/> class.
+    /// </summary>
+    /// <param name="weatherForecastRepository"></param>
     public WeatherForecastService(IWeatherForecastRepository weatherForecastRepository)
     {
         _weatherForecastRepository = weatherForecastRepository;
     }
 
-    public IEnumerable<WeatherForecastDto> GetWeatherForecasts(OperationParam<DateTime>? date, OperationParam<int>? temperatureC, OperationParam<int>? temparatureF)
+    /// <inheritdoc />
+    public IEnumerable<WeatherForecastDto> GetWeatherForecasts(OperationParam<DateTime> date, OperationParam<int> temperatureCelsius, OperationParam<int> temperatureFahrenheit)
     {
         var weathers = _weatherForecastRepository.Get();
         weathers = FilterByDate(weathers, date);
-        weathers = FilterByTemperatureC(weathers, temperatureC);
-        weathers = FilterByTemperatureF(weathers, temparatureF);
+        weathers = FilterByTemperatureC(weathers, temperatureCelsius);
+        weathers = FilterByTemperatureF(weathers, temperatureFahrenheit);
 
         return weathers.Select(x => x.ToDto());
     }
 
+    /// <inheritdoc />
     public WeatherForecastDto GetWeatherForecast(Guid id)
     {
         var weather = _weatherForecastRepository.Get(id);
         return weather?.ToDto();
     }
 
+    /// <inheritdoc />
     public WeatherForecastDto AddWeatherForecast(WeatherForecastDto weatherForecast)
     {
         Validate(weatherForecast);
@@ -47,6 +55,7 @@ public class WeatherForecastService : IWeatherForecastService
         return weather.ToDto();
     }
 
+    /// <inheritdoc />
     public WeatherForecastDto UpdateWeatherForecast(Guid id, WeatherForecastDto weatherForecast)
     {
         var weather = _weatherForecastRepository.Get(id);
@@ -69,6 +78,7 @@ public class WeatherForecastService : IWeatherForecastService
         ValidationException.When(!validationResult.IsValid, validationResult.Errors);
     }
 
+    /// <inheritdoc />
     public void DeleteWeatherForecast(Guid id)
     {
         var weather = _weatherForecastRepository.Get(id);
@@ -111,7 +121,7 @@ public class WeatherForecastService : IWeatherForecastService
         };
     }
 
-    private IQueryable<WeatherForecast> FilterByTemperatureF(IQueryable<WeatherForecast> weathers, OperationParam<int>? filter)
+    private IQueryable<WeatherForecast> FilterByTemperatureF(IQueryable<WeatherForecast> weathers, OperationParam<int> filter)
     {
         if (filter == null)
             return weathers;

@@ -3,8 +3,16 @@ using ApiTemplate.Application.Enumerators;
 
 namespace ApiTemplate.Application.Extensions;
 
+/// <summary>
+///
+/// </summary>
 public static class OperationExtension
 {
+    /// <summary>
+    /// Convert strikng to Operation enum
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public static Operation ToOperation(this string value)
     {
         if (string.Equals(value, nameof(Operation.Equal), StringComparison.OrdinalIgnoreCase))

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiTemplate.WebApi.Controllers.Base;
 
+/// <summary>
+/// Base controller for all controllers.
+/// </summary>
 [Produces("application/json")]
 [ApiConventionType(typeof(DefaultApiConventions))]
 [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -10,6 +13,6 @@ namespace ApiTemplate.WebApi.Controllers.Base;
 [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
 [ApiController]
 [Route("[controller]")]
-public abstract class BaseController
+public abstract class BaseController : ControllerBase
 {
 }

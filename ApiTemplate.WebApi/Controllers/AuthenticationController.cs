@@ -1,35 +1,24 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
 using ApiTemplate.Application.Interfaces;
 using ApiTemplate.Application.Models;
 using ApiTemplate.WebApi.Controllers.Base;
-using ApiTemplate.WebApi.Jwt.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ApiTemplate.WebApi.Controllers;
 
+/// <summary>
+/// Authentication controller
+/// </summary>
 public class AuthenticationController : BaseController
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly ISigningConfiguration _signingConfiguration;
-    private readonly ITokenConfiguration _tokenConfiguration;
-    private const string DateFormat = "yyyy-MM-dd HH:mm:ss";
 
     /// <summary>
     /// </summary>
     /// <param name="authenticationService"></param>
-    /// <param name="signingConfiguration"></param>
-    /// <param name="tokenConfiguration"></param>
-    public AuthenticationController(IAuthenticationService authenticationService,
-        ISigningConfiguration signingConfiguration,
-        ITokenConfiguration tokenConfiguration)
+    public AuthenticationController(IAuthenticationService authenticationService)
     {
         _authenticationService = authenticationService;
-        _signingConfiguration = signingConfiguration;
-        _tokenConfiguration = tokenConfiguration;
     }
 
     /// <summary>
@@ -41,40 +30,6 @@ public class AuthenticationController : BaseController
     [AllowAnonymous]
     public async Task<object> PostAsync([FromBody] AuthenticationModel input)
     {
-        bool credentialsValidates = await _authenticationService.Authenticate(input.Username, input.Password);
-        if (!credentialsValidates) return new TokenModel();
-
-        ClaimsIdentity identity = new ClaimsIdentity(
-            new GenericIdentity(Guid.NewGuid().ToString("N"), "Login"),
-            new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                new Claim(JwtRegisteredClaimNames.UniqueName, Guid.NewGuid().ToString("N"))
-            }
-        );
-
-        DateTime createDate = DateTime.Now;
-        DateTime expireDate = createDate + TimeSpan.FromSeconds(_tokenConfiguration.Seconds);
-
-        var handler = new JwtSecurityTokenHandler();
-        var securityToken = handler.CreateToken(new SecurityTokenDescriptor
-        {
-            Issuer = _tokenConfiguration.Issuer,
-            Audience = _tokenConfiguration.Audience,
-            SigningCredentials = _signingConfiguration.SigningCredentials,
-            Subject = identity,
-            NotBefore = createDate,
-            Expires = expireDate
-        });
-        var token = handler.WriteToken(securityToken);
-
-        return new TokenModel
-        {
-            Authenticated = true,
-            Created = createDate.ToString(DateFormat),
-            Expires = expireDate.ToString(DateFormat),
-            AccessToken = token,
-            Username = input.Username
-        };
+        return await _authenticationService.Authenticate(input.Username, input.Password);
     }
 }

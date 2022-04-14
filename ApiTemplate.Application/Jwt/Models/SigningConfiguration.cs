@@ -1,14 +1,21 @@
 ﻿using System.Security.Cryptography;
-using ApiTemplate.WebApi.Jwt.Interfaces;
+using ApiTemplate.Application.Jwt.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ApiTemplate.WebApi.Jwt.Models;
+namespace ApiTemplate.Application.Jwt.Models;
 
+/// <inheritdoc />
 public class SigningConfiguration : ISigningConfiguration
 {
+    /// <inheritdoc />
     public SecurityKey Key { get; }
+
+    /// <inheritdoc />
     public SigningCredentials SigningCredentials { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SigningConfiguration"/> class.
+    /// </summary>
     public SigningConfiguration()
     {
         using (var provider = new RSACryptoServiceProvider(2048))

@@ -7,11 +7,18 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ApiTemplate.WebApi.Filters;
 
+/// <summary>
+/// This class is used to handle exceptions thrown by the application.
+/// </summary>
 [AttributeUsage(AttributeTargets.All)]
 public class ExceptionFilter : ExceptionFilterAttribute
 {
     private const string MediaType = "application/json";
 
+    /// <summary>
+    ///    Called after an action has thrown an <see cref="Exception" />.
+    /// </summary>
+    /// <param name="context"></param>
     public override void OnException(ExceptionContext context)
     {
         object content = new {message = context.Exception.Message};

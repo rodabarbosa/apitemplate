@@ -1,12 +1,12 @@
 using System.Reflection;
 using ApiTemplate.Application.Interfaces;
+using ApiTemplate.Application.Jwt.Interfaces;
+using ApiTemplate.Application.Jwt.Models;
 using ApiTemplate.Application.Services;
 using ApiTemplate.Domain.Interfaces;
 using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.WebApi.Filters;
-using ApiTemplate.WebApi.Jwt.Interfaces;
-using ApiTemplate.WebApi.Jwt.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +17,16 @@ using Microsoft.OpenApi.Models;
 
 namespace ApiTemplate.WebApi.Extensions;
 
+/// <summary>
+/// ServiceCollection Extensions
+/// </summary>
 public static class ServiceCollectionExtension
 {
+    /// <summary>
+    /// Add JWT configuration to services
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
     public static void AddJwtService(this IServiceCollection services, IConfiguration configuration)
     {
         var signingConfigurations = new SigningConfiguration();
@@ -40,7 +48,7 @@ public static class ServiceCollectionExtension
                     options.Events.OnRedirectToLogin = c =>
                     {
                         c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        return Task.FromResult<object>(null);
+                        return Task.FromResult<object>(null!);
                     };
             })
             .AddJwtBearer(options =>
@@ -67,6 +75,10 @@ public static class ServiceCollectionExtension
         });
     }
 
+    /// <summary>
+    ///    Add swagger configuration to services.
+    /// </summary>
+    /// <param name="services"></param>
     public static void ConfigureSwagger(this IServiceCollection services)
     {
         services.AddVersionedApiExplorer(options =>
@@ -97,7 +109,7 @@ public static class ServiceCollectionExtension
                 });
 
             options.OperationFilter<SwaggerFilter>();
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetEntryAssembly().GetName().Name}.xml"));
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetEntryAssembly()!.GetName().Name}.xml"));
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -106,7 +118,7 @@ public static class ServiceCollectionExtension
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Scheme = "bearer",
-                Type = SecuritySchemeType.Http // Inclui o termo bearer automaticamente no swagger
+                Type = SecuritySchemeType.Http
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -126,6 +138,10 @@ public static class ServiceCollectionExtension
         });
     }
 
+    /// <summary>
+    ///   Add Database configuration to services.
+    /// </summary>
+    /// <param name="services"></param>
     public static void AddDataProviders(this IServiceCollection services)
     {
         services.AddDbContext<ApiTemplateContext>(o => o.UseInMemoryDatabase("ApiTemplate"));
@@ -145,6 +161,10 @@ public static class ServiceCollectionExtension
         services.AddScoped<IWeatherForecastService, WeatherForecastService>();
     }
 
+    /// <summary>
+    /// Configure error handling.
+    /// </summary>
+    /// <param name="services"></param>
     public static void ConfigureDefaultErrorHandler(this IServiceCollection services)
     {
         services.Configure<ApiBehaviorOptions>(options =>

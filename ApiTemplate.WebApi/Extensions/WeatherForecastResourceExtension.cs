@@ -4,8 +4,16 @@ using ApiTemplate.Application.Models;
 
 namespace ApiTemplate.WebApi.Extensions;
 
+/// <summary>
+/// WeatherForecastResource Extension
+/// </summary>
 public static class WeatherForecastResourceExtension
 {
+    /// <summary>
+    /// Extracts date time param
+    /// </summary>
+    /// <param name="param"></param>
+    /// <returns></returns>
     public static OperationParam<DateTime>? ExtractDateParam(this string param)
     {
         if (string.IsNullOrEmpty(param) || !param.ToLower().Contains("date="))
@@ -32,8 +40,19 @@ public static class WeatherForecastResourceExtension
         return default;
     }
 
-    public static OperationParam<int>? ExtractTemperatureCParam(this string param) => GetTemperature(param, "temperatureC");
-    public static OperationParam<int>? ExtractTemperatureFParam(this string param) => GetTemperature(param, "temperatureF");
+    /// <summary>
+    /// Extracts the temperature celsius param.
+    /// </summary>
+    /// <param name="param"></param>
+    /// <returns></returns>
+    public static OperationParam<int>? ExtractTemperatureCelsiusParam(this string param) => GetTemperature(param, "temperatureC");
+
+    /// <summary>
+    /// Extracts the temperature fahrenheit param.
+    /// </summary>
+    /// <param name="param"></param>
+    /// <returns></returns>
+    public static OperationParam<int>? ExtractTemperatureFahrenheitParam(this string param) => GetTemperature(param, "temperatureF");
 
     private static OperationParam<int>? GetTemperature(string param, string key)
     {

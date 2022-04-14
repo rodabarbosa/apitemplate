@@ -7,10 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiTemplate.WebApi.Controllers;
 
+/// <summary>
+/// WeatherForecast Controller
+/// </summary>
 public class WeatherForecastController : BaseAuthController
 {
     private readonly IWeatherForecastService _weatherForecastService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WeatherForecastController"/> class.
+    /// </summary>
+    /// <param name="weatherForecastService"></param>
     public WeatherForecastController(IWeatherForecastService weatherForecastService)
     {
         _weatherForecastService = weatherForecastService;
@@ -40,8 +47,8 @@ public class WeatherForecastController : BaseAuthController
     public IEnumerable<WeatherForecastDto> Get(string param)
     {
         OperationParam<DateTime>? date = param.ExtractDateParam();
-        OperationParam<int>? temperatureC = param.ExtractTemperatureCParam();
-        OperationParam<int>? temperatureF = param.ExtractTemperatureFParam();
+        OperationParam<int>? temperatureC = param.ExtractTemperatureCelsiusParam();
+        OperationParam<int>? temperatureF = param.ExtractTemperatureFahrenheitParam();
 
         return _weatherForecastService.GetWeatherForecasts(date, temperatureC, temperatureF);
     }

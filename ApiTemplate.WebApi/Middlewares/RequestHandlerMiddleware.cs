@@ -4,11 +4,13 @@ using ApiTemplate.Shared.Models;
 
 namespace ApiTemplate.WebApi.Middlewares;
 
+/// <summary>
+/// This class is used to handle exceptions and return a response with the exception message.
+/// </summary>
 public class RequestHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private const string MediaType = "application/json";
-    private const string DefaultMessage = "Internal Server Error";
     private const string UnauthorizedMessage = "Unauthorized access";
 
     /// <summary>
@@ -22,6 +24,11 @@ public class RequestHandlerMiddleware
 
 #pragma warning disable IDE1006 // Naming Styles
 
+    /// <summary>
+    /// Invoke
+    /// </summary>
+    /// <param name="context"></param>
+    /// <exception cref="UnauthorizedAccessException"></exception>
     public async Task Invoke(HttpContext context)
 #pragma warning restore IDE1006 // Naming Styles
     {
@@ -41,12 +48,8 @@ public class RequestHandlerMiddleware
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var code = HttpStatusCode.InternalServerError; // 500 if unexpected
-        object title = DefaultMessage;
-        if (exception is UnauthorizedAccessException)
-        {
-            code = HttpStatusCode.Unauthorized;
-            title = UnauthorizedMessage;
-        }
+
+        if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
 
         context.Response.ContentType = MediaType;
         context.Response.StatusCode = (int) code;
