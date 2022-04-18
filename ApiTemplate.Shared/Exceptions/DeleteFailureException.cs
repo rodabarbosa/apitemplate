@@ -16,7 +16,7 @@ public class DeleteFailureException : Exception
     {
     }
 
-    public DeleteFailureException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    public DeleteFailureException(string message, Exception innerException) : base(message, innerException)
     {
     }
 

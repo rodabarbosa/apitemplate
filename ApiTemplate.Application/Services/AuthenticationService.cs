@@ -17,6 +17,9 @@ public class AuthenticationService : IAuthenticationService
     private readonly ITokenConfiguration _tokenConfiguration;
     private const string DateFormat = "yyyy-MM-dd HH:mm:ss";
 
+    private const string DefaultUsername = "admin";
+    private const string DefaultPassword = "admin@123";
+
     /// <summary>
     /// Authentication service
     /// </summary>
@@ -29,10 +32,15 @@ public class AuthenticationService : IAuthenticationService
         _tokenConfiguration = tokenConfiguration;
     }
 
+    private static bool TempAuthentication(string username, string password)
+    {
+        return username == DefaultUsername && password == DefaultPassword;
+    }
+
     /// <inheritdoc />
     public async Task<TokenModel> Authenticate(string username, string password)
     {
-        bool credentialsValidates = username.Equals("admin") && password.Equals("admin@123"); // TODO: Replace with real authentication
+        bool credentialsValidates = TempAuthentication(username, password);
         if (!credentialsValidates)
             return new TokenModel();
 

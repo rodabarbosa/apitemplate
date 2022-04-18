@@ -21,12 +21,12 @@ public class WeatherForecastDto
     /// <summary>
     /// Gets or sets weatherforecast temperature in Celsius
     /// </summary>
-    public int TemperatureC { get; set; }
+    public double TemperatureC { get; set; }
 
     /// <summary>
     /// Gets or sets weatherforecast temperature in Fahrenheit
     /// </summary>
-    public int TemperatureF => TemperatureC.ToFahrenheit();
+    public double TemperatureF => TemperatureC.ToFahrenheit();
 
     /// <summary>
     /// Gets or sets weatherforecast summary

@@ -16,7 +16,7 @@ public class NotificationFailureException : Exception
     {
     }
 
-    public NotificationFailureException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    public NotificationFailureException(string message, Exception innerException) : base(message, innerException)
     {
     }
 

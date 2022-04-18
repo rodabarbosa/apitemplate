@@ -19,7 +19,7 @@ public class ValidationException : Exception
     {
     }
 
-    private ValidationException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    private ValidationException(string message, Exception innerException) : base(message, innerException)
     {
     }
 

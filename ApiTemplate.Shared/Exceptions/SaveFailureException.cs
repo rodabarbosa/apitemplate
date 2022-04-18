@@ -16,7 +16,7 @@ public class SaveFailureException : Exception
     {
     }
 
-    public SaveFailureException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    public SaveFailureException(string message, Exception innerException) : base(message, innerException)
     {
     }
 

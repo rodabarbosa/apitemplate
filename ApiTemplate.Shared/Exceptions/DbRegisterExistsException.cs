@@ -16,7 +16,7 @@ public class DbRegisterExistsException : Exception
     {
     }
 
-    public DbRegisterExistsException(string message, Exception innerException) : base(message ?? DefaultMessage, innerException)
+    public DbRegisterExistsException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
