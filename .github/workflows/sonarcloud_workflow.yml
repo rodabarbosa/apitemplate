@@ -49,5 +49,5 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"rodabarbosa_apitemplate" /o:"rodabarbosa" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="coverage.xml"
           dotnet build --no-incremental -c Release
-          coverlet .\ApiTemplate.Tests/bin/Release/net6.0/ApiTemplate.Tests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+          .\.sonar\scanner\coverlet .\ApiTemplate.Tests\bin\Release\net6.0\ApiTemplate.Tests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
