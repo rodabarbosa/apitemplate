@@ -39,7 +39,7 @@ jobs:
       - name: Install coverlet
         shell: powershell
         run: |
-          dotnet tool update dotnet-reportgenerator-globaltool -g --tool-path .\.sonar\scanner
+          dotnet tool install dotnet-reportgenerator-globaltool --tool-path .\.sonar\scanner
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -51,6 +51,6 @@ jobs:
           dotnet build
 
           dotnet test --no-build --collect:"XPlat Code Coverage"
-          reportgenerator "-reports:*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
+          .\.sonar\scanner\reportgenerator "-reports:*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
