@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+      <SonarQubeSetting Include="sonar.coverage.exclusions">
+        <Value>Program.cs</Value>
+      </SonarQubeSetting>
+    </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
