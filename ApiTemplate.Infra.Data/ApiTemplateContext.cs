@@ -16,6 +16,7 @@ public class ApiTemplateContext : DbContext
     }
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,5 +29,8 @@ public class ApiTemplateContext : DbContext
     {
         modelBuilder.Entity<WeatherForecast>()
             .HasData(WeatherForecastSeed.GetSeeds());
+
+        modelBuilder.Entity<User>()
+            .HasData(UserSeed.GetSeeds());
     }
 }

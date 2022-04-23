@@ -149,6 +149,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
         services.AddScoped<IWeatherForecastService, WeatherForecastService>();
+
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 
     /// <summary>
