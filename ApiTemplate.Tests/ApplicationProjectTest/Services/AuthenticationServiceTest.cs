@@ -1,19 +1,22 @@
 using System.Threading.Tasks;
+using ApiTemplate.Application.Interfaces;
+using ApiTemplate.Application.Jwt.Interfaces;
 using ApiTemplate.Application.Jwt.Models;
 using ApiTemplate.Application.Services;
+using ApiTemplate.Domain.Interfaces;
 using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.Tests.Utils;
 using Xunit;
 
-namespace ApiTemplate.Tests.ApplicationProjectTest;
+namespace ApiTemplate.Tests.ApplicationProjectTest.Services;
 
 public class AuthenticationServiceTest
 {
-    private readonly SigningConfiguration _signingConfiguration;
-    private readonly TokenConfiguration _tokenConfiguration;
-    private readonly AuthenticationService _authenticationService;
-    private readonly UserRepository _userRepository;
+    private readonly ISigningConfiguration _signingConfiguration;
+    private readonly ITokenConfiguration _tokenConfiguration;
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IUserRepository _userRepository;
     private readonly ApiTemplateContext _context;
 
     private const string AudienceIssuer = "teste";
