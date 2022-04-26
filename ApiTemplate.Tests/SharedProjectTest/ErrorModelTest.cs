@@ -2,7 +2,7 @@ using System;
 using ApiTemplate.Shared.Models;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared;
+namespace ApiTemplate.Tests.SharedProjectTest;
 
 public class ErrorModelTest
 {

@@ -8,7 +8,7 @@ using ApiTemplate.Shared.Exceptions;
 using FluentValidation.Results;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared.Exceptions;
+namespace ApiTemplate.Tests.SharedProjectTest.Exceptions;
 
 public class ValidationExceptionTest
 {

@@ -4,41 +4,41 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ApiTemplate.Shared.Exceptions;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared.Exceptions;
+namespace ApiTemplate.Tests.SharedProjectTest.Exceptions;
 
-public class NotFoundExceptionTest
+public class NotificationFailureExceptionTest
 {
     [Fact]
-    public void NotFoundException_Should_Be_Created()
+    public void NotificationFailureException_Should_Be_Created()
     {
         // Act
-        var exception = new NotFoundException();
+        var exception = new NotificationFailureException();
 
         // Assert
         Assert.NotNull(exception);
     }
 
     [Fact]
-    public void NotFoundException_Should_Have_Correct_Inner_Exception()
+    public void NotificationFailureException_Should_Have_Correct_Inner_Exception()
     {
         // Arrange
         var expectedInnerException = new Exception();
 
         // Act
-        var exception = new NotFoundException(expectedInnerException);
+        var exception = new NotificationFailureException(expectedInnerException);
 
         // Assert
         Assert.Equal(expectedInnerException, exception.InnerException);
     }
 
     [Fact]
-    public void NotFoundException_Should_Have_Correct_Message()
+    public void NotificationFailureException_Should_Have_Correct_Message()
     {
         // Arrange
-        var expectedMessage = "Not Found Exception";
+        var expectedMessage = "Notification has failed";
 
         // Act
-        var exception = new NotFoundException(expectedMessage);
+        var exception = new NotificationFailureException(expectedMessage);
 
         // Assert
         Assert.Equal(expectedMessage, exception.Message);
@@ -47,15 +47,15 @@ public class NotFoundExceptionTest
     [Theory]
     [InlineData(true, "Exception message")]
     [InlineData(false, "Exception message")]
-    public void NotFoundException_When_Meets_Condition(bool condition, string message)
+    public void NotificationFailureException_When_Meets_Condition(bool condition, string message)
     {
         if (condition)
         {
-            Assert.Throws<NotFoundException>(() => { NotFoundException.When(condition, message); });
+            Assert.Throws<NotificationFailureException>(() => { NotificationFailureException.When(condition, message); });
         }
         else
         {
-            NotFoundException.When(condition, message);
+            NotificationFailureException.When(condition, message);
             Assert.True(true);
         }
     }
@@ -65,7 +65,7 @@ public class NotFoundExceptionTest
     {
         // Arrange
         var expectedMessage = "Serialization test";
-        var e = new NotFoundException(expectedMessage);
+        var e = new NotificationFailureException(expectedMessage);
 
         // Act
         using (Stream s = new MemoryStream())
@@ -73,7 +73,7 @@ public class NotFoundExceptionTest
             var formatter = new BinaryFormatter();
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (NotFoundException) formatter.Deserialize(s);
+            e = (NotificationFailureException) formatter.Deserialize(s);
         }
 
         // Assert

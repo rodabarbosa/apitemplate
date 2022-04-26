@@ -3,10 +3,10 @@ using ApiTemplate.Application.Jwt.Models;
 using ApiTemplate.Application.Services;
 using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
-using Microsoft.EntityFrameworkCore;
+using ApiTemplate.Tests.Utils;
 using Xunit;
 
-namespace ApiTemplate.Tests.Application;
+namespace ApiTemplate.Tests.ApplicationProjectTest;
 
 public class AuthenticationServiceTest
 {
@@ -25,10 +25,7 @@ public class AuthenticationServiceTest
         _signingConfiguration = new SigningConfiguration();
         _tokenConfiguration = new TokenConfiguration {Audience = AudienceIssuer, Issuer = AudienceIssuer, Seconds = Expires};
 
-        var builder = new DbContextOptionsBuilder<ApiTemplateContext>();
-        builder.UseInMemoryDatabase("ApiTemplate");
-        _context = new ApiTemplateContext(builder.Options);
-
+        _context = ContextUtil.GetContext();
         _userRepository = new UserRepository(_context);
 
         _authenticationService = new AuthenticationService(_signingConfiguration, _tokenConfiguration, _userRepository);

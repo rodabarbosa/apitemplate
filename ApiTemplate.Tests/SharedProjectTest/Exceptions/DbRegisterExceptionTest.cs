@@ -4,41 +4,41 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ApiTemplate.Shared.Exceptions;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared.Exceptions;
+namespace ApiTemplate.Tests.SharedProjectTest.Exceptions;
 
-public class ForbiddenExceptionTest
+public class DbRegisterExceptionTest
 {
     [Fact]
-    public void ForbiddenException_Should_Be_Created()
+    public void DbRegisterException_Should_Be_Created()
     {
         // Act
-        var exception = new ForbiddenException();
+        var exception = new DbRegisterExistsException();
 
         // Assert
         Assert.NotNull(exception);
     }
 
     [Fact]
-    public void ForbiddenException_Should_Have_Correct_Inner_Exception()
+    public void DbRegisterException_Should_Have_Correct_Inner_Exception()
     {
         // Arrange
         var expectedInnerException = new Exception();
 
         // Act
-        var exception = new ForbiddenException(expectedInnerException);
+        var exception = new DbRegisterExistsException(expectedInnerException);
 
         // Assert
         Assert.Equal(expectedInnerException, exception.InnerException);
     }
 
     [Fact]
-    public void ForbiddenException_Should_Have_Correct_Message()
+    public void DbRegisterException_Should_Have_Correct_Message()
     {
         // Arrange
-        var expectedMessage = "Access Forbidden";
+        var expectedMessage = "Database registration failed.";
 
         // Act
-        var exception = new ForbiddenException(expectedMessage);
+        var exception = new DbRegisterExistsException(expectedMessage);
 
         // Assert
         Assert.Equal(expectedMessage, exception.Message);
@@ -47,25 +47,25 @@ public class ForbiddenExceptionTest
     [Theory]
     [InlineData(true, "Exception message")]
     [InlineData(false, "Exception message")]
-    public void ForbiddenException_When_Meets_Condition(bool condition, string message)
+    public void DbRegisterException_When_Meets_Condition(bool condition, string message)
     {
         if (condition)
         {
-            Assert.Throws<ForbiddenException>(() => { ForbiddenException.When(condition, message); });
+            Assert.Throws<DbRegisterExistsException>(() => { DbRegisterExistsException.When(condition, message); });
         }
         else
         {
-            ForbiddenException.When(condition, message);
+            DbRegisterExistsException.When(condition, message);
             Assert.True(true);
         }
     }
 
     [Fact]
-    public void ForbiddenException_Serialization()
+    public void DbRegisterExistsException_Serialization()
     {
         // Arrange
         var expectedMessage = "Serialization test";
-        var e = new ForbiddenException(expectedMessage);
+        var e = new DbRegisterExistsException(expectedMessage);
 
         // Act
         using (Stream s = new MemoryStream())
@@ -73,7 +73,7 @@ public class ForbiddenExceptionTest
             var formatter = new BinaryFormatter();
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (ForbiddenException) formatter.Deserialize(s);
+            e = (DbRegisterExistsException) formatter.Deserialize(s);
         }
 
         // Assert

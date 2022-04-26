@@ -4,41 +4,41 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ApiTemplate.Shared.Exceptions;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared.Exceptions;
+namespace ApiTemplate.Tests.SharedProjectTest.Exceptions;
 
-public class DbRegisterExceptionTest
+public class UnathorizedExceptionTest
 {
     [Fact]
-    public void DbRegisterException_Should_Be_Created()
+    public void UnathorizedException_Should_Be_Created()
     {
         // Act
-        var exception = new DbRegisterExistsException();
+        var exception = new UnauthorizedException();
 
         // Assert
         Assert.NotNull(exception);
     }
 
     [Fact]
-    public void DbRegisterException_Should_Have_Correct_Inner_Exception()
+    public void UnathorizedException_Should_Have_Correct_Inner_Exception()
     {
         // Arrange
         var expectedInnerException = new Exception();
 
         // Act
-        var exception = new DbRegisterExistsException(expectedInnerException);
+        var exception = new UnauthorizedException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        Assert.Equal(expectedInnerException.Message, exception.InnerException.Message);
     }
 
     [Fact]
-    public void DbRegisterException_Should_Have_Correct_Message()
+    public void UnathorizedException_Should_Have_Correct_Message()
     {
         // Arrange
-        var expectedMessage = "Database registration failed.";
+        var expectedMessage = "Unauthorized Access";
 
         // Act
-        var exception = new DbRegisterExistsException(expectedMessage);
+        var exception = new UnauthorizedException(expectedMessage);
 
         // Assert
         Assert.Equal(expectedMessage, exception.Message);
@@ -47,25 +47,25 @@ public class DbRegisterExceptionTest
     [Theory]
     [InlineData(true, "Exception message")]
     [InlineData(false, "Exception message")]
-    public void DbRegisterException_When_Meets_Condition(bool condition, string message)
+    public void UnathorizedException_When_Meets_Condition(bool condition, string message)
     {
         if (condition)
         {
-            Assert.Throws<DbRegisterExistsException>(() => { DbRegisterExistsException.When(condition, message); });
+            Assert.Throws<UnauthorizedException>(() => { UnauthorizedException.When(condition, message); });
         }
         else
         {
-            DbRegisterExistsException.When(condition, message);
+            UnauthorizedException.When(condition, message);
             Assert.True(true);
         }
     }
 
     [Fact]
-    public void DbRegisterExistsException_Serialization()
+    public void UnauthorizedException_Serialization()
     {
         // Arrange
         var expectedMessage = "Serialization test";
-        var e = new DbRegisterExistsException(expectedMessage);
+        var e = new UnauthorizedException(expectedMessage);
 
         // Act
         using (Stream s = new MemoryStream())
@@ -73,7 +73,7 @@ public class DbRegisterExceptionTest
             var formatter = new BinaryFormatter();
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (DbRegisterExistsException) formatter.Deserialize(s);
+            e = (UnauthorizedException) formatter.Deserialize(s);
         }
 
         // Assert

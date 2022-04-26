@@ -2,7 +2,7 @@ using ApiTemplate.Shared.Extensions;
 using ApiTemplate.Shared.Models;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared.Extensions;
+namespace ApiTemplate.Tests.SharedProjectTest.Extensions;
 
 public class JsonExtensionTest
 {

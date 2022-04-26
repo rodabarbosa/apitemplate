@@ -8,7 +8,7 @@ using ApiTemplate.Infra.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace ApiTemplate.Tests.Application;
+namespace ApiTemplate.Tests.ApplicationProjectTest;
 
 public class WeatherForecastServiceTest
 {

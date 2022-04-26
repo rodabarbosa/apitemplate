@@ -4,41 +4,41 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ApiTemplate.Shared.Exceptions;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared.Exceptions;
+namespace ApiTemplate.Tests.SharedProjectTest.Exceptions;
 
-public class UnathorizedExceptionTest
+public class ForbiddenExceptionTest
 {
     [Fact]
-    public void UnathorizedException_Should_Be_Created()
+    public void ForbiddenException_Should_Be_Created()
     {
         // Act
-        var exception = new UnauthorizedException();
+        var exception = new ForbiddenException();
 
         // Assert
         Assert.NotNull(exception);
     }
 
     [Fact]
-    public void UnathorizedException_Should_Have_Correct_Inner_Exception()
+    public void ForbiddenException_Should_Have_Correct_Inner_Exception()
     {
         // Arrange
         var expectedInnerException = new Exception();
 
         // Act
-        var exception = new UnauthorizedException(expectedInnerException);
+        var exception = new ForbiddenException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException.Message, exception.InnerException.Message);
+        Assert.Equal(expectedInnerException, exception.InnerException);
     }
 
     [Fact]
-    public void UnathorizedException_Should_Have_Correct_Message()
+    public void ForbiddenException_Should_Have_Correct_Message()
     {
         // Arrange
-        var expectedMessage = "Unauthorized Access";
+        var expectedMessage = "Access Forbidden";
 
         // Act
-        var exception = new UnauthorizedException(expectedMessage);
+        var exception = new ForbiddenException(expectedMessage);
 
         // Assert
         Assert.Equal(expectedMessage, exception.Message);
@@ -47,25 +47,25 @@ public class UnathorizedExceptionTest
     [Theory]
     [InlineData(true, "Exception message")]
     [InlineData(false, "Exception message")]
-    public void UnathorizedException_When_Meets_Condition(bool condition, string message)
+    public void ForbiddenException_When_Meets_Condition(bool condition, string message)
     {
         if (condition)
         {
-            Assert.Throws<UnauthorizedException>(() => { UnauthorizedException.When(condition, message); });
+            Assert.Throws<ForbiddenException>(() => { ForbiddenException.When(condition, message); });
         }
         else
         {
-            UnauthorizedException.When(condition, message);
+            ForbiddenException.When(condition, message);
             Assert.True(true);
         }
     }
 
     [Fact]
-    public void UnauthorizedException_Serialization()
+    public void ForbiddenException_Serialization()
     {
         // Arrange
         var expectedMessage = "Serialization test";
-        var e = new UnauthorizedException(expectedMessage);
+        var e = new ForbiddenException(expectedMessage);
 
         // Act
         using (Stream s = new MemoryStream())
@@ -73,7 +73,7 @@ public class UnathorizedExceptionTest
             var formatter = new BinaryFormatter();
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (UnauthorizedException) formatter.Deserialize(s);
+            e = (ForbiddenException) formatter.Deserialize(s);
         }
 
         // Assert

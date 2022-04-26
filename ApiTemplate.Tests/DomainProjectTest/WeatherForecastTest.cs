@@ -2,7 +2,7 @@ using System;
 using ApiTemplate.Domain.Entities;
 using Xunit;
 
-namespace ApiTemplate.Tests.Domain;
+namespace ApiTemplate.Tests.DomainProjectTest;
 
 public class WeatherForecastTest
 {
