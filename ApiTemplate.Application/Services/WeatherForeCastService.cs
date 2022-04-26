@@ -52,6 +52,7 @@ public class WeatherForecastService : IWeatherForecastService
 
         var weather = weatherForecast.ToEntity();
         _weatherForecastRepository.Add(weather);
+
         return weather.ToDto();
     }
 

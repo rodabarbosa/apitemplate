@@ -1,4 +1,5 @@
-﻿using ApiTemplate.Application.Models;
+﻿using System;
+using ApiTemplate.Application.Models;
 using FluentValidation;
 
 namespace ApiTemplate.Application.Validators;
@@ -15,10 +16,12 @@ public class WeatherForecastValidator : AbstractValidator<WeatherForecastDto>
     {
         RuleFor(x => x.Date)
             .NotEmpty()
-            .NotNull();
+            .NotNull()
+            .LessThanOrEqualTo(DateTime.Now);
 
         RuleFor(x => x.TemperatureC)
             .NotEmpty()
-            .NotNull();
+            .NotNull()
+            .LessThanOrEqualTo(200);
     }
 }

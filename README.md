@@ -2,6 +2,8 @@
 
 This project is intended to be used as a template for creating new API endpoints.
 
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=rodabarbosa_apitemplate)
+
 ## Exception Handling
 
 Considering performance, the API should be designed to handle exceptions using a exception filter. 

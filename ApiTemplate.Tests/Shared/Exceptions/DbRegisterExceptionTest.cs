@@ -1,8 +1,10 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using ApiTemplate.Shared.Exceptions;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared;
+namespace ApiTemplate.Tests.Shared.Exceptions;
 
 public class DbRegisterExceptionTest
 {
@@ -56,5 +58,25 @@ public class DbRegisterExceptionTest
             DbRegisterExistsException.When(condition, message);
             Assert.True(true);
         }
+    }
+
+    [Fact]
+    public void DbRegisterExistsException_Serialization()
+    {
+        // Arrange
+        var expectedMessage = "Serialization test";
+        var e = new DbRegisterExistsException(expectedMessage);
+
+        // Act
+        using (Stream s = new MemoryStream())
+        {
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(s, e);
+            s.Position = 0; // Reset stream position
+            e = (DbRegisterExistsException) formatter.Deserialize(s);
+        }
+
+        // Assert
+        Assert.Equal(expectedMessage, e.Message);
     }
 }

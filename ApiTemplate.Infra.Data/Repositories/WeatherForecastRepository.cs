@@ -1,6 +1,6 @@
-﻿using ApiTemplate.Domain.Entities;
+﻿using System.Linq.Expressions;
+using ApiTemplate.Domain.Entities;
 using ApiTemplate.Domain.Interfaces;
-using System.Linq.Expressions;
 
 namespace ApiTemplate.Infra.Data.Repositories;
 
@@ -29,12 +29,14 @@ public class WeatherForecastRepository : IWeatherForecastRepository
             weatherForecast.Id = Guid.NewGuid();
 
         _context.WeatherForecasts.Add(weatherForecast);
+        _context.SaveChanges();
         return weatherForecast;
     }
 
     public WeatherForecast Update(WeatherForecast weatherForecast)
     {
         _context.WeatherForecasts.Update(weatherForecast);
+        _context.SaveChanges();
         return weatherForecast;
     }
 
@@ -46,5 +48,9 @@ public class WeatherForecastRepository : IWeatherForecastRepository
         Delete(weather);
     }
 
-    public void Delete(WeatherForecast weatherForecast) => _context.WeatherForecasts.Remove(weatherForecast);
+    public void Delete(WeatherForecast weatherForecast)
+    {
+        _context.WeatherForecasts.Remove(weatherForecast);
+        _context.SaveChanges();
+    }
 }

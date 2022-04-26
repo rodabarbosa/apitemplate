@@ -1,7 +1,7 @@
 using ApiTemplate.Shared.Extensions;
 using Xunit;
 
-namespace ApiTemplate.Tests.Shared;
+namespace ApiTemplate.Tests.Shared.Extensions;
 
 public class TemperatureExtensionTest
 {
