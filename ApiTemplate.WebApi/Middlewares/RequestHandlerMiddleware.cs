@@ -9,7 +9,7 @@ namespace ApiTemplate.WebApi.Middlewares;
 /// </summary>
 public class RequestHandlerMiddleware
 {
-    //TODO: studing requirement to make a unit test for and how to
+    //TODO: studying requirement to make a unit test for and how to
 
     private readonly RequestDelegate _next;
     private const string MediaType = "application/json";

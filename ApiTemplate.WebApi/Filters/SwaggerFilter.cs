@@ -9,7 +9,7 @@ namespace ApiTemplate.WebApi.Filters;
 /// </summary>
 public class SwaggerFilter : IOperationFilter
 {
-    //TODO: studing requirement to make a unit test for and how to
+    //TODO: studying requirement to make a unit test for and how to
 
     /// <summary>
     /// Apply the filter to the Swagger document.
