@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <SonarQubeSetting Include="sonar.coverage.exclusions">
-            <Value>Program.cs, Filter/*.cs, **/RequerstHandlerMiddleware.cs</Value>
+            <Value>Program.cs, Filters/*.cs, Middlewares/*.cs</Value>
         </SonarQubeSetting>
     </ItemGroup>
 

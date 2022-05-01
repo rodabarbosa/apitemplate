@@ -8,23 +8,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>Extensions/*.cs</Value>
+        </SonarQubeSetting>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj" />
-      <ProjectReference Include="..\ApiTemplate.Shared\ApiTemplate.Shared.csproj" />
+        <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4" />
-      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.4" />
+        <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj"/>
+        <ProjectReference Include="..\ApiTemplate.Shared\ApiTemplate.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.4"/>
     </ItemGroup>
 
 </Project>
