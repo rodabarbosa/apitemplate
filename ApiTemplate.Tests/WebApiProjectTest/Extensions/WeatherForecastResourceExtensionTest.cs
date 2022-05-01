@@ -45,4 +45,9 @@ public class WeatherForecastResourceExtensionTest
         var fahrenheitOperation = query.ExtractTemperatureFahrenheitParam();
         Assert.Null(fahrenheitOperation);
     }
+
+    [Fact]
+    public void Test()
+    {
+    }
 }

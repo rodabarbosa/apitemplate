@@ -22,8 +22,6 @@ namespace ApiTemplate.WebApi.Extensions;
 /// </summary>
 public static class ServiceCollectionExtension
 {
-//TODO: studying requirement to make a unit test for and how to
-
     /// <summary>
     /// Add JWT configuration to services
     /// </summary>
