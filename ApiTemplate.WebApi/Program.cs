@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ApiTemplate.WebApi.Extensions;
 using ApiTemplate.WebApi.Filters;
 using ApiTemplate.WebApi.Middlewares;
@@ -11,10 +12,15 @@ builder.Services.ConfigureDefaultErrorHandler();
 builder.Services.AddResponseCompression();
 
 builder.Services.AddControllers(options =>
-{
-    options.Filters.Add(typeof(CustomExceptionFilterAttribute));
-    options.RespectBrowserAcceptHeader = true;
-});
+    {
+        options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+        options.RespectBrowserAcceptHeader = true;
+    })
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.WriteIndented = false;
+    });
 
 builder.Services.AddJwtService(builder.Configuration);
 

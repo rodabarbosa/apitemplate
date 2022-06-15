@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ApiTemplate.Application.Interfaces;
 using ApiTemplate.Application.Models;
 using ApiTemplate.Application.Services;
@@ -37,11 +38,12 @@ public class WeatherForecastControllerTest
     public void Get_Returns_Weather_Forecast()
     {
         // Act
-        var result = _controller.Get(null).ToList();
+        var result = _controller.Get(null!);
+        var data = result.Result.Value;
 
         // Assert
-        Assert.IsType<List<WeatherForecastDto>>(result);
-        Assert.NotEmpty(result);
+        Assert.IsAssignableFrom<IEnumerable<WeatherForecastDto>>(data);
+        Assert.NotEmpty(data);
     }
 
     [Fact]
@@ -94,10 +96,10 @@ public class WeatherForecastControllerTest
     }
 
     [Fact]
-    public void Delete_Weather_Forecast()
+    public async Task Delete_Weather_Forecast()
     {
         // Act
-        _controller.Delete(_deletingWeather);
+        await _controller.Delete(_deletingWeather);
 
         // Assert
         Assert.True(true);

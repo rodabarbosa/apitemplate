@@ -47,7 +47,9 @@ public class AuthenticationControllerTest : IDisposable
             Password = password
         };
         var result = await _controller.PostAsync(input);
-        Assert.Equal(result.Authenticated, authenticated);
+        var data = result?.Value;
+
+        Assert.Equal(data.Authenticated, authenticated);
     }
 
     public void Dispose()

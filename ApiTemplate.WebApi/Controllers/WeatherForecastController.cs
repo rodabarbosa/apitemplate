@@ -44,13 +44,14 @@ public class WeatherForecastController : BaseAuthController
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<WeatherForecastDto>), StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public IEnumerable<WeatherForecastDto> Get(string param)
+    public async Task<ActionResult<IEnumerable<WeatherForecastDto>>> Get(string param)
     {
         OperationParam<DateTime>? date = param.ExtractDateParam();
         OperationParam<int>? temperatureC = param.ExtractTemperatureCelsiusParam();
         OperationParam<int>? temperatureF = param.ExtractTemperatureFahrenheitParam();
 
-        return _weatherForecastService.GetWeatherForecasts(date, temperatureC, temperatureF);
+        var result = _weatherForecastService.GetWeatherForecasts(date, temperatureC, temperatureF);
+        return Ok(result);
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ public class WeatherForecastController : BaseAuthController
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public WeatherForecastDto Get(Guid id) => _weatherForecastService.GetWeatherForecast(id);
+    public async Task<ActionResult<WeatherForecastDto>> Get(Guid id) => _weatherForecastService.GetWeatherForecast(id);
 
     /// <summary>
     ///   Create a new weather forecast
@@ -70,7 +71,7 @@ public class WeatherForecastController : BaseAuthController
     /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
-    public WeatherForecastDto Post([FromBody] WeatherForecastDto weatherForecast) => _weatherForecastService.AddWeatherForecast(weatherForecast);
+    public async Task<ActionResult<WeatherForecastDto>> Post([FromBody] WeatherForecastDto weatherForecast) => _weatherForecastService.AddWeatherForecast(weatherForecast);
 
     /// <summary>
     ///  Update a weather forecast
@@ -80,7 +81,7 @@ public class WeatherForecastController : BaseAuthController
     /// <returns></returns>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
-    public WeatherForecastDto Put(Guid id, [FromBody] WeatherForecastDto weatherForecast) => _weatherForecastService.UpdateWeatherForecast(id, weatherForecast);
+    public async Task<ActionResult<WeatherForecastDto>> Put(Guid id, [FromBody] WeatherForecastDto weatherForecast) => _weatherForecastService.UpdateWeatherForecast(id, weatherForecast);
 
     /// <summary>
     ///  Delete a weather forecast
@@ -88,5 +89,9 @@ public class WeatherForecastController : BaseAuthController
     /// <param name="id"></param>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public void Delete(Guid id) => _weatherForecastService.DeleteWeatherForecast(id);
+    public async Task<ActionResult> Delete(Guid id)
+    {
+        _weatherForecastService.DeleteWeatherForecast(id);
+        return Ok();
+    }
 }

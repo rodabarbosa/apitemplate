@@ -1,22 +1,31 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace ApiTemplate.Shared.Extensions
+namespace ApiTemplate.Shared.Extensions;
+
+public static class JsonExtension
 {
-    public static class JsonExtension
+    private static readonly JsonSerializerOptions _jsonSerializerOptionsDeserialization = new()
     {
-        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = false,
-            Encoder = JavaScriptEncoder.Default,
-            IgnoreReadOnlyFields = true,
-            IgnoreReadOnlyProperties = true
-        };
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = false,
+        Encoder = JavaScriptEncoder.Default,
+        IgnoreReadOnlyFields = true,
+        IgnoreReadOnlyProperties = true
+    };
 
-        public static string ToJson(this object value) => JsonSerializer.Serialize(value);
+    private static readonly JsonSerializerOptions _jsonSerializerOptionsSerialization = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = false,
+        Encoder = JavaScriptEncoder.Default,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 
-        public static T FromJson<T>(this string value) where T : class => JsonSerializer.Deserialize<T>(value, _jsonSerializerOptions);
-    }
+    public static string ToJson(this object value) => JsonSerializer.Serialize(value, _jsonSerializerOptionsSerialization);
+
+    public static T FromJson<T>(this string value) where T : class => JsonSerializer.Deserialize<T>(value, _jsonSerializerOptionsDeserialization);
 }
