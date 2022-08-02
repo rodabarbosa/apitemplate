@@ -23,8 +23,7 @@ public class SwaggerFilter : IOperationFilter
             var description = context.ApiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
             var routeInfo = description.RouteInfo;
 
-            if (parameter.Description == null)
-                parameter.Description = description.ModelMetadata?.Description;
+            parameter.Description ??= description.ModelMetadata.Description;
 
             if (routeInfo == null)
                 continue;

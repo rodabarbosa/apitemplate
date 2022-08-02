@@ -51,11 +51,11 @@ public class NotFoundExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<NotFoundException>(() => { NotFoundException.When(condition, message); });
+            Assert.Throws<NotFoundException>(() => { NotFoundException.ThrowIf(condition, message); });
         }
         else
         {
-            NotFoundException.When(condition, message);
+            NotFoundException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -71,9 +71,11 @@ public class NotFoundExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (NotFoundException) formatter.Deserialize(s);
+            e = (NotFoundException)formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

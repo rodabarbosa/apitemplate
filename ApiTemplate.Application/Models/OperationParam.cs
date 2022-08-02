@@ -6,7 +6,7 @@ namespace ApiTemplate.Application.Models;
 /// Container for search params in list methods
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class OperationParam<T>
+public sealed class OperationParam<T>
 {
     /// <summary>
     /// Defines operation type

@@ -3,7 +3,7 @@
 /// <summary>
 /// Response container of authentication method
 /// </summary>
-public class TokenModel
+public sealed class TokenModel
 {
     /// <summary>
     /// Is authenticated

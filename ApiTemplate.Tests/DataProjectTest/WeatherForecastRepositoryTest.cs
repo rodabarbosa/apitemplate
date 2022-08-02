@@ -11,6 +11,7 @@ namespace ApiTemplate.Tests.DataProjectTest;
 
 public class WeatherForecastRepositoryTest : IDisposable
 {
+    private const double Tolerance = 1e-6;
     private readonly IWeatherForecastRepository _weatherForecastRepository;
     private readonly ApiTemplateContext _context;
 
@@ -33,8 +34,10 @@ public class WeatherForecastRepositoryTest : IDisposable
         var weatherForecasts = _weatherForecastRepository.Get();
 
         var weatherForecast = weatherForecasts.FirstOrDefault();
+        Assert.NotNull(weatherForecast);
 
-        var result = _weatherForecastRepository.Get(x => x.TemperatureC == weatherForecast.TemperatureC).FirstOrDefault();
+        var temperature = weatherForecast?.TemperatureC ?? 0;
+        var result = _weatherForecastRepository.Get(x => Math.Abs(x.TemperatureC - temperature) < Tolerance).FirstOrDefault();
 
         Assert.NotNull(result);
     }
@@ -44,7 +47,7 @@ public class WeatherForecastRepositoryTest : IDisposable
     {
         var weatherForecasts = _weatherForecastRepository.Get();
 
-        var weatherForecast = weatherForecasts.FirstOrDefault();
+        var weatherForecast = weatherForecasts.First();
 
         var result = _weatherForecastRepository.Get(x => x.Id == weatherForecast.Id).FirstOrDefault();
 
@@ -72,13 +75,13 @@ public class WeatherForecastRepositoryTest : IDisposable
     {
         var weatherForecasts = _weatherForecastRepository.Get();
 
-        var weatherForecast = weatherForecasts.FirstOrDefault();
+        var weatherForecast = weatherForecasts.First();
 
         weatherForecast.TemperatureC = 20;
 
         _weatherForecastRepository.Update(weatherForecast);
 
-        var result = _weatherForecastRepository.Get(x => x.TemperatureC == weatherForecast.TemperatureC).FirstOrDefault();
+        var result = _weatherForecastRepository.Get(x => Math.Abs(x.TemperatureC - weatherForecast.TemperatureC) < Tolerance).FirstOrDefault();
 
         Assert.NotNull(result);
     }
@@ -88,7 +91,7 @@ public class WeatherForecastRepositoryTest : IDisposable
     {
         var weatherForecasts = _weatherForecastRepository.Get();
 
-        var weatherForecast = weatherForecasts.FirstOrDefault();
+        var weatherForecast = weatherForecasts.First();
 
         _weatherForecastRepository.Delete(weatherForecast);
 
@@ -99,6 +102,6 @@ public class WeatherForecastRepositoryTest : IDisposable
 
     public void Dispose()
     {
-        _context?.Dispose();
+        _context.Dispose();
     }
 }

@@ -51,11 +51,11 @@ public class SaveFailureExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<SaveFailureException>(() => { SaveFailureException.When(condition, message); });
+            Assert.Throws<SaveFailureException>(() => { SaveFailureException.ThrowIf(condition, message); });
         }
         else
         {
-            SaveFailureException.When(condition, message);
+            SaveFailureException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -71,9 +71,11 @@ public class SaveFailureExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (SaveFailureException) formatter.Deserialize(s);
+            e = (SaveFailureException)formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

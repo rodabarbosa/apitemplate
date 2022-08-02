@@ -2,7 +2,7 @@ using System;
 
 namespace ApiTemplate.Domain.Entities;
 
-public class WeatherForecast
+public sealed class WeatherForecast
 {
     public Guid Id { get; set; }
     public DateTime Date { get; set; }

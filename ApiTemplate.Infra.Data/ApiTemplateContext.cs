@@ -1,11 +1,10 @@
 ﻿using ApiTemplate.Domain.Entities;
-using ApiTemplate.Infra.Data.Extensions;
 using ApiTemplate.Infra.Data.Seeds;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infra.Data;
 
-public class ApiTemplateContext : DbContext
+public sealed class ApiTemplateContext : DbContext
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -22,7 +21,8 @@ public class ApiTemplateContext : DbContext
     {
         SetSeeds(modelBuilder);
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyAllConfigurations();
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApiTemplateContext).Assembly);
     }
 
     private static void SetSeeds(ModelBuilder modelBuilder)

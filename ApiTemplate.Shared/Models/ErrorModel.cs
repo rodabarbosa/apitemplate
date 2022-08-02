@@ -1,10 +1,10 @@
 ﻿namespace ApiTemplate.Shared.Models
 {
-    public class ErrorModel
+    public sealed class ErrorModel
     {
-        public int Code { get; set; }
-        public object Error { get; set; }
-        public string Exception { get; set; }
-        public string StackTrace { get; set; }
+        public int Code { get; init; }
+        public object Error { get; init; }
+        public string Exception { get; init; }
+        public string StackTrace { get; init; }
     }
 }

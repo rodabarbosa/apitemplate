@@ -24,7 +24,7 @@ public class UnauthorizedException : Exception
     {
     }
 
-    public static void When(bool condition, string message = DefaultMessage, Exception innerException = null)
+    public static void ThrowIf(bool condition, string message = DefaultMessage, Exception innerException = null)
     {
         if (condition)
             throw new UnauthorizedException(message, innerException);

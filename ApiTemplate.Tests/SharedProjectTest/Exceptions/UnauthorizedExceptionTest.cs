@@ -28,7 +28,7 @@ public class UnathorizedExceptionTest
         var exception = new UnauthorizedException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException.Message, exception.InnerException.Message);
+        Assert.Equal(expectedInnerException.Message, exception.InnerException!.Message);
     }
 
     [Fact]
@@ -51,11 +51,11 @@ public class UnathorizedExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<UnauthorizedException>(() => { UnauthorizedException.When(condition, message); });
+            Assert.Throws<UnauthorizedException>(() => { UnauthorizedException.ThrowIf(condition, message); });
         }
         else
         {
-            UnauthorizedException.When(condition, message);
+            UnauthorizedException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -71,9 +71,11 @@ public class UnathorizedExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (UnauthorizedException) formatter.Deserialize(s);
+            e = (UnauthorizedException)formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

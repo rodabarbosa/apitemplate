@@ -66,8 +66,6 @@ public static class WeatherForecastMapping
     /// <returns></returns>
     public static IEnumerable<WeatherForecast> ToEntities(this IEnumerable<WeatherForecastDto> weatherForecastDtos)
     {
-        if (weatherForecastDtos == null) return default;
-
-        return weatherForecastDtos.Select(ToEntity);
+        return weatherForecastDtos?.Select(ToEntity);
     }
 }

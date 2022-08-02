@@ -35,7 +35,7 @@ public class ValidationExceptionTest
         var exception = new ValidationException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException.Message, exception.InnerException.Message);
+        Assert.Equal(expectedInnerException.Message, exception.InnerException!.Message);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class ValidationExceptionTest
                 };
 
                 var result1 = validator.Validate(weather1);
-                Assert.Throws<ValidationException>(() => { ValidationException.When(!result1.IsValid, result1.Errors); });
+                Assert.Throws<ValidationException>(() => { ValidationException.ThrowIf(!result1.IsValid, result1.Errors); });
                 break;
 
             case 2:
@@ -105,7 +105,7 @@ public class ValidationExceptionTest
                 break;
 
             case 3:
-                Assert.Throws<ValidationException>(() => { ValidationException.When(true, Enumerable.Empty<ValidationFailure>()); });
+                Assert.Throws<ValidationException>(() => { ValidationException.ThrowIf(true, Enumerable.Empty<ValidationFailure>()); });
                 break;
         }
     }
@@ -121,9 +121,11 @@ public class ValidationExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (ValidationException) formatter.Deserialize(s);
+            e = (ValidationException)formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

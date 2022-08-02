@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiTemplate.Application.Interfaces;
@@ -9,15 +8,14 @@ using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.Tests.Utils;
 using ApiTemplate.WebApi.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace ApiTemplate.Tests.WebApiProjectTest.Controllers;
 
-public class WeatherForecastControllerTest
+public class WeatherForecastControllerTest : IDisposable
 {
     private readonly WeatherForecastController _controller;
-    private readonly IWeatherForecastService _weatherForecastService;
-    private readonly WeatherForecastRepository _weatherForecastRepository;
     private readonly ApiTemplateContext _context;
 
     private readonly Guid _updatingWeather;
@@ -26,39 +24,37 @@ public class WeatherForecastControllerTest
     public WeatherForecastControllerTest()
     {
         _context = ContextUtil.GetContext();
-        _weatherForecastRepository = new WeatherForecastRepository(_context);
-        _weatherForecastService = new WeatherForecastService(_weatherForecastRepository);
-        _controller = new WeatherForecastController(_weatherForecastService);
+        var weatherForecastRepository = new WeatherForecastRepository(_context);
+        IWeatherForecastService weatherForecastService = new WeatherForecastService(weatherForecastRepository);
+        _controller = new WeatherForecastController(weatherForecastService);
 
-        _updatingWeather = _weatherForecastRepository.Get().First().Id;
-        _deletingWeather = _weatherForecastRepository.Get().Last().Id;
+        _updatingWeather = weatherForecastRepository.Get().First().Id;
+        _deletingWeather = weatherForecastRepository.Get().Last().Id;
     }
 
     [Fact]
-    public void Get_Returns_Weather_Forecast()
+    public async Task Get_Returns_Weather_Forecast()
     {
         // Act
-        var result = _controller.Get(null!);
-        var data = result.Result.Value;
+        var result = await _controller.Get(null!);
 
         // Assert
-        Assert.IsAssignableFrom<IEnumerable<WeatherForecastDto>>(data);
-        Assert.NotEmpty(data);
+        Assert.IsType<OkObjectResult>(result.Result);
     }
 
     [Fact]
-    public void Get_Returns_Weather_Forecast_By_Id()
+    public async Task Get_Returns_Weather_Forecast_By_Id()
     {
         // Act
-        var result = _controller.Get(_updatingWeather);
+        var result = await _controller.Get(_updatingWeather);
 
         // Assert
-        Assert.IsType<WeatherForecastDto>(result);
-        Assert.NotNull(result);
+        Assert.IsType<WeatherForecastDto>(result.Value);
+        Assert.NotNull(result.Value);
     }
 
     [Fact]
-    public void Post_Weather_Forecast()
+    public async Task Post_Weather_Forecast()
     {
         // Act
         var dto = new WeatherForecastDto
@@ -69,15 +65,15 @@ public class WeatherForecastControllerTest
             Summary = null
         };
 
-        var result = _controller.Post(dto);
+        var result = await _controller.Post(dto);
 
         // Assert
-        Assert.IsType<WeatherForecastDto>(result);
-        Assert.NotNull(result);
+        Assert.IsType<WeatherForecastDto>(result.Value);
+        Assert.NotNull(result.Value);
     }
 
     [Fact]
-    public void Put_Weather_Forecast()
+    public async Task Put_Weather_Forecast()
     {
         // Act
         var dto = new WeatherForecastDto
@@ -88,11 +84,11 @@ public class WeatherForecastControllerTest
             Summary = null
         };
 
-        var result = _controller.Put(_updatingWeather, dto);
+        var result = await _controller.Put(_updatingWeather, dto);
 
         // Assert
-        Assert.IsType<WeatherForecastDto>(result);
-        Assert.NotNull(result);
+        Assert.IsType<WeatherForecastDto>(result.Value);
+        Assert.NotNull(result.Value);
     }
 
     [Fact]
@@ -103,5 +99,10 @@ public class WeatherForecastControllerTest
 
         // Assert
         Assert.True(true);
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

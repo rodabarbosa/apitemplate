@@ -47,7 +47,7 @@ public class ValidationException : Exception
 
     public IDictionary<string, string[]> Failures { get; } = new Dictionary<string, string[]>();
 
-    public static void When(bool condition, IEnumerable<ValidationFailure> failures)
+    public static void ThrowIf(bool condition, IEnumerable<ValidationFailure> failures)
     {
         if (condition)
             throw new ValidationException(failures);

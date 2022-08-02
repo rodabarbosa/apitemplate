@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace ApiTemplate.Application.Services;
 
 /// <inheritdoc />
-public class AuthenticationService : IAuthenticationService
+public sealed class AuthenticationService : IAuthenticationService
 {
     private readonly ISigningConfiguration _signingConfiguration;
     private readonly ITokenConfiguration _tokenConfiguration;

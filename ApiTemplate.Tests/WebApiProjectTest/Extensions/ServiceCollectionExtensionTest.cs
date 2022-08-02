@@ -8,15 +8,14 @@ namespace ApiTemplate.Tests.WebApiProjectTest.Extensions;
 
 public class ServiceCollectionExtensionTest
 {
-    private readonly WebApplicationBuilder _builder;
     private readonly IServiceCollection _serviceCollection;
     private readonly ConfigurationManager _configuration;
 
     public ServiceCollectionExtensionTest()
     {
-        _builder = WebApplication.CreateBuilder();
-        _serviceCollection = _builder.Services;
-        _configuration = _builder.Configuration;
+        var builder = WebApplication.CreateBuilder();
+        _serviceCollection = builder.Services;
+        _configuration = builder.Configuration;
     }
 
     [Fact]

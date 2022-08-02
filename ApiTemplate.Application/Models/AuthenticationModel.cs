@@ -3,15 +3,15 @@
 /// <summary>
 /// Container for authentication request
 /// </summary>
-public class AuthenticationModel
+public sealed class AuthenticationModel
 {
     /// <summary>
     /// Gets or sets the username.
     /// </summary>
-    public string Username { get; set; }
+    public string Username { get; init; }
 
     /// <summary>
     /// Gets or sets the password.
     /// </summary>
-    public string Password { get; set; }
+    public string Password { get; init; }
 }

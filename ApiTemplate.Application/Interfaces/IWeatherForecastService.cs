@@ -17,7 +17,7 @@ public interface IWeatherForecastService
     /// <param name="temperatureCelsius"></param>
     /// <param name="temperatureFahrenheit"></param>
     /// <returns></returns>
-    IEnumerable<WeatherForecastDto> GetWeatherForecasts(OperationParam<DateTime> date, OperationParam<int> temperatureCelsius, OperationParam<int> temperatureFahrenheit);
+    IEnumerable<WeatherForecastDto> GetWeatherForecasts(OperationParam<DateTime> date, OperationParam<double> temperatureCelsius, OperationParam<double> temperatureFahrenheit);
 
     /// <summary>
     /// Gets a  weather forecasts.

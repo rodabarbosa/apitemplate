@@ -4,19 +4,18 @@ namespace ApiTemplate.Infra.Data.Seeds;
 
 public static class WeatherForecastSeed
 {
-    private static readonly string[] Summaries = {"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"};
+    private static readonly string[] _summaries = {"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"};
 
-    public static List<WeatherForecast> GetSeeds()
+    public static IEnumerable<WeatherForecast> GetSeeds()
     {
         var rnd = new Random();
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        return Enumerable.Range(1, 5).Select(_ => new WeatherForecast
             {
                 Id = Guid.NewGuid(),
                 Date = GetRandomDate(rnd),
                 TemperatureC = rnd.Next(-20, 55),
-                Summary = Summaries[rnd.Next(Summaries.Length)]
-            })
-            .ToList();
+                Summary = _summaries[rnd.Next(_summaries.Length)]
+            });
     }
 
     private static DateTime GetRandomDate(Random rnd)

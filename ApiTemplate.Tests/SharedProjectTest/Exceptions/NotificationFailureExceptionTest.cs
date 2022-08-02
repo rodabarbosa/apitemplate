@@ -51,11 +51,11 @@ public class NotificationFailureExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<NotificationFailureException>(() => { NotificationFailureException.When(condition, message); });
+            Assert.Throws<NotificationFailureException>(() => { NotificationFailureException.ThrowIf(condition, message); });
         }
         else
         {
-            NotificationFailureException.When(condition, message);
+            NotificationFailureException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -71,9 +71,11 @@ public class NotificationFailureExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (NotificationFailureException) formatter.Deserialize(s);
+            e = (NotificationFailureException)formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

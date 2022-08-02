@@ -4,7 +4,7 @@ namespace ApiTemplate.Infra.Data.Seeds;
 
 public static class UserSeed
 {
-    public static List<User> GetSeeds()
+    public static IEnumerable<User> GetSeeds()
     {
         return new List<User>
         {

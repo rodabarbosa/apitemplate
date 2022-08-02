@@ -16,11 +16,7 @@ namespace ApiTemplate.Tests.WebApiProjectTest.Controllers;
 
 public class AuthenticationControllerTest : IDisposable
 {
-    private readonly IAuthenticationService _authenticationService;
     private readonly AuthenticationController _controller;
-    private readonly ISigningConfiguration _signingConfiguration;
-    private readonly ITokenConfiguration _tokenConfiguration;
-    private readonly IUserRepository _userRepository;
     private readonly ApiTemplateContext _context;
 
     private const string AudienceIssuer = "teste";
@@ -29,11 +25,11 @@ public class AuthenticationControllerTest : IDisposable
     public AuthenticationControllerTest()
     {
         _context = ContextUtil.GetContext();
-        _userRepository = new UserRepository(_context);
-        _signingConfiguration = new SigningConfiguration();
-        _tokenConfiguration = new TokenConfiguration {Audience = AudienceIssuer, Issuer = AudienceIssuer, Seconds = Expires};
-        _authenticationService = new AuthenticationService(_signingConfiguration, _tokenConfiguration, _userRepository);
-        _controller = new AuthenticationController(_authenticationService);
+        IUserRepository userRepository = new UserRepository(_context);
+        ISigningConfiguration signingConfiguration = new SigningConfiguration();
+        ITokenConfiguration tokenConfiguration = new TokenConfiguration { Audience = AudienceIssuer, Issuer = AudienceIssuer, Seconds = Expires };
+        IAuthenticationService authenticationService = new AuthenticationService(signingConfiguration, tokenConfiguration, userRepository);
+        _controller = new AuthenticationController(authenticationService);
     }
 
     [Theory]
@@ -47,13 +43,13 @@ public class AuthenticationControllerTest : IDisposable
             Password = password
         };
         var result = await _controller.PostAsync(input);
-        var data = result?.Value;
+        var data = result.Value;
 
-        Assert.Equal(data.Authenticated, authenticated);
+        Assert.Equal(data?.Authenticated, authenticated);
     }
 
     public void Dispose()
     {
-        _context?.Dispose();
+        _context.Dispose();
     }
 }

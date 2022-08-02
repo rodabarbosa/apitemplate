@@ -7,7 +7,7 @@ namespace ApiTemplate.WebApi.Middlewares;
 /// <summary>
 /// This class is used to handle exceptions and return a response with the exception message.
 /// </summary>
-public class RequestHandlerMiddleware
+public sealed class RequestHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private const string MediaType = "application/json";
@@ -36,7 +36,7 @@ public class RequestHandlerMiddleware
         {
             await _next(context);
 
-            if (context.Response.StatusCode == (int) HttpStatusCode.Unauthorized)
+            if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
                 throw new UnauthorizedAccessException(UnauthorizedMessage);
         }
         catch (Exception ex)
@@ -52,10 +52,10 @@ public class RequestHandlerMiddleware
         if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
 
         context.Response.ContentType = MediaType;
-        context.Response.StatusCode = (int) code;
+        context.Response.StatusCode = (int)code;
         var error = new ErrorModel
         {
-            Code = (int) code,
+            Code = (int)code,
             Error = exception.Message,
             Exception = exception.GetType().Name,
             StackTrace = exception.StackTrace

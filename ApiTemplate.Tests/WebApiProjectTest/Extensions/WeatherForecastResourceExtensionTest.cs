@@ -15,18 +15,18 @@ public class WeatherForecastResourceExtensionTest
         var dateOperation = query.ExtractDateParam();
 
         Assert.NotNull(dateOperation);
-        Assert.Equal(Operation.NotEqual, dateOperation.Operation);
-        Assert.Equal(new DateTime(2019, 1, 1), dateOperation.Value);
+        Assert.Equal(Operation.NotEqual, dateOperation?.Operation);
+        Assert.Equal(new DateTime(2019, 1, 1), dateOperation?.Value);
 
         var celsiusOperation = query.ExtractTemperatureCelsiusParam();
         Assert.NotNull(celsiusOperation);
-        Assert.Equal(Operation.GreaterThan, celsiusOperation.Operation);
-        Assert.Equal(0, celsiusOperation.Value);
+        Assert.Equal(Operation.GreaterThan, celsiusOperation?.Operation);
+        Assert.Equal(0, celsiusOperation?.Value);
 
         var fahrenheitOperation = query.ExtractTemperatureFahrenheitParam();
         Assert.NotNull(fahrenheitOperation);
-        Assert.Equal(Operation.Equal, fahrenheitOperation.Operation);
-        Assert.Equal(32, fahrenheitOperation.Value);
+        Assert.Equal(Operation.Equal, fahrenheitOperation?.Operation);
+        Assert.Equal(32, fahrenheitOperation?.Value);
     }
 
     [Theory]

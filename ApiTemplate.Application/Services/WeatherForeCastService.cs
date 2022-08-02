@@ -14,9 +14,10 @@ using ApiTemplate.Shared.Extensions;
 namespace ApiTemplate.Application.Services;
 
 /// <inheritdoc />
-public class WeatherForecastService : IWeatherForecastService
+public sealed class WeatherForecastService : IWeatherForecastService
 {
     private readonly IWeatherForecastRepository _weatherForecastRepository;
+    private const double Tolerance = 1e-6;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeatherForecastService"/> class.
@@ -28,7 +29,7 @@ public class WeatherForecastService : IWeatherForecastService
     }
 
     /// <inheritdoc />
-    public IEnumerable<WeatherForecastDto> GetWeatherForecasts(OperationParam<DateTime> date, OperationParam<int> temperatureCelsius, OperationParam<int> temperatureFahrenheit)
+    public IEnumerable<WeatherForecastDto> GetWeatherForecasts(OperationParam<DateTime> date, OperationParam<double> temperatureCelsius, OperationParam<double> temperatureFahrenheit)
     {
         var weathers = _weatherForecastRepository.Get();
         weathers = FilterByDate(weathers, date);
@@ -60,11 +61,11 @@ public class WeatherForecastService : IWeatherForecastService
     public WeatherForecastDto UpdateWeatherForecast(Guid id, WeatherForecastDto weatherForecast)
     {
         var weather = _weatherForecastRepository.Get(id);
-        NotFoundException.When(weather == null, $"WeatherForecast with id {id} not found");
+        NotFoundException.ThrowIf(weather is null, $"WeatherForecast with id {id} not found");
 
         Validate(weatherForecast);
 
-        weather.Date = weatherForecast.Date;
+        weather!.Date = weatherForecast.Date;
         weather.Summary = weatherForecast.Summary;
         weather.TemperatureC = weatherForecast.TemperatureC;
 
@@ -76,16 +77,16 @@ public class WeatherForecastService : IWeatherForecastService
     {
         var validator = new WeatherForecastValidator();
         var validationResult = validator.Validate(weatherForecast);
-        ValidationException.When(!validationResult.IsValid, validationResult.Errors);
+        ValidationException.ThrowIf(!validationResult.IsValid, validationResult.Errors);
     }
 
     /// <inheritdoc />
     public void DeleteWeatherForecast(Guid id)
     {
         var weather = _weatherForecastRepository.Get(id);
-        NotFoundException.When(weather == null, $"WeatherForecast with id {id} not found");
+        NotFoundException.ThrowIf(weather is null, $"WeatherForecast with id {id} not found");
 
-        _weatherForecastRepository.Delete(weather.Id);
+        _weatherForecastRepository.Delete(weather!.Id);
     }
 
     private static IQueryable<WeatherForecast> FilterByDate(IQueryable<WeatherForecast> weathers, OperationParam<DateTime> filter)
@@ -105,7 +106,7 @@ public class WeatherForecastService : IWeatherForecastService
         };
     }
 
-    private static IQueryable<WeatherForecast> FilterByTemperatureCelsius(IQueryable<WeatherForecast> weathers, OperationParam<int> filter)
+    private static IQueryable<WeatherForecast> FilterByTemperatureCelsius(IQueryable<WeatherForecast> weathers, OperationParam<double> filter)
     {
         if (filter == null)
             return weathers;
@@ -114,15 +115,15 @@ public class WeatherForecastService : IWeatherForecastService
         {
             Operation.GreaterThan => weathers.Where(w => w.TemperatureC > filter.Value),
             Operation.LessThan => weathers.Where(w => w.TemperatureC < filter.Value),
-            Operation.Equal => weathers.Where(w => w.TemperatureC == filter.Value),
-            Operation.NotEqual => weathers.Where(w => w.TemperatureC != filter.Value),
+            Operation.Equal => weathers.Where(w => Math.Abs(w.TemperatureC - filter.Value) < Tolerance),
+            Operation.NotEqual => weathers.Where(w => Math.Abs(w.TemperatureC - filter.Value) > Tolerance),
             Operation.GreaterThanOrEqual => weathers.Where(w => w.TemperatureC >= filter.Value),
             Operation.LessThanOrEqual => weathers.Where(w => w.TemperatureC <= filter.Value),
             _ => weathers
         };
     }
 
-    private static IQueryable<WeatherForecast> FilterByTemperatureFahrenheit(IQueryable<WeatherForecast> weathers, OperationParam<int> filter)
+    private static IQueryable<WeatherForecast> FilterByTemperatureFahrenheit(IQueryable<WeatherForecast> weathers, OperationParam<double> filter)
     {
         if (filter == null)
             return weathers;
@@ -131,8 +132,8 @@ public class WeatherForecastService : IWeatherForecastService
         {
             Operation.GreaterThan => weathers.Where(w => w.TemperatureC.ToFahrenheit() > filter.Value),
             Operation.LessThan => weathers.Where(w => w.TemperatureC.ToFahrenheit() < filter.Value),
-            Operation.Equal => weathers.Where(w => w.TemperatureC.ToFahrenheit() == filter.Value),
-            Operation.NotEqual => weathers.Where(w => w.TemperatureC.ToFahrenheit() != filter.Value),
+            Operation.Equal => weathers.Where(w => Math.Abs(w.TemperatureC.ToFahrenheit() - filter.Value) < Tolerance),
+            Operation.NotEqual => weathers.Where(w => Math.Abs(w.TemperatureC.ToFahrenheit() - filter.Value) > Tolerance),
             Operation.GreaterThanOrEqual => weathers.Where(w => w.TemperatureC.ToFahrenheit() >= filter.Value),
             Operation.LessThanOrEqual => weathers.Where(w => w.TemperatureC.ToFahrenheit() <= filter.Value),
             _ => weathers

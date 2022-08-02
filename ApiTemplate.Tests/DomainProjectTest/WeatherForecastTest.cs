@@ -6,6 +6,8 @@ namespace ApiTemplate.Tests.DomainProjectTest;
 
 public class WeatherForecastTest
 {
+    private const double Tolerance = 1e-6;
+
     [Fact]
     public void ShouldBeAbleToCreateAWeatherForecast()
     {
@@ -31,7 +33,7 @@ public class WeatherForecastTest
         };
         Assert.True(weatherForecast.Id != Guid.Empty
                     && weatherForecast.Date != default
-                    && weatherForecast.TemperatureC == 10
+                    && Math.Abs(weatherForecast.TemperatureC - 10) < Tolerance
                     && !string.IsNullOrEmpty(weatherForecast.Summary));
     }
 }

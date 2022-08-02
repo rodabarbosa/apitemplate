@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace ApiTemplate.Application.Jwt.Models;
 
 /// <inheritdoc />
-public class SigningConfiguration : ISigningConfiguration
+public sealed class SigningConfiguration : ISigningConfiguration
 {
     /// <inheritdoc />
     public SecurityKey Key { get; }

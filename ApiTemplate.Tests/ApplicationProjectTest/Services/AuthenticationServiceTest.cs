@@ -7,16 +7,14 @@ using ApiTemplate.Domain.Interfaces;
 using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.Tests.Utils;
+using System;
 using Xunit;
 
 namespace ApiTemplate.Tests.ApplicationProjectTest.Services;
 
-public class AuthenticationServiceTest
+public sealed class AuthenticationServiceTest : IDisposable
 {
-    private readonly ISigningConfiguration _signingConfiguration;
-    private readonly ITokenConfiguration _tokenConfiguration;
     private readonly IAuthenticationService _authenticationService;
-    private readonly IUserRepository _userRepository;
     private readonly ApiTemplateContext _context;
 
     private const string AudienceIssuer = "teste";
@@ -25,13 +23,13 @@ public class AuthenticationServiceTest
     public AuthenticationServiceTest()
     {
         // Arrange
-        _signingConfiguration = new SigningConfiguration();
-        _tokenConfiguration = new TokenConfiguration {Audience = AudienceIssuer, Issuer = AudienceIssuer, Seconds = Expires};
+        ISigningConfiguration signingConfiguration = new SigningConfiguration();
+        ITokenConfiguration tokenConfiguration = new TokenConfiguration { Audience = AudienceIssuer, Issuer = AudienceIssuer, Seconds = Expires };
 
         _context = ContextUtil.GetContext();
-        _userRepository = new UserRepository(_context);
+        IUserRepository userRepository = new UserRepository(_context);
 
-        _authenticationService = new AuthenticationService(_signingConfiguration, _tokenConfiguration, _userRepository);
+        _authenticationService = new AuthenticationService(signingConfiguration, tokenConfiguration, userRepository);
     }
 
     [Theory]
@@ -47,5 +45,10 @@ public class AuthenticationServiceTest
             Assert.True(result.Authenticated);
         else
             Assert.False(result.Authenticated);
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

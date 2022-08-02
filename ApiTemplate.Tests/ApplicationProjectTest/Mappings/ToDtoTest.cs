@@ -27,7 +27,7 @@ public class ToDtoTest
     [Fact]
     public void Should_Map_To_A_Null_Dto()
     {
-        WeatherForecast entity = default;
+        WeatherForecast? entity = default;
 
         var dto = entity.ToDto();
         // Assert
@@ -63,7 +63,7 @@ public class ToDtoTest
     [Fact]
     public void Should_Map_To_A_Null_Collection_Of_Dto()
     {
-        List<WeatherForecast> entities = default;
+        List<WeatherForecast>? entities = default;
 
         var dtos = entities.ToDtos();
         // Assert

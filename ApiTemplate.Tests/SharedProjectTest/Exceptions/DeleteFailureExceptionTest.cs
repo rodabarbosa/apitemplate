@@ -51,11 +51,11 @@ public class DeleteFailureExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<DeleteFailureException>(() => { DeleteFailureException.When(condition, message); });
+            Assert.Throws<DeleteFailureException>(() => { DeleteFailureException.ThrowIf(condition, message); });
         }
         else
         {
-            DeleteFailureException.When(condition, message);
+            DeleteFailureException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -71,9 +71,11 @@ public class DeleteFailureExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (DeleteFailureException) formatter.Deserialize(s);
+            e = (DeleteFailureException)formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

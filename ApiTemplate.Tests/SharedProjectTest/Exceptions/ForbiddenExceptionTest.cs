@@ -51,11 +51,11 @@ public class ForbiddenExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<ForbiddenException>(() => { ForbiddenException.When(condition, message); });
+            Assert.Throws<ForbiddenException>(() => { ForbiddenException.ThrowIf(condition, message); });
         }
         else
         {
-            ForbiddenException.When(condition, message);
+            ForbiddenException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -71,9 +71,11 @@ public class ForbiddenExceptionTest
         using (Stream s = new MemoryStream())
         {
             var formatter = new BinaryFormatter();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
             e = (ForbiddenException) formatter.Deserialize(s);
+#pragma warning restore SYSLIB0011
         }
 
         // Assert

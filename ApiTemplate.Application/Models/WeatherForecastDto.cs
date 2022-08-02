@@ -6,7 +6,7 @@ namespace ApiTemplate.Application.Models;
 /// <summary>
 /// WeatherForecast model
 /// </summary>
-public class WeatherForecastDto
+public sealed class WeatherForecastDto
 {
     /// <summary>
     /// Gets or sets weatherforecast identification

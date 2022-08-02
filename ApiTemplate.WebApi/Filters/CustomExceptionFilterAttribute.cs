@@ -11,7 +11,7 @@ namespace ApiTemplate.WebApi.Filters;
 /// This class is used to handle exceptions thrown by the application.
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
-public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
+public sealed class CustomExceptionFilterAttribute : ExceptionFilterAttribute
 {
     private const string MediaType = "application/json";
 
@@ -21,7 +21,7 @@ public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     /// <param name="context"></param>
     public override void OnException(ExceptionContext context)
     {
-        object content = new {message = context.Exception.Message};
+        object content = new { message = context.Exception.Message };
         HttpStatusCode code;
         switch (context.Exception.GetType().Name)
         {
@@ -50,7 +50,7 @@ public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
 
             case nameof(ValidationException):
                 code = HttpStatusCode.NotAcceptable;
-                content = ((ValidationException) context.Exception).Failures;
+                content = ((ValidationException)context.Exception).Failures;
                 break;
 
             default:
@@ -63,7 +63,7 @@ public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
                 break;
         }
 
-        BuildContext(context, (int) code, content);
+        BuildContext(context, (int)code, content);
     }
 
     private static void BuildContext(ExceptionContext context, int code, object content)

@@ -17,9 +17,11 @@ public class RequestHandlerMiddlewareTest
         const string expectedOutput = "Request handed over to next request delegate";
 
         // Arrange
-        var defaultContext = new DefaultHttpContext();
-        defaultContext.Response.Body = new MemoryStream();
-        defaultContext.Request.Path = "/";
+        var defaultContext = new DefaultHttpContext
+        {
+            Response = { Body = new MemoryStream() },
+            Request = { Path = "/" }
+        };
 
         // Act
         var middlewareInstance = new RequestHandlerMiddleware(innerHttpContext =>
@@ -28,7 +30,7 @@ public class RequestHandlerMiddlewareTest
             return Task.CompletedTask;
         });
 
-        middlewareInstance.Invoke(defaultContext);
+        _ = middlewareInstance.Invoke(defaultContext);
 
         defaultContext.Response.Body.Seek(0, SeekOrigin.Begin);
         var body = new StreamReader(defaultContext.Response.Body).ReadToEnd();
@@ -38,17 +40,15 @@ public class RequestHandlerMiddlewareTest
     [Fact]
     public void Invoke_WhenCalled_ReturnsException()
     {
-        const string expectedOutput = "Request handed over to next request delegate";
-
         // Arrange
         var defaultContext = new DefaultHttpContext();
         defaultContext.Response.Body = new MemoryStream();
         defaultContext.Request.Path = "/";
 
         // Act
-        var middlewareInstance = new RequestHandlerMiddleware(innerHttpContext => { throw new Exception("TEST Exception"); });
+        var middlewareInstance = new RequestHandlerMiddleware(_ => throw new Exception("TEST Exception"));
 
-        middlewareInstance.Invoke(defaultContext);
+        _ = middlewareInstance.Invoke(defaultContext) ?? throw new ArgumentNullException($"middlewareInstance.Invoke(defaultContext)");
 
         defaultContext.Response.Body.Seek(0, SeekOrigin.Begin);
         var body = new StreamReader(defaultContext.Response.Body).ReadToEnd();

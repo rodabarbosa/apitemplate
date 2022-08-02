@@ -4,9 +4,9 @@ using Xunit;
 
 namespace ApiTemplate.Tests.SharedProjectTest.Extensions;
 
-public class JsonExtensionTest
+public sealed class JsonExtensionTest
 {
-    private static readonly string JsonTest = "{\"Code\":1,\"Error\":\"Test Error\",\"Exception\":\"Test Exception\",\"StackTrace\":\"Test StackTrace\"}";
+    private const string JsonTest = "{\"code\":1,\"error\":\"Test Error\",\"exception\":\"Test Exception\",\"stackTrace\":\"Test StackTrace\"}";
 
     [Fact]
     public void ToJson_Should_Return_Json_String()

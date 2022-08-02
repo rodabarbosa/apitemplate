@@ -10,20 +10,19 @@ using Xunit;
 
 namespace ApiTemplate.Tests.ApplicationProjectTest.Services;
 
-public class WeatherForecastServiceTest
+public sealed class WeatherForecastServiceTest : IDisposable
 {
-    private readonly WeatherForecastService _weatherForecastService;
-    private readonly WeatherForecastRepository _weatherForecastRepository;
     private readonly ApiTemplateContext _context;
+    private readonly WeatherForecastService _weatherForecastService;
 
     public WeatherForecastServiceTest()
     {
-        var builder = new DbContextOptionsBuilder<ApiTemplateContext>();
-        builder.UseInMemoryDatabase("ApiTemplate");
-        _context = new ApiTemplateContext(builder.Options);
+        var optionsBuilder = new DbContextOptionsBuilder<ApiTemplateContext>()
+            .UseInMemoryDatabase("ApiTemplate");
+        _context = new ApiTemplateContext(optionsBuilder.Options);
 
-        _weatherForecastRepository = new WeatherForecastRepository(_context);
-        _weatherForecastService = new WeatherForecastService(_weatherForecastRepository);
+        var weatherForecastRepository = new WeatherForecastRepository(_context);
+        _weatherForecastService = new WeatherForecastService(weatherForecastRepository);
     }
 
     [Fact]
@@ -33,11 +32,11 @@ public class WeatherForecastServiceTest
         var result = _weatherForecastService.GetWeatherForecasts(null, null, null);
 
         // Assert
-        Assert.NotEmpty(result);
+        var weatherForecastDtos = result as WeatherForecastDto[] ?? result.ToArray();
+        Assert.NotEmpty(weatherForecastDtos);
 
-        var single = _weatherForecastService.GetWeatherForecast(result.First().Id.Value);
+        var single = _weatherForecastService.GetWeatherForecast(weatherForecastDtos.First().Id!.Value);
         Assert.NotNull(single);
-        ;
     }
 
     [Fact]
@@ -54,7 +53,7 @@ public class WeatherForecastServiceTest
         // Assert
         Assert.Empty(result);
 
-        result = _weatherForecastService.GetWeatherForecasts(null, new OperationParam<int>
+        result = _weatherForecastService.GetWeatherForecasts(null, new OperationParam<double>
         {
             Operation = Operation.Equal,
             Value = 300
@@ -64,7 +63,7 @@ public class WeatherForecastServiceTest
         Assert.Empty(result);
 
         result = _weatherForecastService.GetWeatherForecasts(null, null,
-            new OperationParam<int>
+            new OperationParam<double>
             {
                 Operation = Operation.Equal,
                 Value = 3000
@@ -78,7 +77,7 @@ public class WeatherForecastServiceTest
                 Operation = Operation.Equal,
                 Value = DateTime.Now.AddDays(1)
             },
-            new OperationParam<int>
+            new OperationParam<double>
             {
                 Operation = Operation.Equal,
                 Value = 300
@@ -94,7 +93,7 @@ public class WeatherForecastServiceTest
                 Value = DateTime.Now.AddDays(1)
             },
             null,
-            new OperationParam<int>
+            new OperationParam<double>
             {
                 Operation = Operation.Equal,
                 Value = 3000
@@ -108,12 +107,12 @@ public class WeatherForecastServiceTest
                 Operation = Operation.Equal,
                 Value = DateTime.Now.AddDays(1)
             },
-            new OperationParam<int>
+            new OperationParam<double>
             {
                 Operation = Operation.Equal,
                 Value = 300
             },
-            new OperationParam<int>
+            new OperationParam<double>
             {
                 Operation = Operation.Equal,
                 Value = 3000
@@ -156,7 +155,7 @@ public class WeatherForecastServiceTest
         weather.Summary = "Summary 1";
 
         // Act
-        _weatherForecastService.UpdateWeatherForecast(weather.Id.Value, weather);
+        _weatherForecastService.UpdateWeatherForecast(weather.Id!.Value, weather);
 
         // Assert
         Assert.Equal(weather.TemperatureC, _weatherForecastService.GetWeatherForecast(weather.Id.Value).TemperatureC);
@@ -171,9 +170,14 @@ public class WeatherForecastServiceTest
         var weather = weathers.First();
 
         // Act
-        _weatherForecastService.DeleteWeatherForecast(weather.Id.Value);
+        _weatherForecastService.DeleteWeatherForecast(weather.Id!.Value);
 
         // Assert
         Assert.Null(_weatherForecastService.GetWeatherForecast(weather.Id.Value));
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

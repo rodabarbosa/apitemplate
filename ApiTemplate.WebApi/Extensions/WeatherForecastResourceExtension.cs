@@ -45,16 +45,16 @@ public static class WeatherForecastResourceExtension
     /// </summary>
     /// <param name="param"></param>
     /// <returns></returns>
-    public static OperationParam<int>? ExtractTemperatureCelsiusParam(this string param) => GetTemperature(param, "temperatureC");
+    public static OperationParam<double>? ExtractTemperatureCelsiusParam(this string param) => GetTemperature(param, "temperatureC");
 
     /// <summary>
     /// Extracts the temperature fahrenheit param.
     /// </summary>
     /// <param name="param"></param>
     /// <returns></returns>
-    public static OperationParam<int>? ExtractTemperatureFahrenheitParam(this string param) => GetTemperature(param, "temperatureF");
+    public static OperationParam<double>? ExtractTemperatureFahrenheitParam(this string param) => GetTemperature(param, "temperatureF");
 
-    private static OperationParam<int>? GetTemperature(string param, string key)
+    private static OperationParam<double>? GetTemperature(string param, string key)
     {
         var lowercaseKey = key.ToLower();
         if (string.IsNullOrEmpty(param) || !param.ToLower().Contains($"{lowercaseKey}="))
@@ -65,12 +65,14 @@ public static class WeatherForecastResourceExtension
         {
             if (!item.ToLower().StartsWith($"{lowercaseKey}="))
                 continue;
-            string[] date = item.Split('=');
-            var operationParam = CleanParam(date[1]).Split(',');
-            Operation operation = operationParam[0].ToOperation();
-            int value = int.Parse(operationParam[1]);
 
-            return new OperationParam<int>
+            string[] data = item.Split('=');
+            var operationParam = CleanParam(data[1]).Split(',');
+            Operation operation = operationParam[0].ToOperation();
+
+            double.TryParse(operationParam[1], out double value);
+
+            return new OperationParam<double>
             {
                 Value = value,
                 Operation = operation

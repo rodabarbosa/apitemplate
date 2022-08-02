@@ -3,7 +3,7 @@
 namespace ApiTemplate.Application.Jwt.Models;
 
 /// <inheritdoc />
-public class TokenConfiguration : ITokenConfiguration
+public sealed class TokenConfiguration : ITokenConfiguration
 {
     /// <inheritdoc />
     public string Audience { get; set; }

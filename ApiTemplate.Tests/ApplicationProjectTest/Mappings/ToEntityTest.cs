@@ -29,7 +29,7 @@ public class ToEntityTest
     public void Should_Map_To_Null_Entity()
     {
         // Arrange
-        WeatherForecastDto dto = default;
+        WeatherForecastDto? dto = default;
 
         var entity = dto.ToEntity();
 
@@ -67,7 +67,7 @@ public class ToEntityTest
     public void Should_Map_To_Null_Collection_Of_Entity()
     {
         // Arrange
-        List<WeatherForecastDto> listDto = default;
+        List<WeatherForecastDto>? listDto = default;
 
         var entity = listDto.ToEntities();
 
