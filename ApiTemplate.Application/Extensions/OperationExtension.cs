@@ -4,7 +4,7 @@ using ApiTemplate.Application.Enumerators;
 namespace ApiTemplate.Application.Extensions;
 
 /// <summary>
-///
+/// Operation Extension
 /// </summary>
 public static class OperationExtension
 {

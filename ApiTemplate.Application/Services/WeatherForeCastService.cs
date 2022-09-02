@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ApiTemplate.Application.Enumerators;
+﻿using ApiTemplate.Application.Enumerators;
 using ApiTemplate.Application.Interfaces;
 using ApiTemplate.Application.Mappings;
 using ApiTemplate.Application.Models;
@@ -10,14 +7,17 @@ using ApiTemplate.Domain.Entities;
 using ApiTemplate.Domain.Interfaces;
 using ApiTemplate.Shared.Exceptions;
 using ApiTemplate.Shared.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ApiTemplate.Application.Services;
 
 /// <inheritdoc />
 public sealed class WeatherForecastService : IWeatherForecastService
 {
-    private readonly IWeatherForecastRepository _weatherForecastRepository;
     private const double Tolerance = 1e-6;
+    private readonly IWeatherForecastRepository _weatherForecastRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeatherForecastService"/> class.
@@ -43,6 +43,9 @@ public sealed class WeatherForecastService : IWeatherForecastService
     public WeatherForecastDto GetWeatherForecast(Guid id)
     {
         var weather = _weatherForecastRepository.Get(id);
+
+        NotFoundException.ThrowIf(weather is null, $"Weather forecast with id {id} not found");
+
         return weather?.ToDto();
     }
 
@@ -61,6 +64,7 @@ public sealed class WeatherForecastService : IWeatherForecastService
     public WeatherForecastDto UpdateWeatherForecast(Guid id, WeatherForecastDto weatherForecast)
     {
         var weather = _weatherForecastRepository.Get(id);
+
         NotFoundException.ThrowIf(weather is null, $"WeatherForecast with id {id} not found");
 
         Validate(weatherForecast);
@@ -73,20 +77,21 @@ public sealed class WeatherForecastService : IWeatherForecastService
         return weather.ToDto();
     }
 
+    /// <inheritdoc />
+    public void DeleteWeatherForecast(Guid id)
+    {
+        var weather = _weatherForecastRepository.Get(id);
+
+        NotFoundException.ThrowIf(weather is null, $"WeatherForecast with id {id} not found");
+
+        _weatherForecastRepository.Delete(weather!.Id);
+    }
+
     private static void Validate(WeatherForecastDto weatherForecast)
     {
         var validator = new WeatherForecastValidator();
         var validationResult = validator.Validate(weatherForecast);
         ValidationException.ThrowIf(!validationResult.IsValid, validationResult.Errors);
-    }
-
-    /// <inheritdoc />
-    public void DeleteWeatherForecast(Guid id)
-    {
-        var weather = _weatherForecastRepository.Get(id);
-        NotFoundException.ThrowIf(weather is null, $"WeatherForecast with id {id} not found");
-
-        _weatherForecastRepository.Delete(weather!.Id);
     }
 
     private static IQueryable<WeatherForecast> FilterByDate(IQueryable<WeatherForecast> weathers, OperationParam<DateTime> filter)

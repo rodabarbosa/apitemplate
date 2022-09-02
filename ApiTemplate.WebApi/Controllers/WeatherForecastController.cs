@@ -4,6 +4,7 @@ using ApiTemplate.WebApi.Controllers.Base;
 using ApiTemplate.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace ApiTemplate.WebApi.Controllers;
 
@@ -44,13 +45,11 @@ public class WeatherForecastController : BaseAuthController
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<WeatherForecastDto>), StatusCodes.Status200OK)]
     [AllowAnonymous]
-#pragma warning disable CS1998
-    public async Task<ActionResult<IEnumerable<WeatherForecastDto>>> Get(string param)
-#pragma warning restore CS1998
+    public async Task<ActionResult<IEnumerable<WeatherForecastDto>>> Get(string param = null)
     {
-        OperationParam<DateTime>? date = param.ExtractDateParam();
-        OperationParam<double>? temperatureC = param.ExtractTemperatureCelsiusParam();
-        OperationParam<double>? temperatureF = param.ExtractTemperatureFahrenheitParam();
+        var date = param.ExtractDateParam();
+        var temperatureC = param.ExtractTemperatureCelsiusParam();
+        var temperatureF = param.ExtractTemperatureFahrenheitParam();
 
         var result = _weatherForecastService.GetWeatherForecasts(date, temperatureC, temperatureF);
         return Ok(result);
@@ -64,7 +63,10 @@ public class WeatherForecastController : BaseAuthController
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public Task<ActionResult<WeatherForecastDto>> Get(Guid id) => Task.FromResult<ActionResult<WeatherForecastDto>>(_weatherForecastService.GetWeatherForecast(id));
+    public Task<ActionResult<WeatherForecastDto>> Get(Guid id)
+    {
+        return Task.FromResult<ActionResult<WeatherForecastDto>>(_weatherForecastService.GetWeatherForecast(id));
+    }
 
     /// <summary>
     ///   Create a new weather forecast
@@ -72,8 +74,15 @@ public class WeatherForecastController : BaseAuthController
     /// <param name="weatherForecast"></param>
     /// <returns></returns>
     [HttpPost]
-    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
-    public Task<ActionResult<WeatherForecastDto>> Post([FromBody] WeatherForecastDto weatherForecast) => Task.FromResult<ActionResult<WeatherForecastDto>>(_weatherForecastService.AddWeatherForecast(weatherForecast));
+    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status201Created)]
+    public async Task<ActionResult<WeatherForecastDto>> Post([FromBody] WeatherForecastDto weatherForecast)
+    {
+        var result = _weatherForecastService.AddWeatherForecast(weatherForecast);
+
+        Response.StatusCode = (int)HttpStatusCode.Created;
+
+        return result;
+    }
 
     /// <summary>
     ///  Update a weather forecast
@@ -82,18 +91,26 @@ public class WeatherForecastController : BaseAuthController
     /// <param name="weatherForecast"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
-    public Task<ActionResult<WeatherForecastDto>> Put(Guid id, [FromBody] WeatherForecastDto weatherForecast) => Task.FromResult<ActionResult<WeatherForecastDto>>(_weatherForecastService.UpdateWeatherForecast(id, weatherForecast));
+    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status204NoContent)]
+    public async Task<ActionResult<WeatherForecastDto>> Put(Guid id, [FromBody] WeatherForecastDto weatherForecast)
+    {
+        var result = _weatherForecastService.UpdateWeatherForecast(id, weatherForecast);
+
+        Response.StatusCode = (int)HttpStatusCode.NoContent;
+
+        return result;
+    }
 
     /// <summary>
     ///  Delete a weather forecast
     /// </summary>
     /// <param name="id"></param>
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public Task<ActionResult> Delete(Guid id)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Delete(Guid id)
     {
         _weatherForecastService.DeleteWeatherForecast(id);
-        return Task.FromResult<ActionResult>(Ok());
+
+        return NoContent();
     }
 }

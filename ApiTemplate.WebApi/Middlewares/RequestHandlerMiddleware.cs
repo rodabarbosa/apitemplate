@@ -1,6 +1,7 @@
-using System.Net;
+using ApiTemplate.Shared.Exceptions;
 using ApiTemplate.Shared.Extensions;
 using ApiTemplate.Shared.Models;
+using System.Net;
 
 namespace ApiTemplate.WebApi.Middlewares;
 
@@ -9,9 +10,9 @@ namespace ApiTemplate.WebApi.Middlewares;
 /// </summary>
 public sealed class RequestHandlerMiddleware
 {
-    private readonly RequestDelegate _next;
     private const string MediaType = "application/json";
     private const string UnauthorizedMessage = "Unauthorized access";
+    private readonly RequestDelegate _next;
 
     /// <summary>
     /// ErrorHandlingMiddleware
@@ -47,9 +48,18 @@ public sealed class RequestHandlerMiddleware
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var code = HttpStatusCode.InternalServerError; // 500 if unexpected
-
-        if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
+        var code = exception switch
+        {
+            UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+            UnauthorizedException => HttpStatusCode.Unauthorized,
+            NotFoundException => HttpStatusCode.NotFound,
+            DeleteFailureException => HttpStatusCode.BadRequest,
+            ForbiddenException => HttpStatusCode.Forbidden,
+            NotificationFailureException => HttpStatusCode.BadRequest,
+            SaveFailureException => HttpStatusCode.BadRequest,
+            ValidationException => HttpStatusCode.BadRequest,
+            _ => HttpStatusCode.InternalServerError
+        };
 
         context.Response.ContentType = MediaType;
         context.Response.StatusCode = (int)code;
