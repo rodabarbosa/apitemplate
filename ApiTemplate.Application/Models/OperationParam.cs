@@ -16,5 +16,5 @@ public sealed class OperationParam<T>
     /// <summary>
     /// Defines search value
     /// </summary>
-    public T Value { get; set; }
+    public T Value { get; set; } = default!;
 }

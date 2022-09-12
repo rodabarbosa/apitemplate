@@ -8,15 +8,15 @@ public class DeleteFailureException : Exception
 {
     private const string DefaultMessage = "Delete has failed";
 
-    public DeleteFailureException(string message = DefaultMessage) : this(message, null)
+    public DeleteFailureException(string? message = DefaultMessage) : this(message, null)
     {
     }
 
-    public DeleteFailureException(Exception innerException) : this(DefaultMessage, innerException)
+    public DeleteFailureException(Exception? innerException) : this(DefaultMessage, innerException)
     {
     }
 
-    public DeleteFailureException(string message, Exception innerException) : base(message, innerException)
+    public DeleteFailureException(string? message, Exception? innerException) : base(DefineMessage(message, DefaultMessage), innerException)
     {
     }
 
@@ -24,7 +24,12 @@ public class DeleteFailureException : Exception
     {
     }
 
-    public static void ThrowIf(bool condition, string message = DefaultMessage, Exception innerException = null)
+    private static string? DefineMessage(string? message, string? fallbackMessage)
+    {
+        return string.IsNullOrEmpty(message?.Trim()) ? fallbackMessage : message;
+    }
+
+    public static void ThrowIf(bool condition, string? message = DefaultMessage, Exception? innerException = null)
     {
         if (condition)
             throw new DeleteFailureException(message, innerException);

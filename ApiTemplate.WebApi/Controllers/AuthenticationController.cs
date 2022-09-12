@@ -1,9 +1,8 @@
-using ApiTemplate.Application.Interfaces;
-using ApiTemplate.Application.Models;
+using ApiTemplate.Application.Contracts;
+using ApiTemplate.Application.Services;
 using ApiTemplate.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace ApiTemplate.WebApi.Controllers;
 
@@ -12,28 +11,19 @@ namespace ApiTemplate.WebApi.Controllers;
 /// </summary>
 public class AuthenticationController : BaseController
 {
-    private readonly IAuthenticationService _authenticationService;
-
-    /// <summary>
-    /// </summary>
-    /// <param name="authenticationService"></param>
-    public AuthenticationController(IAuthenticationService authenticationService)
-    {
-        _authenticationService = authenticationService;
-    }
-
     /// <summary>
     ///     Authenticate user
     /// </summary>
-    /// <param name="input">Authentication data</param>
+    /// <param name="service"></param>
+    /// <param name="request">Authentication data</param>
     /// <returns></returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult<TokenModel>> PostAsync([FromBody] AuthenticationModel input)
+    [ProducesResponseType(typeof(AuthenticateResponseContract), StatusCodes.Status200OK)]
+    public async Task<ActionResult<AuthenticateResponseContract>> PostAsync([FromServices] IAuthenticateService service, [FromBody] AuthenticateRequestContract request)
     {
-        var response = await _authenticationService.Authenticate(input.Username, input.Password);
+        var response = await service.Authenticate(request);
 
-        Response.StatusCode = (int)HttpStatusCode.Created;
-        return response;
+        return Ok(response);
     }
 }

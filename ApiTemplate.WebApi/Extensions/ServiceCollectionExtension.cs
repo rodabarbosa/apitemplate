@@ -1,9 +1,9 @@
-using System.Reflection;
-using ApiTemplate.Application.Interfaces;
 using ApiTemplate.Application.Jwt.Interfaces;
 using ApiTemplate.Application.Jwt.Models;
 using ApiTemplate.Application.Services;
-using ApiTemplate.Domain.Interfaces;
+using ApiTemplate.Application.Services.Authentication;
+using ApiTemplate.Application.Services.WeatherForecasts;
+using ApiTemplate.Domain.Repositories;
 using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.WebApi.Filters;
@@ -14,30 +14,31 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace ApiTemplate.WebApi.Extensions;
 
 /// <summary>
 /// ServiceCollection Extensions
 /// </summary>
-public static class ServiceCollectionExtension
+static public class ServiceCollectionExtension
 {
     /// <summary>
     /// Add JWT configuration to services
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
-    public static void AddJwtService(this IServiceCollection services, IConfiguration configuration)
+    static public void AddJwtService(this IServiceCollection services, IConfiguration configuration)
     {
         var signingConfigurations = new SigningConfiguration();
-        services.AddSingleton(typeof(ISigningConfiguration), signingConfigurations);
+        _ = services.AddSingleton(typeof(ISigningConfiguration), signingConfigurations);
 
         var tokenConfigurations = new TokenConfiguration();
         new ConfigureFromConfigurationOptions<TokenConfiguration>(configuration.GetSection("TokenConfiguration"))
             .Configure(tokenConfigurations);
-        services.AddSingleton(typeof(ITokenConfiguration), tokenConfigurations);
+        _ = services.AddSingleton(typeof(ITokenConfiguration), tokenConfigurations);
 
-        services.AddAuthentication(options =>
+        _ = services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,7 +67,7 @@ public static class ServiceCollectionExtension
                 paramsValidation.ClockSkew = TimeSpan.Zero;
             });
 
-        services.AddAuthorization(options =>
+        _ = services.AddAuthorization(options =>
         {
             options.InvokeHandlersAfterFailure = true;
             options.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
@@ -79,17 +80,17 @@ public static class ServiceCollectionExtension
     ///    Add swagger configuration to services.
     /// </summary>
     /// <param name="services"></param>
-    public static void ConfigureSwagger(this IServiceCollection services)
+    static public void ConfigureSwagger(this IServiceCollection services)
     {
-        services.AddVersionedApiExplorer(options =>
+        _ = services.AddVersionedApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
 
-        services.AddApiVersioning();
+        _ = services.AddApiVersioning();
 
-        services.AddSwaggerGen(options =>
+        _ = services.AddSwaggerGen(options =>
         {
             var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
             foreach (var description in provider.ApiVersionDescriptions)
@@ -102,7 +103,7 @@ public static class ServiceCollectionExtension
                     Contact = new OpenApiContact
                     {
                         Email = default,
-                        Name = "Rodrigo A. Barbosa",
+                        Name = "Rod Barbosa",
                         Url = default
                     },
                     License = default
@@ -142,24 +143,28 @@ public static class ServiceCollectionExtension
     ///   Add Database configuration to services.
     /// </summary>
     /// <param name="services"></param>
-    public static void AddDataProviders(this IServiceCollection services)
+    static public void AddDataProviders(this IServiceCollection services)
     {
-        services.AddDbContext<ApiTemplateContext>(o => o.UseInMemoryDatabase("ApiTemplate"));
+        _ = services.AddDbContext<ApiTemplateContext>(o => o.UseInMemoryDatabase("ApiTemplate"));
 
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
-        services.AddScoped<IWeatherForecastService, WeatherForecastService>();
+        _ = services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
+        _ = services.AddScoped<IAuthenticateService, AuthenticateService>();
+        _ = services.AddScoped<ICreateWeatherForecastService, CreateWeatherForecastService>();
+        _ = services.AddScoped<IDeleteWeatherForecastService, DeleteWeatherForecastService>();
+        _ = services.AddScoped<IGetWeatherForecastService, GetWeatherForecastService>();
+        _ = services.AddScoped<IGetAllWeatherForecastsService, GetAllWeatherForecastsService>();
+        _ = services.AddScoped<IUpdateWeatherForecastService, UpdateWeatherForecastService>();
 
-        services.AddScoped<IUserRepository, UserRepository>();
+        _ = services.AddScoped<IUserRepository, UserRepository>();
     }
 
     /// <summary>
     /// Configure error handling.
     /// </summary>
     /// <param name="services"></param>
-    public static void ConfigureDefaultErrorHandler(this IServiceCollection services)
+    static public void ConfigureDefaultErrorHandler(this IServiceCollection services)
     {
-        services.Configure<ApiBehaviorOptions>(options =>
+        _ = services.Configure<ApiBehaviorOptions>(options =>
         {
             options.SuppressModelStateInvalidFilter = true;
             options.SuppressMapClientErrors = true;

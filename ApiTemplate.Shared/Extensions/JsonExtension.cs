@@ -25,7 +25,13 @@ public static class JsonExtension
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    public static string ToJson(this object value) => JsonSerializer.Serialize(value, _jsonSerializerOptionsSerialization);
+    public static string ToJson(this object value)
+    {
+        return JsonSerializer.Serialize(value, _jsonSerializerOptionsSerialization);
+    }
 
-    public static T FromJson<T>(this string value) where T : class => JsonSerializer.Deserialize<T>(value, _jsonSerializerOptionsDeserialization);
+    public static T? FromJson<T>(this string value) where T : class
+    {
+        return JsonSerializer.Deserialize<T?>(value, _jsonSerializerOptionsDeserialization);
+    }
 }

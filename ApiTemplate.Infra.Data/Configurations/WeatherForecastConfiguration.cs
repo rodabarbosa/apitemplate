@@ -16,7 +16,7 @@ public class WeatherForecastConfiguration : IEntityTypeConfiguration<WeatherFore
         builder.Property(x => x.Date)
             .IsRequired();
 
-        builder.Property(x => x.TemperatureC)
+        builder.Property(x => x.TemperatureCelsius)
             .IsRequired();
 
         builder.Property(x => x.Summary)

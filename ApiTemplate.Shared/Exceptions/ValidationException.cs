@@ -1,8 +1,8 @@
-﻿using System;
+﻿using FluentValidation.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using FluentValidation.Results;
 
 namespace ApiTemplate.Shared.Exceptions;
 
@@ -15,24 +15,24 @@ public class ValidationException : Exception
     {
     }
 
-    public ValidationException(Exception innerException) : this(DefaultMessage, innerException)
+    public ValidationException(Exception? innerException) : this(DefaultMessage, innerException)
     {
     }
 
-    private ValidationException(string message, Exception innerException) : base(message, innerException)
+    private ValidationException(string? message, Exception? innerException) : base(DefineMessage(message, DefaultMessage), innerException)
     {
     }
 
     public ValidationException(IEnumerable<ValidationFailure> failures) : this()
     {
         IEnumerable<ValidationFailure> validationFailures = failures.ToList();
-        IEnumerable<string> propertyNames = validationFailures
+        var propertyNames = validationFailures
             .Select(e => e.PropertyName)
             .Distinct();
 
-        foreach (string propertyName in propertyNames)
+        foreach (var propertyName in propertyNames)
         {
-            string[] propertyFailures = validationFailures
+            var propertyFailures = validationFailures
                 .Where(e => e.PropertyName == propertyName)
                 .Select(e => e.ErrorMessage)
                 .ToArray();
@@ -47,13 +47,18 @@ public class ValidationException : Exception
 
     public IDictionary<string, string[]> Failures { get; } = new Dictionary<string, string[]>();
 
+    private static string? DefineMessage(string? message, string? fallbackMessage)
+    {
+        return string.IsNullOrEmpty(message?.Trim()) ? fallbackMessage : message;
+    }
+
     public static void ThrowIf(bool condition, IEnumerable<ValidationFailure> failures)
     {
         if (condition)
             throw new ValidationException(failures);
     }
 
-    public static void When(bool condition, string message = DefaultMessage, Exception innerException = null)
+    public static void When(bool condition, string? message = DefaultMessage, Exception? innerException = null)
     {
         if (condition)
             throw new ValidationException(message, innerException);

@@ -1,9 +1,9 @@
-using System.Net;
 using ApiTemplate.Shared.Exceptions;
 using ApiTemplate.Shared.Extensions;
 using ApiTemplate.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace ApiTemplate.WebApi.Filters;
 
@@ -25,6 +25,7 @@ public sealed class CustomExceptionFilterAttribute : ExceptionFilterAttribute
         HttpStatusCode code;
         switch (context.Exception.GetType().Name)
         {
+            case nameof(BadHttpRequestException):
             case nameof(DbRegisterExistsException):
             case nameof(DeleteFailureException):
             case nameof(SaveFailureException):

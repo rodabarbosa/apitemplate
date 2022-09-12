@@ -1,0 +1,34 @@
+﻿using System;
+
+namespace ApiTemplate.Application.Contracts;
+
+/// <summary>
+/// Weather forecast update request contract
+/// </summary>
+public class UpdateWeatherForecastRequestContract
+{
+    /// <summary>
+    /// Weather forecast id
+    /// </summary>
+    public Guid? Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets weatherforecast date
+    /// </summary>
+    public DateTime? Date { get; set; }
+
+    /// <summary>
+    /// Gets or sets weatherforecast temperature in Celsius
+    /// </summary>
+    public decimal? TemperatureCelsius { get; set; }
+
+    /// <summary>
+    /// Gets or sets weatherforecast temperature in Fahrenheit
+    /// </summary>
+    public decimal? TemperatureFahrenheit { get; set; }
+
+    /// <summary>
+    /// Gets or sets weatherforecast summary
+    /// </summary>
+    public string? Summary { get; set; }
+}

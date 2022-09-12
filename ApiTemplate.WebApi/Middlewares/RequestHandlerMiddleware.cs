@@ -12,6 +12,7 @@ public sealed class RequestHandlerMiddleware
 {
     private const string MediaType = "application/json";
     private const string UnauthorizedMessage = "Unauthorized access";
+    private const string DefaultErrorMessage = "An error occurred while processing your request";
     private readonly RequestDelegate _next;
 
     /// <summary>
@@ -23,15 +24,12 @@ public sealed class RequestHandlerMiddleware
         _next = next;
     }
 
-#pragma warning disable IDE1006 // Naming Styles
-
     /// <summary>
     /// Invoke
     /// </summary>
     /// <param name="context"></param>
     /// <exception cref="UnauthorizedAccessException"></exception>
     public async Task Invoke(HttpContext context)
-#pragma warning restore IDE1006 // Naming Styles
     {
         try
         {
@@ -46,10 +44,11 @@ public sealed class RequestHandlerMiddleware
         }
     }
 
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static Task HandleExceptionAsync(HttpContext context, Exception? exception)
     {
         var code = exception switch
         {
+            BadRequestException => HttpStatusCode.BadRequest,
             UnauthorizedAccessException => HttpStatusCode.Unauthorized,
             UnauthorizedException => HttpStatusCode.Unauthorized,
             NotFoundException => HttpStatusCode.NotFound,
@@ -66,9 +65,9 @@ public sealed class RequestHandlerMiddleware
         var error = new ErrorModel
         {
             Code = (int)code,
-            Error = exception.Message,
-            Exception = exception.GetType().Name,
-            StackTrace = exception.StackTrace
+            Error = exception?.Message ?? DefaultErrorMessage,
+            Exception = exception?.GetType().Name,
+            StackTrace = exception?.StackTrace
         };
 
         return context.Response.WriteAsync(error.ToJson());

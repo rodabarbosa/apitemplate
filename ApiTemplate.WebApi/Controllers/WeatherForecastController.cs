@@ -1,10 +1,8 @@
-using ApiTemplate.Application.Interfaces;
-using ApiTemplate.Application.Models;
+using ApiTemplate.Application.Contracts;
+using ApiTemplate.Application.Services;
 using ApiTemplate.WebApi.Controllers.Base;
-using ApiTemplate.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace ApiTemplate.WebApi.Controllers;
 
@@ -13,17 +11,6 @@ namespace ApiTemplate.WebApi.Controllers;
 /// </summary>
 public class WeatherForecastController : BaseAuthController
 {
-    private readonly IWeatherForecastService _weatherForecastService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WeatherForecastController"/> class.
-    /// </summary>
-    /// <param name="weatherForecastService"></param>
-    public WeatherForecastController(IWeatherForecastService weatherForecastService)
-    {
-        _weatherForecastService = weatherForecastService;
-    }
-
     /// <summary>
     ///     List all weather forecasts
     /// </summary>
@@ -40,76 +27,77 @@ public class WeatherForecastController : BaseAuthController
     ///     LessThan,
     ///     LessThanOrEqual
     /// </remarks>
+    /// <param name="service"></param>
     /// <param name="param"></param>
     /// <returns></returns>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<WeatherForecastDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<GetWeatherForecastResponseContract>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<WeatherForecastDto>>> Get(string param = null)
+    public async Task<ActionResult<IEnumerable<GetWeatherForecastResponseContract>>> Get([FromServices] IGetAllWeatherForecastsService service, string? param = null)
     {
-        var date = param.ExtractDateParam();
-        var temperatureC = param.ExtractTemperatureCelsiusParam();
-        var temperatureF = param.ExtractTemperatureFahrenheitParam();
+        var result = await service.GetAllWeatherForecastsAsync(param);
+        if (!result.Any())
+            return NoContent();
 
-        var result = _weatherForecastService.GetWeatherForecasts(date, temperatureC, temperatureF);
         return Ok(result);
     }
 
     /// <summary>
     /// Get a specific weather forecast
     /// </summary>
+    /// <param name="service"></param>
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetWeatherForecastResponseContract), StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public Task<ActionResult<WeatherForecastDto>> Get(Guid id)
+    public async Task<ActionResult<GetWeatherForecastResponseContract>> Get([FromServices] IGetWeatherForecastService service, Guid? id)
     {
-        return Task.FromResult<ActionResult<WeatherForecastDto>>(_weatherForecastService.GetWeatherForecast(id));
+        return Ok(await service.GetWeatherForecastAsync(id));
     }
 
     /// <summary>
     ///   Create a new weather forecast
     /// </summary>
-    /// <param name="weatherForecast"></param>
+    /// <param name="service"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status201Created)]
-    public async Task<ActionResult<WeatherForecastDto>> Post([FromBody] WeatherForecastDto weatherForecast)
+    [ProducesResponseType(typeof(GetWeatherForecastResponseContract), StatusCodes.Status201Created)]
+    public async Task<ActionResult<GetWeatherForecastResponseContract>> Post([FromServices] ICreateWeatherForecastService service, [FromBody] CreateWeatherForecastRequestContract request)
     {
-        var result = _weatherForecastService.AddWeatherForecast(weatherForecast);
+        var result = await service.CreateWeatherForecastAsync(request);
 
-        Response.StatusCode = (int)HttpStatusCode.Created;
-
-        return result;
+        return Created(Request.Path, result);
     }
 
     /// <summary>
     ///  Update a weather forecast
     /// </summary>
+    /// <param name="service"></param>
     /// <param name="id"></param>
-    /// <param name="weatherForecast"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    [ProducesResponseType(typeof(WeatherForecastDto), StatusCodes.Status204NoContent)]
-    public async Task<ActionResult<WeatherForecastDto>> Put(Guid id, [FromBody] WeatherForecastDto weatherForecast)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Put([FromServices] IUpdateWeatherForecastService service, Guid id, [FromBody] UpdateWeatherForecastRequestContract request)
     {
-        var result = _weatherForecastService.UpdateWeatherForecast(id, weatherForecast);
+        _ = await service.UpdateWeatherForecastAsync(id, request);
 
-        Response.StatusCode = (int)HttpStatusCode.NoContent;
-
-        return result;
+        return NoContent();
     }
 
     /// <summary>
     ///  Delete a weather forecast
     /// </summary>
+    /// <param name="service"></param>
     /// <param name="id"></param>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> Delete([FromServices] IDeleteWeatherForecastService service, Guid? id)
     {
-        _weatherForecastService.DeleteWeatherForecast(id);
+        await service.DeleteWeatherForecastAsync(id);
 
         return NoContent();
     }

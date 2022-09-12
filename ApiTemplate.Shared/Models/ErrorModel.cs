@@ -1,10 +1,15 @@
-﻿namespace ApiTemplate.Shared.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ApiTemplate.Shared.Models;
+
+public sealed class ErrorModel
 {
-    public sealed class ErrorModel
-    {
-        public int Code { get; init; }
-        public object Error { get; init; }
-        public string Exception { get; init; }
-        public string StackTrace { get; init; }
-    }
+    [JsonPropertyName("code")] public int Code { get; init; }
+    [JsonPropertyName("error")] public object? Error { get; init; }
+    [JsonPropertyName("exception")] public string? Exception { get; init; }
+
+#if !DEBUG
+    [JsonIgnore]
+#endif
+    [JsonPropertyName("stacktrace")] public string? StackTrace { get; init; }
 }

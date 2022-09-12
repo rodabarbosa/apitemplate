@@ -6,11 +6,11 @@ namespace ApiTemplate.Application.Jwt.Models;
 public sealed class TokenConfiguration : ITokenConfiguration
 {
     /// <inheritdoc />
-    public string Audience { get; set; }
+    public string Audience { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    public string Issuer { get; set; }
+    public string Issuer { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    public int Seconds { get; set; }
+    public int Seconds { get; set; } = 0;
 }

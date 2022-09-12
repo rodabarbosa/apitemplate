@@ -16,7 +16,7 @@ public class SwaggerFilter : IOperationFilter
     /// <param name="context"></param>
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        if (operation.Parameters == null) return;
+        if (operation.Parameters is null) return;
 
         foreach (var parameter in operation.Parameters)
         {
@@ -25,7 +25,7 @@ public class SwaggerFilter : IOperationFilter
 
             parameter.Description ??= description.ModelMetadata.Description;
 
-            if (routeInfo == null)
+            if (routeInfo is null)
                 continue;
 
             parameter.Required |= !routeInfo.IsOptional;
