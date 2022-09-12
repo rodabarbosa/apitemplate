@@ -23,7 +23,7 @@ public class OperationExtensionTest
     }
 
     [Theory]
-    [InlineData("date=[notequal,2019-01-01]&TemperatureC=[greaterthan,0]&TemperatureF=[equal,32]")]
+    [InlineData("date=[notequal,2019-01-01]&TemperatureCelsius=[greaterthan,0]&TemperatureFahrenheit=[equal,32]")]
     public void ToWeatherForecastResource_ShouldReturnCorrectResource(string query)
     {
         // Arrange
@@ -47,7 +47,7 @@ public class OperationExtensionTest
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void ToWeatherForecastResource_ShouldReturnNull(string query)
+    public void ToWeatherForecastResource_ShouldReturnNull(string? query)
     {
         // Arrange
         var dateOperation = query.ExtractDateParam();

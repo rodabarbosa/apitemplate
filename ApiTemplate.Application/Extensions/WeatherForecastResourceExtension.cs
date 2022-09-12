@@ -56,7 +56,7 @@ public static class WeatherForecastResourceExtension
     /// <returns></returns>
     public static OperationParam<decimal>? ExtractTemperatureFahrenheitParam(this string param)
     {
-        return GetTemperature(param, "temperatureFahreiheit");
+        return GetTemperature(param, "temperatureFahrenheit");
     }
 
     private static OperationParam<decimal>? GetTemperature(string param, string key)
