@@ -51,10 +51,7 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
 
     private static IQueryable<WeatherForecast> FilterByDate(IQueryable<WeatherForecast> weathers, OperationParam<DateTime>? filter)
     {
-        if (filter is null)
-            return weathers;
-
-        return filter.Operation switch
+        return filter?.Operation switch
         {
             Operation.GreaterThan => weathers.Where(w => w.Date > filter.Value),
             Operation.LessThan => weathers.Where(w => w.Date < filter.Value),
@@ -68,10 +65,7 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
 
     private static IQueryable<WeatherForecast> FilterByTemperatureCelsius(IQueryable<WeatherForecast> weathers, OperationParam<decimal>? filter)
     {
-        if (filter is null)
-            return weathers;
-
-        return filter.Operation switch
+        return filter?.Operation switch
         {
             Operation.GreaterThan => weathers.Where(w => w.TemperatureCelsius > filter.Value),
             Operation.LessThan => weathers.Where(w => w.TemperatureCelsius < filter.Value),
@@ -85,10 +79,7 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
 
     private static IQueryable<WeatherForecast> FilterByTemperatureFahrenheit(IQueryable<WeatherForecast> weathers, OperationParam<decimal>? filter)
     {
-        if (filter is null)
-            return weathers;
-
-        return filter.Operation switch
+        return filter?.Operation switch
         {
             Operation.GreaterThan => weathers.Where(w => w.TemperatureCelsius.ToFahrenheit() > filter.Value),
             Operation.LessThan => weathers.Where(w => w.TemperatureCelsius.ToFahrenheit() < filter.Value),

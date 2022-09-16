@@ -44,7 +44,7 @@ public static class WeatherForecastResourceExtension
     /// </summary>
     /// <param name="param"></param>
     /// <returns></returns>
-    public static OperationParam<decimal>? ExtractTemperatureCelsiusParam(this string param)
+    public static OperationParam<decimal>? ExtractTemperatureCelsiusParam(this string? param)
     {
         return GetTemperature(param, "temperatureCelsius");
     }
@@ -59,16 +59,16 @@ public static class WeatherForecastResourceExtension
         return GetTemperature(param, "temperatureFahrenheit");
     }
 
-    private static OperationParam<decimal>? GetTemperature(string param, string key)
+    private static OperationParam<decimal>? GetTemperature(string? param, string key)
     {
         var lowercaseKey = key.ToLower();
-        if (string.IsNullOrEmpty(param) || !param.ToLower().Contains($"{lowercaseKey}="))
+        if (string.IsNullOrEmpty(param?.Trim()))
             return default;
 
         var values = param.Split('&');
         foreach (var item in values)
         {
-            if (!item.ToLower().StartsWith($"{lowercaseKey}="))
+            if (!item.StartsWith($"{lowercaseKey}=", StringComparison.OrdinalIgnoreCase))
                 continue;
 
             var data = item.Split('=');

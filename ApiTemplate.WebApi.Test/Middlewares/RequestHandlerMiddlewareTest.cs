@@ -34,12 +34,35 @@ public class RequestHandlerMiddlewareTest
     }
 
     [Fact]
-    public void Invoke_WhenCalled_ReturnsException()
+    public void Invoke_WhenCalled_ReturnsUnauthorized()
     {
         // Arrange
         var defaultContext = new DefaultHttpContext
         {
-            Response = { Body = new MemoryStream() },
+            Response = { Body = new MemoryStream(), StatusCode = 401 },
+            Request = { Path = "/" }
+        };
+
+        // Act
+        var middlewareInstance = new RequestHandlerMiddleware(innerHttpContext => Task.CompletedTask);
+
+        _ = middlewareInstance.Invoke(defaultContext);
+
+        defaultContext.Response.Body.Seek(0, SeekOrigin.Begin);
+        var body = new StreamReader(defaultContext.Response.Body).ReadToEnd();
+        var response = body.FromJson<ErrorModel>();
+        Assert.NotNull(response);
+    }
+
+    [Theory]
+    [InlineData(400)]
+    [InlineData(401)]
+    public void Invoke_WhenCalled_ReturnsException(int code)
+    {
+        // Arrange
+        var defaultContext = new DefaultHttpContext
+        {
+            Response = { Body = new MemoryStream(), StatusCode = code },
             Request = { Path = "/" }
         };
 

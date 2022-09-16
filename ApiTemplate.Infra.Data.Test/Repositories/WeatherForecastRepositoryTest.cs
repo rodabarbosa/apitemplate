@@ -93,7 +93,7 @@ public class WeatherForecastRepositoryTest : IDisposable
 
         var weatherForecast = weatherForecasts.First();
 
-        _weatherForecastRepository.Delete(weatherForecast);
+        _weatherForecastRepository.Delete(weatherForecast.Id);
 
         var result = _weatherForecastRepository.Get(x => x.Id == weatherForecast.Id).FirstOrDefault();
 

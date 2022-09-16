@@ -5,6 +5,7 @@ using ApiTemplate.Domain.Repositories;
 using ApiTemplate.Infra.Data;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.Shared.Exceptions;
+using ApiTemplate.Shared.Extensions;
 
 namespace ApiTemplate.Application.Test.Services;
 
@@ -43,18 +44,53 @@ public sealed class WeatherForecastServiceTest : IDisposable
         await Assert.ThrowsAsync<NotFoundException>(() => service.GetWeatherForecastAsync(id));
     }
 
-    [Fact]
-    public async Task GetForecast_Returns_WeatherForecast_With_Filter()
+    [Theory]
+    [InlineData("date", "2030-01-01 00:00:00", "Equal")]
+    [InlineData("date", "2030-01-01 00:00:00", "GreaterThan")]
+    [InlineData("date", "2030-01-01 00:00:00", "GreaterThanOrEqual")]
+    [InlineData("date", "1900-01-01 00:00:00", "LessThan")]
+    [InlineData("date", "1900-01-01 00:00:00", "LessThanOrEqual")]
+    [InlineData("date", "1900-01-01 00:00:00", "Less")]
+    [InlineData("temperatureFahrenheit", "2000", "Equal")]
+    [InlineData("temperatureFahrenheit", "2000", "GreaterThan")]
+    [InlineData("temperatureFahrenheit", "2000", "GreaterThanOrEqual")]
+    [InlineData("temperatureFahrenheit", "-2000", "LessThan")]
+    [InlineData("temperatureFahrenheit", "-2000", "LessThanOrEqual")]
+    [InlineData("temperatureFahrenheit", "-2000", "Less")]
+    [InlineData("temperatureCelsius", "2000", "Equal")]
+    [InlineData("temperatureCelsius", "2000", "GreaterThan")]
+    [InlineData("temperatureCelsius", "2000", "GreaterThanOrEqual")]
+    [InlineData("temperatureCelsius", "-2000", "LessThan")]
+    [InlineData("temperatureCelsius", "-2000", "LessThanOrEqual")]
+    [InlineData("temperatureCelsius", "-2000", "Less")]
+    public async Task GetForecast_Returns_WeatherForecast_With_Filter(string key, string value, string operation)
     {
         var service = new GetAllWeatherForecastsService(_weatherForecastRepository);
         // Act
-        var date = DateTime.Now.AddDays(1).ToString("YYYY-MM-dd HH:mm:ss");
-        var param = $"date=[Equal,{date}]";
+        var param = $"dtInsert=[Equal,0]&dtUpdate=[Equal,0]&{key}=[{operation},{value}]";
 
         var result = await service.GetAllWeatherForecastsAsync(param);
 
         // Assert
+        Assert.NotNull(result);
         Assert.Empty(result);
+    }
+
+    [Theory]
+    [InlineData("date", "2030-01-01 00:00:00")]
+    [InlineData("temperatureFahrenheit", "2000")]
+    [InlineData("temperatureCelsius", "2000")]
+    public async Task GetForecast_Returns_WeatherForecast_With_Filter_NotEqual(string key, string value)
+    {
+        var service = new GetAllWeatherForecastsService(_weatherForecastRepository);
+        // Act
+        var param = $"{key}=[NotEqual,{value}]";
+
+        var result = await service.GetAllWeatherForecastsAsync(param);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotEmpty(result);
     }
 
     [Fact]
@@ -65,7 +101,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
 
         var weatherForecast = new CreateWeatherForecastRequestContract
         {
-            Date = DateTime.Now,
+            Date = DateTime.Now.AddHours(-1),
             TemperatureCelsius = 10,
             Summary = "Summary"
         };
@@ -84,11 +120,14 @@ public sealed class WeatherForecastServiceTest : IDisposable
 
         var id = Guid.Parse("43903282-c4b3-42f9-99cc-fd234ee6941d");
 
+        var celsius = 30m;
+
         var request = new UpdateWeatherForecastRequestContract
         {
             Id = id,
-            Date = DateTime.Now,
-            TemperatureCelsius = 30,
+            Date = DateTime.Now.AddHours(-1),
+            TemperatureCelsius = celsius,
+            TemperatureFahrenheit = celsius.ToFahrenheit(),
             Summary = default
         };
 

@@ -5,7 +5,7 @@ namespace ApiTemplate.Shared.Test.Extensions;
 
 public sealed class JsonExtensionTest
 {
-    private const string JsonTest = "{\"code\":1,\"error\":\"Test Error\",\"exception\":\"Test Exception\",\"stackTrace\":\"Test StackTrace\"}";
+    private const string JsonTest = "{\"code\":1,\"error\":\"Test Error\",\"exception\":\"Test Exception\",\"stacktrace\":\"Test StackTrace\"}";
 
     [Fact]
     public void ToJson_Should_Return_Json_String()

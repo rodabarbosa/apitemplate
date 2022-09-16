@@ -16,7 +16,7 @@ public class CreateWeatherForecastValidator : AbstractValidator<CreateWeatherFor
     {
         RuleFor(x => x.Date)
             .NotNull()
-            .LessThanOrEqualTo(DateTime.Now);
+            .LessThanOrEqualTo(DateTime.Now.AddMinutes(1));
 
         RuleFor(x => x.TemperatureCelsius)
             .NotNull()

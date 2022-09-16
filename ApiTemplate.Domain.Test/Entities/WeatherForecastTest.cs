@@ -7,9 +7,13 @@ public class WeatherForecastTest
     [Fact]
     public void ShouldBeAbleToCreateAWeatherForecast()
     {
-        var weatherForecast = new WeatherForecast(Guid.Empty, default, 0, default);
+        var weatherForecast1 = new WeatherForecast(Guid.Empty, default, 0, default);
+        Assert.NotNull(weatherForecast1);
+        Assert.NotEqual(weatherForecast1.Id, Guid.Empty);
 
-        Assert.NotNull(weatherForecast);
+        var weatherForecast2 = new WeatherForecast(Guid.Empty);
+        Assert.NotNull(weatherForecast2);
+        Assert.NotEqual(weatherForecast2.Id, Guid.Empty);
     }
 
     [Fact]

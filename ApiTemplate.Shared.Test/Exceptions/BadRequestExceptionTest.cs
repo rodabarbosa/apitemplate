@@ -16,6 +16,18 @@ public class BadRequestExceptionTest
     }
 
     [Fact]
+    public void BadRequestException_Should_Be_Created_With_InnerException()
+    {
+        // Act
+        var innerException = new Exception();
+        var exception = new BadRequestException(innerException);
+
+        // Assert
+        Assert.NotNull(exception);
+        Assert.NotNull(exception.InnerException);
+    }
+
+    [Fact]
     public void BadRequestException_Should_Have_Correct_Inner_Exception()
     {
         // Arrange

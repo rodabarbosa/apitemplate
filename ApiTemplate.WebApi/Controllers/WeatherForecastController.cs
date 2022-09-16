@@ -34,7 +34,7 @@ public class WeatherForecastController : BaseAuthController
     [ProducesResponseType(typeof(IEnumerable<GetWeatherForecastResponseContract>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<GetWeatherForecastResponseContract>>> Get([FromServices] IGetAllWeatherForecastsService service, string? param = null)
+    public async Task<ActionResult<IEnumerable<GetWeatherForecastResponseContract>>> GetAsync([FromServices] IGetAllWeatherForecastsService service, string? param = null)
     {
         var result = await service.GetAllWeatherForecastsAsync(param);
         if (!result.Any())
@@ -52,7 +52,7 @@ public class WeatherForecastController : BaseAuthController
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetWeatherForecastResponseContract), StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<ActionResult<GetWeatherForecastResponseContract>> Get([FromServices] IGetWeatherForecastService service, Guid? id)
+    public async Task<ActionResult<GetWeatherForecastResponseContract>> GetASync([FromServices] IGetWeatherForecastService service, Guid? id)
     {
         return Ok(await service.GetWeatherForecastAsync(id));
     }
@@ -65,7 +65,8 @@ public class WeatherForecastController : BaseAuthController
     /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(GetWeatherForecastResponseContract), StatusCodes.Status201Created)]
-    public async Task<ActionResult<GetWeatherForecastResponseContract>> Post([FromServices] ICreateWeatherForecastService service, [FromBody] CreateWeatherForecastRequestContract request)
+    public async Task<ActionResult<GetWeatherForecastResponseContract>> PostAsync([FromServices] ICreateWeatherForecastService service,
+        [FromBody] CreateWeatherForecastRequestContract request)
     {
         var result = await service.CreateWeatherForecastAsync(request);
 
@@ -81,7 +82,7 @@ public class WeatherForecastController : BaseAuthController
     /// <returns></returns>
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Put([FromServices] IUpdateWeatherForecastService service, Guid id, [FromBody] UpdateWeatherForecastRequestContract request)
+    public async Task<ActionResult> PutAsync([FromServices] IUpdateWeatherForecastService service, Guid id, [FromBody] UpdateWeatherForecastRequestContract request)
     {
         _ = await service.UpdateWeatherForecastAsync(id, request);
 
@@ -95,7 +96,7 @@ public class WeatherForecastController : BaseAuthController
     /// <param name="id"></param>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Delete([FromServices] IDeleteWeatherForecastService service, Guid? id)
+    public async Task<ActionResult> DeleteAsync([FromServices] IDeleteWeatherForecastService service, Guid? id)
     {
         await service.DeleteWeatherForecastAsync(id);
 
