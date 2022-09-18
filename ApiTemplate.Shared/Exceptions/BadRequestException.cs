@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ApiTemplate.Shared.Exceptions;
 
+[Serializable]
 public class BadRequestException : Exception
 {
     private const string DefaultMessage = "Bad Request";
@@ -15,6 +17,10 @@ public class BadRequestException : Exception
     }
 
     public BadRequestException(string? message, Exception? innerException) : base(DefineMessage(message, DefaultMessage), innerException)
+    {
+    }
+
+    protected BadRequestException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

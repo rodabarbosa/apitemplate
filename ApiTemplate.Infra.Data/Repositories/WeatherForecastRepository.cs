@@ -65,6 +65,14 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
         Delete(weather);
     }
 
+    public void Delete(WeatherForecast? weatherForecast)
+    {
+        DeleteFailureException.ThrowIf(weatherForecast is null, "Weather forecast was not informed.");
+
+        _context.WeatherForecasts!.Remove(weatherForecast!);
+        _context.SaveChanges();
+    }
+
     public Task DeleteAsync(Guid id)
     {
         var weather = Get(id);
@@ -72,14 +80,6 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
         DeleteFailureException.ThrowIf(weather is null, $"Weather forecast {id} not found");
 
         return DeleteAsync(weather);
-    }
-
-    public void Delete(WeatherForecast? weatherForecast)
-    {
-        DeleteFailureException.ThrowIf(weatherForecast is null, "Weather forecast was not informed.");
-
-        _context.WeatherForecasts!.Remove(weatherForecast!);
-        _context.SaveChanges();
     }
 
     public Task DeleteAsync(WeatherForecast? weatherForecast)
@@ -92,7 +92,7 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
 
     private void AddCheckup(WeatherForecast weatherForecast)
     {
-        if (weatherForecast.Id == Guid.Empty || weatherForecast.Id == default)
+        if (weatherForecast.Id == Guid.Empty)
             weatherForecast.Id = Guid.NewGuid();
 
         _context.WeatherForecasts!.Add(weatherForecast);

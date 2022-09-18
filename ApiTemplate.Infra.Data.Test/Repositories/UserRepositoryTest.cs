@@ -4,7 +4,7 @@ using ApiTemplate.Infra.Data.Test.Utils;
 
 namespace ApiTemplate.Infra.Data.Test.Repositories;
 
-public class UserRepositoryTest : IDisposable
+public class UserRepositoryTest
 {
     private readonly ApiTemplateContext _context;
     private readonly IUserRepository _userRepository;
@@ -13,11 +13,6 @@ public class UserRepositoryTest : IDisposable
     {
         _context = ContextUtil.GetContext();
         _userRepository = new UserRepository(_context);
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
     }
 
     [Theory]

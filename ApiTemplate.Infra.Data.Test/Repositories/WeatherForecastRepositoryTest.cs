@@ -5,7 +5,7 @@ using ApiTemplate.Infra.Data.Test.Utils;
 
 namespace ApiTemplate.Infra.Data.Test.Repositories;
 
-public class WeatherForecastRepositoryTest : IDisposable
+public class WeatherForecastRepositoryTest
 {
     private readonly ApiTemplateContext _context;
     private readonly IWeatherForecastRepository _weatherForecastRepository;
@@ -14,11 +14,6 @@ public class WeatherForecastRepositoryTest : IDisposable
     {
         _context = ContextUtil.GetContext();
         _weatherForecastRepository = new WeatherForecastRepository(_context);
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
     }
 
     [Fact]

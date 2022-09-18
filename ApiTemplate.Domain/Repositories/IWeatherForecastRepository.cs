@@ -16,7 +16,7 @@ public interface IWeatherForecastRepository
     void Update(WeatherForecast weatherForecast);
     Task UpdateAsync(WeatherForecast weatherForecast);
     void Delete(Guid id);
-    Task DeleteAsync(Guid id);
     void Delete(WeatherForecast weatherForecast);
-    Task DeleteAsync(WeatherForecast weatherForecast);
+    Task DeleteAsync(Guid id);
+    Task DeleteAsync(WeatherForecast? weatherForecast);
 }

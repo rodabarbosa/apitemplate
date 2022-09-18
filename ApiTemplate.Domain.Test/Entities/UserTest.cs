@@ -9,7 +9,7 @@ public class UserTest
     {
         var user = new User
         {
-            Id = default,
+            Id = Guid.NewGuid(),
             Name = "Test User",
             Email = "user@test.com",
             Username = "test",

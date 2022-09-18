@@ -69,6 +69,7 @@ public class ValidationExceptionTest
     [InlineData(1)]
     [InlineData(2)]
     [InlineData(3)]
+    [InlineData(4)]
     public void ValidationException_When_UsingValidator(int index)
     {
         var validator = new CreateWeatherForecastValidator();
@@ -100,6 +101,11 @@ public class ValidationExceptionTest
 
             case 3:
                 Assert.Throws<ValidationException>(() => { ValidationException.ThrowIf(true, Enumerable.Empty<ValidationFailure>()); });
+                break;
+
+            default:
+                ValidationException.ThrowIf(false, Enumerable.Empty<ValidationFailure>());
+                Assert.True(true);
                 break;
         }
     }

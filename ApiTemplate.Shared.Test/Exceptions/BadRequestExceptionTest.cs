@@ -60,11 +60,11 @@ public class BadRequestExceptionTest
     {
         if (condition)
         {
-            Assert.Throws<DbRegisterExistsException>(() => { DbRegisterExistsException.ThrowIf(condition, message); });
+            Assert.Throws<BadRequestException>(() => { BadRequestException.ThrowIf(condition, message); });
         }
         else
         {
-            DbRegisterExistsException.ThrowIf(condition, message);
+            BadRequestException.ThrowIf(condition, message);
             Assert.True(true);
         }
     }
@@ -74,7 +74,7 @@ public class BadRequestExceptionTest
     {
         // Arrange
         const string expectedMessage = "Serialization test";
-        var e = new DbRegisterExistsException(expectedMessage);
+        var e = new BadRequestException(expectedMessage);
 
         // Act
         using (Stream s = new MemoryStream())
@@ -83,7 +83,7 @@ public class BadRequestExceptionTest
 #pragma warning disable SYSLIB0011
             formatter.Serialize(s, e);
             s.Position = 0; // Reset stream position
-            e = (DbRegisterExistsException)formatter.Deserialize(s);
+            e = (BadRequestException)formatter.Deserialize(s);
 #pragma warning restore SYSLIB0011
         }
 

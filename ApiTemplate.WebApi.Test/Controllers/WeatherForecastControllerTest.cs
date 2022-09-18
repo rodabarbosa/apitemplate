@@ -11,8 +11,7 @@ namespace ApiTemplate.WebApi.Test.Controllers;
 
 public class WeatherForecastControllerTest
 {
-    private readonly WeatherForecastController _controller;
-    private readonly WeatherForecastRepository _reposity;
+    private readonly WeatherForecastController _controller = new();
 
     public WeatherForecastControllerTest()
     {
@@ -24,11 +23,6 @@ public class WeatherForecastControllerTest
         serviceCollection.AddDataProviders();
         serviceCollection.ConfigureDefaultErrorHandler();
         serviceCollection.ConfigureSwagger();
-
-        var context = ContextUtil.GetContext();
-        _reposity = new WeatherForecastRepository(context);
-
-        _controller = new WeatherForecastController();
     }
 
     [Theory]
@@ -36,7 +30,9 @@ public class WeatherForecastControllerTest
     [InlineData("date=[Equal,2030-01-01 00:00:00]")]
     public async Task GetAll_ReturnsWeatherForecasts(string? param)
     {
-        var service = new GetAllWeatherForecastsService(_reposity);
+        var context = ContextUtil.GetContext();
+        var reposity = new WeatherForecastRepository(context);
+        var service = new GetAllWeatherForecastsService(reposity);
         _ = await _controller.GetAsync(service, param);
         Assert.True(true);
     }
@@ -46,7 +42,9 @@ public class WeatherForecastControllerTest
     [InlineData("10fd1392-3b4c-431a-b6dc-19cfba4ea000", false)]
     public async Task Get_ReturnsWeatherForecasts(Guid id, bool expected)
     {
-        var service = new GetWeatherForecastService(_reposity);
+        var context = ContextUtil.GetContext();
+        var reposity = new WeatherForecastRepository(context);
+        var service = new GetWeatherForecastService(reposity);
         if (expected)
         {
             await _controller.GetASync(service, id);
@@ -60,7 +58,9 @@ public class WeatherForecastControllerTest
     [Fact]
     public async Task Create_ReturnsWeatherForecasts()
     {
-        var service = new CreateWeatherForecastService(_reposity);
+        var context = ContextUtil.GetContext();
+        var reposity = new WeatherForecastRepository(context);
+        var service = new CreateWeatherForecastService(reposity);
 
         var request = new CreateWeatherForecastRequestContract
         {
@@ -76,7 +76,9 @@ public class WeatherForecastControllerTest
     [Fact]
     public void Update_ReturnsWeatherForecasts()
     {
-        var service = new UpdateWeatherForecastService(_reposity);
+        var context = ContextUtil.GetContext();
+        var reposity = new WeatherForecastRepository(context);
+        var service = new UpdateWeatherForecastService(reposity);
 
         var request = new UpdateWeatherForecastRequestContract
         {
@@ -94,7 +96,9 @@ public class WeatherForecastControllerTest
     [Fact]
     public void Delete_ReturnsWeatherForecasts()
     {
-        var service = new DeleteWeatherForecastService(_reposity);
+        var context = ContextUtil.GetContext();
+        var reposity = new WeatherForecastRepository(context);
+        var service = new DeleteWeatherForecastService(reposity);
         var id = Guid.Parse("10fd1392-3b4c-431a-b6dc-19cfba4ea269");
         _ = _controller.DeleteAsync(service, id);
         Assert.True(true);

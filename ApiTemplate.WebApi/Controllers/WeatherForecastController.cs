@@ -70,7 +70,7 @@ public class WeatherForecastController : BaseAuthController
     {
         var result = await service.CreateWeatherForecastAsync(request);
 
-        return Created(Request.Path, result);
+        return Created("weatherforecast", result);
     }
 
     /// <summary>
