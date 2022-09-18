@@ -14,6 +14,6 @@ public class GetWeatherForecastResponseTest
             Summary = "summary"
         };
 
-        Assert.Equal(response.TemperatureFahrenheit, 32);
+        Assert.Equal(32, response.TemperatureFahrenheit);
     }
 }

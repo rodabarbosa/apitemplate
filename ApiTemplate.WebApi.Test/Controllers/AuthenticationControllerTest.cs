@@ -7,28 +7,24 @@ using ApiTemplate.WebApi.Controllers;
 using ApiTemplate.WebApi.Extensions;
 using ApiTemplate.WebApi.Test.Utils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ApiTemplate.WebApi.Test.Controllers;
 
 public class AuthenticationControllerTest
 {
-    private readonly ConfigurationManager _configuration;
     private readonly AuthenticationController _controller;
     private readonly IAuthenticateService _service;
-    private readonly IServiceCollection _serviceCollection;
 
     public AuthenticationControllerTest()
     {
         var builder = WebApplication.CreateBuilder();
-        _serviceCollection = builder.Services;
-        _configuration = builder.Configuration;
+        var serviceCollection = builder.Services;
+        var configuration = builder.Configuration;
 
-        _serviceCollection.AddJwtService(_configuration);
-        _serviceCollection.AddDataProviders();
-        _serviceCollection.ConfigureDefaultErrorHandler();
-        _serviceCollection.ConfigureSwagger();
+        serviceCollection.AddJwtService(configuration);
+        serviceCollection.AddDataProviders();
+        serviceCollection.ConfigureDefaultErrorHandler();
+        serviceCollection.ConfigureSwagger();
 
         var signInConfiguration = new SigningConfiguration();
         var tokenConfiguration = new TokenConfiguration
@@ -64,6 +60,6 @@ public class AuthenticationControllerTest
             return;
         }
 
-        Assert.ThrowsAnyAsync<Exception>(() => _controller.PostAsync(_service, request));
+        await Assert.ThrowsAnyAsync<Exception>(() => _controller.PostAsync(_service, request));
     }
 }

@@ -44,7 +44,7 @@ public class RequestHandlerMiddlewareTest
         };
 
         // Act
-        var middlewareInstance = new RequestHandlerMiddleware(innerHttpContext => Task.CompletedTask);
+        var middlewareInstance = new RequestHandlerMiddleware(_ => Task.CompletedTask);
 
         _ = middlewareInstance.Invoke(defaultContext);
 

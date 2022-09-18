@@ -6,28 +6,24 @@ using ApiTemplate.WebApi.Controllers;
 using ApiTemplate.WebApi.Extensions;
 using ApiTemplate.WebApi.Test.Utils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ApiTemplate.WebApi.Test.Controllers;
 
 public class WeatherForecastControllerTest
 {
-    private readonly ConfigurationManager _configuration;
     private readonly WeatherForecastController _controller;
     private readonly WeatherForecastRepository _reposity;
-    private readonly IServiceCollection _serviceCollection;
 
     public WeatherForecastControllerTest()
     {
         var builder = WebApplication.CreateBuilder();
-        _serviceCollection = builder.Services;
-        _configuration = builder.Configuration;
+        var serviceCollection = builder.Services;
+        var configuration = builder.Configuration;
 
-        _serviceCollection.AddJwtService(_configuration);
-        _serviceCollection.AddDataProviders();
-        _serviceCollection.ConfigureDefaultErrorHandler();
-        _serviceCollection.ConfigureSwagger();
+        serviceCollection.AddJwtService(configuration);
+        serviceCollection.AddDataProviders();
+        serviceCollection.ConfigureDefaultErrorHandler();
+        serviceCollection.ConfigureSwagger();
 
         var context = ContextUtil.GetContext();
         _reposity = new WeatherForecastRepository(context);
@@ -41,7 +37,7 @@ public class WeatherForecastControllerTest
     public async Task GetAll_ReturnsWeatherForecasts(string? param)
     {
         var service = new GetAllWeatherForecastsService(_reposity);
-        var result = await _controller.GetAsync(service, param);
+        _ = await _controller.GetAsync(service, param);
         Assert.True(true);
     }
 
@@ -62,7 +58,7 @@ public class WeatherForecastControllerTest
     }
 
     [Fact]
-    public void Create_ReturnsWeatherForecasts()
+    public async Task Create_ReturnsWeatherForecasts()
     {
         var service = new CreateWeatherForecastService(_reposity);
 
@@ -73,7 +69,7 @@ public class WeatherForecastControllerTest
             Summary = null
         };
 
-        var result = _controller.PostAsync(service, request);
+        _ = await _controller.PostAsync(service, request);
         Assert.True(true);
     }
 
@@ -91,7 +87,7 @@ public class WeatherForecastControllerTest
             Summary = null
         };
 
-        var result = _controller.PutAsync(service, request.Id.Value, request);
+        _ = _controller.PutAsync(service, request.Id.Value, request);
         Assert.True(true);
     }
 
@@ -100,7 +96,7 @@ public class WeatherForecastControllerTest
     {
         var service = new DeleteWeatherForecastService(_reposity);
         var id = Guid.Parse("10fd1392-3b4c-431a-b6dc-19cfba4ea269");
-        var result = _controller.DeleteAsync(service, id);
+        _ = _controller.DeleteAsync(service, id);
         Assert.True(true);
     }
 }

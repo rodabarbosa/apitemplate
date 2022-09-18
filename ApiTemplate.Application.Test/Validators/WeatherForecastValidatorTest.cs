@@ -29,8 +29,7 @@ public class WeatherForecastValidatorTest
         Assert.True(result.IsValid);
     }
 
-    [Theory]
-    [InlineData]
+    [Fact]
     public void GivenAWeatherForecast_WhenValidating_ThenValidationShouldFail()
     {
         var weatherForecast1 = new UpdateWeatherForecastRequestContract

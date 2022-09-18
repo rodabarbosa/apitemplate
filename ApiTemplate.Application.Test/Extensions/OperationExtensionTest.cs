@@ -66,7 +66,7 @@ public class OperationExtensionTest
         var celsiusOperation = query.ExtractTemperatureCelsiusParam();
         Assert.Null(celsiusOperation);
 
-        var fahrenheitOperation = query.ExtractTemperatureFahrenheitParam();
+        var fahrenheitOperation = query?.ExtractTemperatureFahrenheitParam();
         Assert.Null(fahrenheitOperation);
     }
 }
