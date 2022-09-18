@@ -6,13 +6,12 @@ namespace ApiTemplate.Infra.Data.Test.Repositories;
 
 public class UserRepositoryTest
 {
-    private readonly ApiTemplateContext _context;
     private readonly IUserRepository _userRepository;
 
     public UserRepositoryTest()
     {
-        _context = ContextUtil.GetContext();
-        _userRepository = new UserRepository(_context);
+        var context = ContextUtil.GetContext();
+        _userRepository = new UserRepository(context);
     }
 
     [Theory]

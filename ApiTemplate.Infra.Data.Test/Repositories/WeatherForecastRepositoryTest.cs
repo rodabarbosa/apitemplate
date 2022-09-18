@@ -7,13 +7,12 @@ namespace ApiTemplate.Infra.Data.Test.Repositories;
 
 public class WeatherForecastRepositoryTest
 {
-    private readonly ApiTemplateContext _context;
     private readonly IWeatherForecastRepository _weatherForecastRepository;
 
     public WeatherForecastRepositoryTest()
     {
-        _context = ContextUtil.GetContext();
-        _weatherForecastRepository = new WeatherForecastRepository(_context);
+        var context = ContextUtil.GetContext();
+        _weatherForecastRepository = new WeatherForecastRepository(context);
     }
 
     [Fact]
