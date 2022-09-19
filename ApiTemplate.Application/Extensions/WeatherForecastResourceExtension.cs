@@ -75,7 +75,7 @@ public static class WeatherForecastResourceExtension
             var operationParam = CleanParam(data[1]).Split(',');
             var operation = operationParam[0].ToOperation();
 
-            decimal.TryParse(operationParam[1], out var value);
+            _ = decimal.TryParse(operationParam[1], out var value);
 
             return new OperationParam<decimal>
             {

@@ -54,7 +54,7 @@ public class CreateWeatherForecastService : ICreateWeatherForecastService
         return weather;
     }
 
-    private GetWeatherForecastResponseContract CreateResponse(WeatherForecast weather)
+    private static GetWeatherForecastResponseContract CreateResponse(WeatherForecast weather)
     {
         return new GetWeatherForecastResponseContract
         {

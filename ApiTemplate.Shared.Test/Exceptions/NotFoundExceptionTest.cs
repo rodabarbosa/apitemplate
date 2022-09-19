@@ -44,6 +44,7 @@ public class NotFoundExceptionTest
     [Theory]
     [InlineData(true, "Exception message")]
     [InlineData(false, "Exception message")]
+    [InlineData(true, "")]
     public void NotFoundException_When_Meets_Condition(bool condition, string message)
     {
         if (condition)

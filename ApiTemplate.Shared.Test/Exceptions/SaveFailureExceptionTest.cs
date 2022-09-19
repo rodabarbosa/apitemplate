@@ -44,6 +44,7 @@ public class SaveFailureExceptionTest
     [Theory]
     [InlineData(true, "Exception message")]
     [InlineData(false, "Exception message")]
+    [InlineData(true, "")]
     public void SaveFailureException_When_Meets_Condition(bool condition, string message)
     {
         if (condition)

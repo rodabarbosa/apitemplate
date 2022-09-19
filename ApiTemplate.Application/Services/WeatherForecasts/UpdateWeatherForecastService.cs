@@ -61,7 +61,7 @@ public class UpdateWeatherForecastService : IUpdateWeatherForecastService
         return _weatherForecastRepository.UpdateAsync(weatherForecast);
     }
 
-    private GetWeatherForecastResponseContract CreateRespoonse(WeatherForecast weatherForecast)
+    private static GetWeatherForecastResponseContract CreateRespoonse(WeatherForecast weatherForecast)
     {
         return new GetWeatherForecastResponseContract
         {
