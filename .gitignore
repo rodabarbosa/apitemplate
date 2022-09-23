@@ -293,6 +293,7 @@ paket-files/
 .fake/
 
 # JetBrains Rider
+/.fleet/
 /.idea/
 *.sln.iml
 
