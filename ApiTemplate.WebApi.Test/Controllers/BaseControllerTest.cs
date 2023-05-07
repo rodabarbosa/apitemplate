@@ -1,5 +1,4 @@
-﻿using ApiTemplate.Application.Jwt.Models;
-using ApiTemplate.WebApi.Configs;
+﻿using ApiTemplate.WebApi.Configs;
 using ApiTemplate.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
@@ -25,6 +24,7 @@ public abstract class BaseControllerTest
         var apiDescriptionConfig = new ApiDescriptionConfig();
         new ConfigureFromConfigurationOptions<ApiDescriptionConfig>(configuration.GetSection("ApiDescription"))
             .Configure(apiDescriptionConfig);
+
         serviceCollection.ConfigureSwagger(apiDescriptionConfig);
     }
 }

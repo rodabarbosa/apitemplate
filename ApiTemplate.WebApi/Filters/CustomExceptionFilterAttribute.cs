@@ -67,7 +67,7 @@ public sealed class CustomExceptionFilterAttribute : ExceptionFilterAttribute
         BuildContext(context, (int)code, content);
     }
 
-    private static void BuildContext(ExceptionContext context, int code, object content)
+    static private void BuildContext(ExceptionContext context, int code, object content)
     {
         context.HttpContext.Response.ContentType = MediaType;
         context.HttpContext.Response.StatusCode = code;
@@ -76,7 +76,9 @@ public sealed class CustomExceptionFilterAttribute : ExceptionFilterAttribute
             Code = code,
             Error = content,
             Exception = context.Exception.GetType().Name,
+#if DEBUG
             StackTrace = context.Exception.StackTrace
+#endif
         };
 
         context.Result = new ContentResult

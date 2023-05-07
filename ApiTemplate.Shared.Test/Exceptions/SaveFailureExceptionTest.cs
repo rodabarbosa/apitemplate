@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class SaveFailureExceptionTest
@@ -12,7 +9,8 @@ public class SaveFailureExceptionTest
         var exception = new SaveFailureException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -25,7 +23,10 @@ public class SaveFailureExceptionTest
         var exception = new SaveFailureException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        exception.InnerException!
+            .Message
+            .Should()
+            .Be(expectedInnerException.Message);
     }
 
     [Fact]
@@ -38,24 +39,30 @@ public class SaveFailureExceptionTest
         var exception = new SaveFailureException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void SaveFailureException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_SaveFailureException_When_Meets_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<SaveFailureException>(() => { SaveFailureException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            SaveFailureException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => SaveFailureException.ThrowIf(condition, message);
+
+        act.Should()
+            .Throw<SaveFailureException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_SaveFailureException_When_Meets_Condition(bool condition, string message)
+    {
+        var act = () => SaveFailureException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -77,6 +84,8 @@ public class SaveFailureExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

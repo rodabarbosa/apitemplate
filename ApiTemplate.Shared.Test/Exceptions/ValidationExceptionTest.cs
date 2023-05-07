@@ -1,13 +1,9 @@
-using ApiTemplate.Application.Contracts;
-using ApiTemplate.Application.Validators;
-using ApiTemplate.Shared.Exceptions;
-using FluentValidation.Results;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class ValidationExceptionTest
 {
+    private readonly CreateWeatherForecastValidator _validator = new();
+
     [Fact]
     public void ValidationException_Should_Be_Created()
     {
@@ -17,7 +13,8 @@ public class ValidationExceptionTest
         var exception = new ValidationException(Enumerable.Empty<ValidationFailure>());
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -31,7 +28,10 @@ public class ValidationExceptionTest
         var exception = new ValidationException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException.Message, exception.InnerException!.Message);
+        exception.InnerException!
+            .Message
+            .Should()
+            .Be(message);
     }
 
     [Fact]
@@ -44,70 +44,68 @@ public class ValidationExceptionTest
         var exception = new ValidationException(Enumerable.Empty<ValidationFailure>());
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
-    public void ValidationException_When_Meets_Condition(bool condition, string message)
+    public void Condition_Throws_Exception(bool condition, string message)
     {
-        // Arrange
+        var act = () => ValidationException.ThrowIf(condition, message);
 
-        if (condition)
-        {
-            Assert.Throws<ValidationException>(() => { ValidationException.When(condition, message); });
-        }
-        else
-        {
-            ValidationException.When(condition, message);
-            Assert.True(!condition);
-        }
+        act.Should()
+            .Throw<ValidationException>();
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    [InlineData(4)]
-    public void ValidationException_When_UsingValidator(int index)
+    [InlineData(false, "Exception message")]
+    public void Condition_NotThrows_Exception(bool condition, string message)
     {
-        var validator = new CreateWeatherForecastValidator();
-        switch (index)
+        var act = () => ValidationException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
+    }
+
+    [Theory]
+    [InlineData(10, 2500)]
+    [InlineData(-1, 250)]
+    public void Should_Throw_Exception_Using_ThrowIf(int daysToAdd, decimal temperature)
+    {
+        var weather = new CreateWeatherForecastRequestContract
         {
-            case 1:
-                var weather1 = new CreateWeatherForecastRequestContract
-                {
-                    Date = DateTime.Now.AddDays(10),
-                    TemperatureCelsius = 2000,
-                    Summary = "Test summary"
-                };
+            Date = DateTime.Now.AddDays(daysToAdd),
+            TemperatureCelsius = temperature,
+            Summary = "Test summary"
+        };
 
-                var result1 = validator.Validate(weather1);
-                Assert.Throws<ValidationException>(() => { ValidationException.ThrowIf(!result1.IsValid, result1.Errors); });
-                break;
+        var result = _validator.Validate(weather);
 
-            case 2:
-                var weather2 = new CreateWeatherForecastRequestContract
-                {
-                    Date = DateTime.Now.AddDays(-1),
-                    TemperatureCelsius = 20,
-                    Summary = "Test summary"
-                };
+        var act = () => ValidationException.ThrowIf(!result.IsValid, result.Errors);
 
-                var result = validator.Validate(weather2);
-                Assert.True(result.IsValid);
-                break;
+        act.Should()
+            .Throw<ValidationException>();
+    }
 
-            case 3:
-                Assert.Throws<ValidationException>(() => { ValidationException.ThrowIf(true, Enumerable.Empty<ValidationFailure>()); });
-                break;
+    [Theory]
+    [InlineData(-1, 20)]
+    public void Should_Not_Throw_Exception_Using_ThrowIf(int daysToAdd, decimal temperature)
+    {
+        var weather = new CreateWeatherForecastRequestContract
+        {
+            Date = DateTime.Now.AddDays(daysToAdd),
+            TemperatureCelsius = temperature,
+            Summary = "Test summary"
+        };
 
-            default:
-                ValidationException.ThrowIf(false, Enumerable.Empty<ValidationFailure>());
-                Assert.True(true);
-                break;
-        }
+        var result = _validator.Validate(weather);
+
+        var act = () => ValidationException.ThrowIf(!result.IsValid, result.Errors);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -129,6 +127,8 @@ public class ValidationExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

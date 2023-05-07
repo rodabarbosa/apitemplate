@@ -1,5 +1,3 @@
-using ApiTemplate.Shared.Extensions;
-
 namespace ApiTemplate.Shared.Test.Extensions;
 
 public class TemperatureExtensionTest
@@ -14,7 +12,8 @@ public class TemperatureExtensionTest
         var fahrenheit = celsius.ToFahrenheit();
 
         // Assert
-        Assert.Equal(98.6m, fahrenheit);
+        fahrenheit.Should()
+            .Be(98.6m);
     }
 
     [Fact]
@@ -27,6 +26,7 @@ public class TemperatureExtensionTest
         var celsius = fahrenheit.ToCelsius();
 
         // Assert
-        Assert.Equal(37m, celsius);
+        celsius.Should()
+            .Be(37m);
     }
 }

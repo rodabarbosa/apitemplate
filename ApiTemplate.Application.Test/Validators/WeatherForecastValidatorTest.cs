@@ -1,8 +1,4 @@
-﻿using ApiTemplate.Application.Contracts;
-using ApiTemplate.Application.Validators;
-using ApiTemplate.Shared.Extensions;
-
-namespace ApiTemplate.Application.Test.Validators;
+﻿namespace ApiTemplate.Application.Test.Validators;
 
 public class WeatherForecastValidatorTest
 {
@@ -26,46 +22,30 @@ public class WeatherForecastValidatorTest
         var result = _validator.Validate(weatherForecast);
 
         // Assert
-        Assert.True(result.IsValid);
+        result.IsValid
+            .Should()
+            .BeTrue();
     }
 
-    [Fact]
-    public void GivenAWeatherForecast_WhenValidating_ThenValidationShouldFail()
+    [Theory]
+    [InlineData(-1, 250, 150)]
+    [InlineData(-1, 0, 5000)]
+    [InlineData(10, 220, null)]
+    public void Should_Return_False_Validation(int removeFromHours, decimal temperatureCelsius, decimal temperatureFahrenheit)
     {
-        var weatherForecast1 = new UpdateWeatherForecastRequestContract
+        var weather = new UpdateWeatherForecastRequestContract
         {
             Id = default,
-            Date = DateTime.Now.AddHours(-1),
-            TemperatureCelsius = 30,
-            TemperatureFahrenheit = 150,
+            Date = DateTime.Now.AddHours(removeFromHours),
+            TemperatureCelsius = temperatureCelsius,
+            TemperatureFahrenheit = temperatureFahrenheit,
             Summary = default
         };
 
-        var result1 = _validator.Validate(weatherForecast1);
-        Assert.False(result1.IsValid);
+        var result = _validator.Validate(weather);
 
-        var weatherForecast2 = new UpdateWeatherForecastRequestContract
-        {
-            Id = default,
-            Date = DateTime.Now.AddHours(-1),
-            TemperatureCelsius = default,
-            TemperatureFahrenheit = 150,
-            Summary = default
-        };
-
-        var result2 = _validator.Validate(weatherForecast2);
-        Assert.False(result2.IsValid);
-
-        var weatherForecast3 = new UpdateWeatherForecastRequestContract
-        {
-            Id = default,
-            Date = DateTime.Now.AddHours(-1),
-            TemperatureCelsius = 30,
-            TemperatureFahrenheit = default,
-            Summary = default
-        };
-
-        var result3 = _validator.Validate(weatherForecast3);
-        Assert.False(result3.IsValid);
+        result.IsValid
+            .Should()
+            .BeFalse();
     }
 }

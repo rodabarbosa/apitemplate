@@ -1,26 +1,39 @@
-﻿using ApiTemplate.Domain.Entities;
-
-namespace ApiTemplate.Domain.Test.Entities;
+﻿namespace ApiTemplate.Domain.Test.Entities;
 
 public class WeatherForecastTest
 {
-    [Fact]
-    public void ShouldBeAbleToCreateAWeatherForecast()
+    [Theory]
+    [InlineData(true, true, "Test summary")]
+    [InlineData(false, false, null)]
+    public void ShouldBeAbleToCreateAWeatherForecast(bool generateId, bool getDateNow, string? summary)
     {
-        var weatherForecast1 = new WeatherForecast
+        var weather = new WeatherForecast
         {
-            Id = Guid.NewGuid(),
-            Date = DateTime.Now,
-            TemperatureCelsius = 0,
-            Summary = null
+            Summary = summary
         };
 
-        Assert.NotNull(weatherForecast1);
-        Assert.NotEqual(weatherForecast1.Id, Guid.Empty);
+        if (generateId)
+            weather.Id = Guid.NewGuid();
 
-        var weatherForecast2 = new WeatherForecast();
-        Assert.NotNull(weatherForecast2);
-        Assert.NotEqual(weatherForecast2.Id, Guid.Empty);
+        if (getDateNow)
+            weather.Date = DateTime.Now;
+
+        weather.Should()
+            .NotBeNull();
+
+        weather.Id
+            .Should()
+            .NotBe(Guid.Empty);
+
+        weather.Date
+            .Should()
+            .NotBe(DateTime.MinValue)
+            .And
+            .NotBe(default);
+
+        weather.Summary
+            .Should()
+            .Be(summary);
     }
 
     [Fact]
@@ -34,9 +47,22 @@ public class WeatherForecastTest
             Summary = "Test summary"
         };
 
-        Assert.True(weatherForecast.Id != Guid.Empty
-                    && weatherForecast.Date != default
-                    && weatherForecast.TemperatureCelsius == 10
-                    && !string.IsNullOrEmpty(weatherForecast.Summary));
+        weatherForecast.Id
+            .Should()
+            .NotBe(Guid.Empty);
+
+        weatherForecast.Date
+            .Should()
+            .NotBe(DateTime.MinValue)
+            .And
+            .NotBe(default);
+
+        weatherForecast.TemperatureCelsius
+            .Should()
+            .Be(10);
+
+        weatherForecast.Summary
+            .Should()
+            .Be("Test summary");
     }
 }

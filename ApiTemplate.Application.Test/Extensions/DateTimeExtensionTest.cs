@@ -1,5 +1,3 @@
-using ApiTemplate.Application.Extensions;
-
 namespace ApiTemplate.Application.Test.Extensions;
 
 public class DateTimeExtensionTest
@@ -13,7 +11,8 @@ public class DateTimeExtensionTest
         // Act
         var result = dateTime.ToDateTime();
 
-        // Assert
-        Assert.Equal(new DateTime(2019, 12, 25), result);
+        result
+            .Should()
+            .Be(new DateTime(2019, 12, 25));
     }
 }

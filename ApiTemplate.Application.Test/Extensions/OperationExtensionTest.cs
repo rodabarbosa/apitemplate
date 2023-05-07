@@ -1,6 +1,3 @@
-using ApiTemplate.Application.Enumerators;
-using ApiTemplate.Application.Extensions;
-
 namespace ApiTemplate.Application.Test.Extensions;
 
 public class OperationExtensionTest
@@ -19,54 +16,83 @@ public class OperationExtensionTest
     public void Should_Return_True_When_Operation_Is_Equal(string operationName, Operation operation)
     {
         var result = operationName.ToOperation();
-        Assert.Equal(result, operation);
+
+        result.Should()
+            .Be(operation);
     }
 
     [Theory]
-    [InlineData("date=[notequal,2019-01-01]&TemperatureCelsius=[greaterthan,0]&TemperatureFahrenheit=[equal,32]", true)]
-    [InlineData("", false)]
-    [InlineData("day=[equal,2019-01-01]", false)]
-    public void ToWeatherForecastResource_ShouldReturnCorrectResource(string query, bool expected)
+    [InlineData("date=[notequal,2019-01-01]&TemperatureCelsius=[greaterthan,0]&TemperatureFahrenheit=[equal,32]")]
+    [InlineData("date=[equal,2019-01-01]")]
+    public void Should_Return_Value_Data_Extract_From_Query(string query)
     {
         // Arrange
         var dateOperation = query.ExtractDateParam();
 
-        if (!expected)
-        {
-            Assert.Null(dateOperation);
-            return;
-        }
+        dateOperation.Should()
+            .NotBeNull();
 
-        Assert.NotNull(dateOperation);
-        Assert.Equal(Operation.NotEqual, dateOperation?.Operation);
-        Assert.Equal(new DateTime(2019, 1, 1), dateOperation?.Value);
+        dateOperation.Value
+            .Should()
+            .Be(new DateTime(2019, 1, 1));
+    }
 
+    [Theory]
+    [InlineData("date=[notequal,2019-01-01]&TemperatureCelsius=[greaterthan,0]&TemperatureFahrenheit=[equal,32]")]
+    public void Should_Return_Value_Celsius_Extract_From_Query(string query)
+    {
         var celsiusOperation = query.ExtractTemperatureCelsiusParam();
-        Assert.NotNull(celsiusOperation);
-        Assert.Equal(Operation.GreaterThan, celsiusOperation?.Operation);
-        Assert.Equal(0, celsiusOperation?.Value);
 
+        celsiusOperation.Should()
+            .NotBeNull();
+
+        celsiusOperation.Operation
+            .Should()
+            .Be(Operation.GreaterThan);
+
+        celsiusOperation.Value
+            .Should()
+            .Be(0);
+    }
+
+    [Theory]
+    [InlineData("date=[notequal,2019-01-01]&TemperatureCelsius=[greaterthan,0]&TemperatureFahrenheit=[equal,32]")]
+    public void Should_Return_Value_Fahrenheit_Extract_From_Query(string query)
+    {
         var fahrenheitOperation = query.ExtractTemperatureFahrenheitParam();
-        Assert.NotNull(fahrenheitOperation);
-        Assert.Equal(Operation.Equal, fahrenheitOperation?.Operation);
-        Assert.Equal(32, fahrenheitOperation?.Value);
+
+        fahrenheitOperation.Should()
+            .NotBeNull();
+
+        fahrenheitOperation.Operation
+            .Should()
+            .Be(Operation.Equal);
+
+        fahrenheitOperation.Value
+            .Should()
+            .Be(32);
     }
 
     [Theory]
     [InlineData("")]
     [InlineData(null)]
     [InlineData("day=[equal,2019-01-01]")]
-    public void ToWeatherForecastResource_ShouldReturnNull(string? query)
+    public void Should_Not_Return_Value_Data_Extract_From_Query(string? query)
     {
         // Arrange
         var dateOperation = query.ExtractDateParam();
 
-        Assert.Null(dateOperation);
+        dateOperation.Should()
+            .BeNull();
 
         var celsiusOperation = query.ExtractTemperatureCelsiusParam();
-        Assert.Null(celsiusOperation);
+
+        celsiusOperation.Should()
+            .BeNull();
 
         var fahrenheitOperation = query?.ExtractTemperatureFahrenheitParam();
-        Assert.Null(fahrenheitOperation);
+
+        fahrenheitOperation.Should()
+            .BeNull();
     }
 }

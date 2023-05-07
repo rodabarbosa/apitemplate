@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class NotificationFailureExceptionTest
@@ -12,7 +9,8 @@ public class NotificationFailureExceptionTest
         var exception = new NotificationFailureException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -25,7 +23,10 @@ public class NotificationFailureExceptionTest
         var exception = new NotificationFailureException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        exception.InnerException!
+            .Message
+            .Should()
+            .Be(expectedInnerException.Message);
     }
 
     [Fact]
@@ -38,24 +39,30 @@ public class NotificationFailureExceptionTest
         var exception = new NotificationFailureException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void NotificationFailureException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_NotificationFailureException_When_Meets_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<NotificationFailureException>(() => { NotificationFailureException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            NotificationFailureException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => NotificationFailureException.ThrowIf(condition, message);
+
+        act.Should()
+            .Throw<NotificationFailureException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_NotificationFailureException_When_Meets_Condition(bool condition, string message)
+    {
+        var act = () => NotificationFailureException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -77,6 +84,8 @@ public class NotificationFailureExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

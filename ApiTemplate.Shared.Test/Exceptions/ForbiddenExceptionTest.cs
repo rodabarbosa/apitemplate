@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class ForbiddenExceptionTest
@@ -12,7 +9,8 @@ public class ForbiddenExceptionTest
         var exception = new ForbiddenException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -25,7 +23,9 @@ public class ForbiddenExceptionTest
         var exception = new ForbiddenException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        exception.InnerException
+            .Should()
+            .Be(expectedInnerException);
     }
 
     [Fact]
@@ -38,24 +38,29 @@ public class ForbiddenExceptionTest
         var exception = new ForbiddenException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void ForbiddenException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_ForbiddenException_When_Meets_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<ForbiddenException>(() => { ForbiddenException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            ForbiddenException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => ForbiddenException.ThrowIf(condition, message);
+        act.Should()
+            .Throw<ForbiddenException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_ForbiddenException_When_Meets_Condition(bool condition, string message)
+    {
+        var act = () => ForbiddenException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -77,6 +82,8 @@ public class ForbiddenExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

@@ -1,12 +1,3 @@
-using ApiTemplate.Application.Contracts;
-using ApiTemplate.Application.Services.WeatherForecasts;
-using ApiTemplate.Application.Test.Utils;
-using ApiTemplate.Domain.Repositories;
-using ApiTemplate.Infra.Data;
-using ApiTemplate.Infra.Data.Repositories;
-using ApiTemplate.Shared.Exceptions;
-using ApiTemplate.Shared.Extensions;
-
 namespace ApiTemplate.Application.Test.Services;
 
 public sealed class WeatherForecastServiceTest : IDisposable
@@ -26,22 +17,28 @@ public sealed class WeatherForecastServiceTest : IDisposable
     }
 
     [Theory]
-    [InlineData("43903282-c4b3-42f9-99cc-fd234ee6941d", true)]
-    [InlineData("43903282-0000-0000-0000-fd234ee6941d", false)]
-    public async Task GetForecast_Returns_WeatherForecast_collection_And_By_Id(Guid id, bool expected)
+    [InlineData("43903282-c4b3-42f9-99cc-fd234ee6941d")]
+    async public Task Should_Return_Weather_Collection(Guid id)
+    {
+        var service = new GetWeatherForecastService(_weatherForecastRepository);
+
+        var act = () => service.GetWeatherForecastAsync(id);
+
+        await act.Should()
+            .NotThrowAsync();
+    }
+
+    [Theory]
+    [InlineData("43903282-0000-0000-0000-fd234ee6941d")]
+    async public Task Should_Not_Return_Weather_Collection(Guid id)
     {
         // Act
         var service = new GetWeatherForecastService(_weatherForecastRepository);
 
-        // Assert
-        if (expected)
-        {
-            var weather = await service.GetWeatherForecastAsync(id);
-            Assert.NotNull(weather);
-            return;
-        }
+        var act = () => service.GetWeatherForecastAsync(id);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => service.GetWeatherForecastAsync(id));
+        await act.Should()
+            .ThrowAsync<NotFoundException>();
     }
 
     [Theory]
@@ -63,38 +60,40 @@ public sealed class WeatherForecastServiceTest : IDisposable
     [InlineData("temperatureCelsius", "-2000", "LessThan")]
     [InlineData("temperatureCelsius", "-2000", "LessThanOrEqual")]
     [InlineData("temperatureCelsius", "-2000", "Less")]
-    public async Task GetForecast_Returns_WeatherForecast_With_Filter(string key, string value, string operation)
+    async public Task GetForecast_Returns_WeatherForecast_With_Filter(string key, string value, string operation)
     {
         var service = new GetAllWeatherForecastsService(_weatherForecastRepository);
-        // Act
+
         var param = $"dtInsert=[Equal,0]&dtUpdate=[Equal,0]&{key}=[{operation},{value}]";
 
         var result = await service.GetAllWeatherForecastsAsync(param);
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.Empty(result);
+        result.Should()
+            .NotBeNull()
+            .And
+            .BeEmpty();
     }
 
     [Theory]
     [InlineData("date", "2030-01-01 00:00:00")]
     [InlineData("temperatureFahrenheit", "2000")]
     [InlineData("temperatureCelsius", "2000")]
-    public async Task GetForecast_Returns_WeatherForecast_With_Filter_NotEqual(string key, string value)
+    async public Task GetForecast_Returns_WeatherForecast_With_Filter_NotEqual(string key, string value)
     {
         var service = new GetAllWeatherForecastsService(_weatherForecastRepository);
-        // Act
+
         var param = $"{key}=[NotEqual,{value}]";
 
         var result = await service.GetAllWeatherForecastsAsync(param);
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.NotEmpty(result);
+        result.Should()
+            .NotBeNull()
+            .And
+            .NotBeEmpty();
     }
 
     [Fact]
-    public async Task WeatherForecast_Creating()
+    async public Task WeatherForecast_Creating()
     {
         // Arrange
         var service = new CreateWeatherForecastService(_weatherForecastRepository);
@@ -109,11 +108,12 @@ public sealed class WeatherForecastServiceTest : IDisposable
         // Act
         var result = await service.CreateWeatherForecastAsync(weatherForecast);
 
-        Assert.NotNull(result);
+        result.Should()
+            .NotBeNull();
     }
 
     [Fact]
-    public async Task WeatherForecast_Updating()
+    async public Task WeatherForecast_Updating()
     {
         // Arrange
         var service = new UpdateWeatherForecastService(_weatherForecastRepository);
@@ -131,13 +131,14 @@ public sealed class WeatherForecastServiceTest : IDisposable
             Summary = default
         };
 
-        await service.UpdateWeatherForecastAsync(id, request);
+        var act = () => service.UpdateWeatherForecastAsync(id, request);
 
-        Assert.True(true);
+        await act.Should()
+            .NotThrowAsync();
     }
 
     [Fact]
-    public async Task WeatherForecast_Deleting()
+    async public Task WeatherForecast_Deleting()
     {
         // Arrange
         var service = new DeleteWeatherForecastService(_weatherForecastRepository);
@@ -146,8 +147,9 @@ public sealed class WeatherForecastServiceTest : IDisposable
         var id = Guid.Parse("10fd1392-3b4c-431a-b6dc-19cfba4ea269");
 
         // Assert
-        await service.DeleteWeatherForecastAsync(id);
+        var act = () => service.DeleteWeatherForecastAsync(id);
 
-        Assert.True(true);
+        await act.Should()
+            .NotThrowAsync();
     }
 }

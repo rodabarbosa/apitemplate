@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class DeleteFailureExceptionTest
@@ -12,7 +9,8 @@ public class DeleteFailureExceptionTest
         var exception = new DeleteFailureException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -25,7 +23,9 @@ public class DeleteFailureExceptionTest
         var exception = new DeleteFailureException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        exception.InnerException
+            .Should()
+            .Be(expectedInnerException);
     }
 
     [Fact]
@@ -38,24 +38,30 @@ public class DeleteFailureExceptionTest
         var exception = new DeleteFailureException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void DeleteFailureException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_DeleteFailureException_When_Meets_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<DeleteFailureException>(() => { DeleteFailureException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            DeleteFailureException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => DeleteFailureException.ThrowIf(condition, message);
+
+        act.Should()
+            .Throw<DeleteFailureException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_DeleteFailureException_When_Meets_Condition(bool condition, string message)
+    {
+        var act = () => DeleteFailureException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -77,6 +83,8 @@ public class DeleteFailureExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

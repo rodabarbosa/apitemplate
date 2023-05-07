@@ -1,7 +1,4 @@
-﻿using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
-namespace ApiTemplate.Shared.Test.Exceptions;
+﻿namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class BadRequestExceptionTest
 {
@@ -12,7 +9,8 @@ public class BadRequestExceptionTest
         var exception = new BadRequestException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -23,8 +21,12 @@ public class BadRequestExceptionTest
         var exception = new BadRequestException(innerException);
 
         // Assert
-        Assert.NotNull(exception);
-        Assert.NotNull(exception.InnerException);
+        exception.Should()
+            .NotBeNull();
+
+        exception.InnerException
+            .Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -37,7 +39,9 @@ public class BadRequestExceptionTest
         var exception = new DbRegisterExistsException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        exception.InnerException
+            .Should()
+            .Be(expectedInnerException);
     }
 
     [Fact]
@@ -50,24 +54,30 @@ public class BadRequestExceptionTest
         var exception = new DbRegisterExistsException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void BadRequestException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_BadRequestException_When_Meet_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<BadRequestException>(() => { BadRequestException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            BadRequestException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => BadRequestException.ThrowIf(condition, message);
+
+        act.Should()
+            .Throw<BadRequestException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_BadRequestException_When_Meet_Condition(bool condition, string message)
+    {
+        var act = () => BadRequestException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -89,6 +99,8 @@ public class BadRequestExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

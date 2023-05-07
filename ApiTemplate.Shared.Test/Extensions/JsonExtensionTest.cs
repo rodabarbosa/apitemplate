@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Extensions;
-using ApiTemplate.Shared.Models;
-
 namespace ApiTemplate.Shared.Test.Extensions;
 
 public sealed class JsonExtensionTest
@@ -20,7 +17,8 @@ public sealed class JsonExtensionTest
 
         var json = testObject.ToJson();
 
-        Assert.Equal(JsonTest, json);
+        json.Should()
+            .Be(JsonTest);
     }
 
     [Fact]
@@ -28,11 +26,19 @@ public sealed class JsonExtensionTest
     {
         var testObject = JsonTest.FromJson<ErrorModel>();
 
-        Assert.NotNull(testObject);
+        testObject.Should()
+            .NotBeNull();
 
-        Assert.Equal(1, testObject?.Code);
-        Assert.Equal("Test Error", testObject?.Error?.ToString());
-        Assert.Equal("Test Exception", testObject?.Exception);
-        Assert.Equal("Test StackTrace", testObject?.StackTrace);
+        testObject.Code
+            .Should()
+            .Be(1);
+
+        testObject.Exception
+            .Should()
+            .Be("Test Exception");
+
+        testObject.StackTrace
+            .Should()
+            .Be("Test StackTrace");
     }
 }

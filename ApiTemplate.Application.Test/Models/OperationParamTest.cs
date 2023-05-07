@@ -1,7 +1,4 @@
-﻿using ApiTemplate.Application.Enumerators;
-using ApiTemplate.Application.Models;
-
-namespace ApiTemplate.Application.Test.Models;
+﻿namespace ApiTemplate.Application.Test.Models;
 
 public class OperationParamTest
 {
@@ -14,6 +11,7 @@ public class OperationParamTest
             Value = 10m
         };
 
-        Assert.NotNull(operationParam);
+        operationParam.Should()
+            .NotBeNull();
     }
 }

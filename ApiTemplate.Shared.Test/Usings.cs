@@ -1,1 +1,9 @@
 global using Xunit;
+global using FluentAssertions;
+global using ApiTemplate.Shared.Exceptions;
+global using System.Runtime.Serialization.Formatters.Binary;
+global using ApiTemplate.Shared.Models;
+global using ApiTemplate.Shared.Extensions;
+global using ApiTemplate.Application.Contracts;
+global using ApiTemplate.Application.Validators;
+global using FluentValidation.Results;

@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class UnauthorizedExceptionTest
@@ -12,7 +9,8 @@ public class UnauthorizedExceptionTest
         var exception = new UnauthorizedException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -25,7 +23,10 @@ public class UnauthorizedExceptionTest
         var exception = new UnauthorizedException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException.Message, exception.InnerException!.Message);
+        exception.InnerException!
+            .Message
+            .Should()
+            .Be(expectedInnerException.Message);
     }
 
     [Fact]
@@ -38,24 +39,29 @@ public class UnauthorizedExceptionTest
         var exception = new UnauthorizedException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void UnauthorizedException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_Exception_When_Meets_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<UnauthorizedException>(() => { UnauthorizedException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            UnauthorizedException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => UnauthorizedException.ThrowIf(condition, message);
+
+        act.Should()
+            .Throw<UnauthorizedException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_Exception_When_Meets_Condition(bool condition, string message)
+    {
+        var act = () => UnauthorizedException.ThrowIf(condition, message);
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -77,6 +83,8 @@ public class UnauthorizedExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

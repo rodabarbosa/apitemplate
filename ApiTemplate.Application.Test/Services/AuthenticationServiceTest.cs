@@ -1,14 +1,3 @@
-using ApiTemplate.Application.Contracts;
-using ApiTemplate.Application.Jwt.Interfaces;
-using ApiTemplate.Application.Jwt.Models;
-using ApiTemplate.Application.Services;
-using ApiTemplate.Application.Services.Authentication;
-using ApiTemplate.Application.Test.Utils;
-using ApiTemplate.Domain.Repositories;
-using ApiTemplate.Infra.Data;
-using ApiTemplate.Infra.Data.Repositories;
-using ApiTemplate.Shared.Exceptions;
-
 namespace ApiTemplate.Application.Test.Services;
 
 public sealed class AuthenticationServiceTest : IDisposable
@@ -36,9 +25,8 @@ public sealed class AuthenticationServiceTest : IDisposable
     }
 
     [Theory]
-    [InlineData("admin", "admin", false)]
-    [InlineData("admin", "admin@123", true)]
-    public async Task Should_Authenticate_User(string username, string password, bool expectedAssert)
+    [InlineData("admin", "admin@123")]
+    async public Task Should_Authenticate_User(string username, string password)
     {
         // Act
         var request = new AuthenticateRequestContract
@@ -47,14 +35,26 @@ public sealed class AuthenticationServiceTest : IDisposable
             Password = password
         };
 
-        // Assert
-        if (expectedAssert)
-        {
-            var result = await _authenticateService.Authenticate(request);
-            Assert.NotNull(result);
-            return;
-        }
+        var act = () => _authenticateService.Authenticate(request);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _authenticateService.Authenticate(request));
+        await act.Should()
+            .NotThrowAsync();
+    }
+
+    [Theory]
+    [InlineData("admin", "admin")]
+    async public Task Should_Not_Authenticate_User(string username, string password)
+    {
+        // Act
+        var request = new AuthenticateRequestContract
+        {
+            Username = username,
+            Password = password
+        };
+
+        var act = () => _authenticateService.Authenticate(request);
+
+        await act.Should()
+            .ThrowAsync<BadRequestException>();
     }
 }

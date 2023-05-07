@@ -1,9 +1,5 @@
-﻿using ApiTemplate.Application.Contracts;
-using ApiTemplate.Application.Services.WeatherForecasts;
-using ApiTemplate.Infra.Data.Repositories;
+﻿using ApiTemplate.Application.Services.WeatherForecasts;
 using ApiTemplate.Shared.Exceptions;
-using ApiTemplate.WebApi.Controllers;
-using ApiTemplate.WebApi.Test.Utils;
 
 namespace ApiTemplate.WebApi.Test.Controllers;
 
@@ -19,8 +15,11 @@ public class WeatherForecastControllerTest : BaseControllerTest
         var context = ContextUtil.GetContext();
         var repository = new WeatherForecastRepository(context);
         var service = new GetAllWeatherForecastsService(repository);
-        _ = await _controller.GetAsync(service, param);
-        Assert.True(true);
+
+        var act = () => _controller.GetAsync(service, param);
+
+        await act.Should()
+            .NotThrowAsync();
     }
 
     [Theory]
@@ -31,8 +30,10 @@ public class WeatherForecastControllerTest : BaseControllerTest
         var reposity = new WeatherForecastRepository(context);
         var service = new GetWeatherForecastService(reposity);
 
-        await _controller.GetASync(service, id);
-        Assert.True(true);
+        var act = () => _controller.GetASync(service, id);
+
+        await act.Should()
+            .NotThrowAsync();
     }
 
     [Theory]
@@ -43,7 +44,9 @@ public class WeatherForecastControllerTest : BaseControllerTest
         var reposity = new WeatherForecastRepository(context);
         var service = new GetWeatherForecastService(reposity);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _controller.GetASync(service, id));
+        var act = () => _controller.GetASync(service, id);
+        await act.Should()
+            .ThrowAsync<NotFoundException>();
     }
 
     [Fact]
@@ -60,12 +63,13 @@ public class WeatherForecastControllerTest : BaseControllerTest
             Summary = null
         };
 
-        _ = await _controller.PostAsync(service, request);
-        Assert.True(true);
+        var act = () => _controller.PostAsync(service, request);
+        await act.Should()
+            .NotThrowAsync();
     }
 
     [Fact]
-    public void Update_ReturnsWeatherForecasts()
+    async public Task Update_ReturnsWeatherForecasts()
     {
         var context = ContextUtil.GetContext();
         var reposity = new WeatherForecastRepository(context);
@@ -80,18 +84,23 @@ public class WeatherForecastControllerTest : BaseControllerTest
             Summary = null
         };
 
-        _ = _controller.PutAsync(service, request.Id.Value, request);
-        Assert.True(true);
+        var act = () => _controller.PutAsync(service, request.Id.Value, request);
+
+        await act.Should()
+            .NotThrowAsync();
     }
 
     [Fact]
-    public void Delete_ReturnsWeatherForecasts()
+    async public Task Delete_ReturnsWeatherForecasts()
     {
         var context = ContextUtil.GetContext();
         var reposity = new WeatherForecastRepository(context);
         var service = new DeleteWeatherForecastService(reposity);
         var id = Guid.Parse("10fd1392-3b4c-431a-b6dc-19cfba4ea269");
-        _ = _controller.DeleteAsync(service, id);
-        Assert.True(true);
+
+        var act = () => _controller.DeleteAsync(service, id);
+
+        await act.Should()
+            .NotThrowAsync();
     }
 }

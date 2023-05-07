@@ -1,6 +1,4 @@
-﻿using ApiTemplate.Application.Contracts;
-
-namespace ApiTemplate.Application.Test.Contracts;
+﻿namespace ApiTemplate.Application.Test.Contracts;
 
 public class GetWeatherForecastResponseTest
 {
@@ -14,6 +12,8 @@ public class GetWeatherForecastResponseTest
             Summary = "summary"
         };
 
-        Assert.Equal(32, response.TemperatureFahrenheit);
+        response.TemperatureFahrenheit
+            .Should()
+            .Be(32);
     }
 }

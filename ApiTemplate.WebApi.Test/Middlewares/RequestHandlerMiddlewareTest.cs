@@ -1,8 +1,3 @@
-using ApiTemplate.Shared.Extensions;
-using ApiTemplate.Shared.Models;
-using ApiTemplate.WebApi.Middlewares;
-using Microsoft.AspNetCore.Http;
-
 namespace ApiTemplate.WebApi.Test.Middlewares;
 
 public class RequestHandlerMiddlewareTest
@@ -30,7 +25,9 @@ public class RequestHandlerMiddlewareTest
 
         defaultContext.Response.Body.Seek(0, SeekOrigin.Begin);
         var body = new StreamReader(defaultContext.Response.Body).ReadToEnd();
-        Assert.Equal(expectedOutput, body);
+
+        body.Should()
+            .Be(expectedOutput);
     }
 
     [Fact]
@@ -50,8 +47,11 @@ public class RequestHandlerMiddlewareTest
 
         defaultContext.Response.Body.Seek(0, SeekOrigin.Begin);
         var body = new StreamReader(defaultContext.Response.Body).ReadToEnd();
+
         var response = body.FromJson<ErrorModel>();
-        Assert.NotNull(response);
+
+        response.Should()
+            .NotBeNull();
     }
 
     [Theory]
@@ -74,6 +74,8 @@ public class RequestHandlerMiddlewareTest
         defaultContext.Response.Body.Seek(0, SeekOrigin.Begin);
         var body = new StreamReader(defaultContext.Response.Body).ReadToEnd();
         var response = body.FromJson<ErrorModel>();
-        Assert.NotNull(response);
+
+        response.Should()
+            .NotBeNull();
     }
 }

@@ -47,18 +47,18 @@ public class ValidationException : Exception
 
     public IDictionary<string, string[]> Failures { get; } = new Dictionary<string, string[]>();
 
-    private static string? DefineMessage(string? message, string? fallbackMessage)
+    static private string? DefineMessage(string? message, string? fallbackMessage)
     {
         return string.IsNullOrEmpty(message?.Trim()) ? fallbackMessage : message;
     }
 
-    public static void ThrowIf(bool condition, IEnumerable<ValidationFailure> failures)
+    static public void ThrowIf(bool condition, IEnumerable<ValidationFailure> failures)
     {
         if (condition)
             throw new ValidationException(failures);
     }
 
-    public static void When(bool condition, string? message = DefaultMessage, Exception? innerException = null)
+    static public void ThrowIf(bool condition, string? message = DefaultMessage, Exception? innerException = null)
     {
         if (condition)
             throw new ValidationException(message, innerException);

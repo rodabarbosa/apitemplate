@@ -12,7 +12,7 @@ namespace ApiTemplate.WebApi.Controllers.Base;
 [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
 [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
 [ApiController]
-[Route("[controller]")]
+[Route("v{version:apiVersion}/[controller]")]
 public abstract class BaseController : ControllerBase
 {
 }

@@ -37,7 +37,7 @@ public sealed class AuthenticateService : IAuthenticateService
     }
 
     /// <inheritdoc />
-    public async Task<AuthenticateResponseContract> Authenticate(AuthenticateRequestContract request)
+    async public Task<AuthenticateResponseContract> Authenticate(AuthenticateRequestContract request)
     {
         var validationResult = _validator.Validate(request);
         ValidationException.ThrowIf(!validationResult.IsValid, validationResult.Errors);
@@ -51,7 +51,7 @@ public sealed class AuthenticateService : IAuthenticateService
         return CreateResponse(identity, request.Username!);
     }
 
-    private static ClaimsIdentity CreateIdentity()
+    static private ClaimsIdentity CreateIdentity()
     {
         return new ClaimsIdentity(
             new GenericIdentity(Guid.NewGuid().ToString("N"), "Login"),
@@ -63,18 +63,16 @@ public sealed class AuthenticateService : IAuthenticateService
         );
     }
 
-    private static string CreateToken(ClaimsIdentity identity,
-        ISigningConfiguration signingConfiguration,
-        ITokenConfiguration tokenConfiguration,
+    private string CreateToken(ClaimsIdentity identity,
         DateTime createdDate,
         DateTime expiresDate)
     {
         var handler = new JwtSecurityTokenHandler();
         var securityToken = handler.CreateToken(new SecurityTokenDescriptor
         {
-            Issuer = tokenConfiguration.Issuer,
-            Audience = tokenConfiguration.Audience,
-            SigningCredentials = signingConfiguration.SigningCredentials,
+            Issuer = _tokenConfiguration.Issuer,
+            Audience = _tokenConfiguration.Audience,
+            SigningCredentials = _signingConfiguration.SigningCredentials,
             Subject = identity,
             NotBefore = createdDate,
             Expires = expiresDate
@@ -87,7 +85,7 @@ public sealed class AuthenticateService : IAuthenticateService
         var createdDate = DateTime.Now;
         var expiresDate = createdDate + TimeSpan.FromSeconds(_tokenConfiguration.Seconds);
 
-        var token = CreateToken(identity, _signingConfiguration, _tokenConfiguration, createdDate, expiresDate);
+        var token = CreateToken(identity, createdDate, expiresDate);
 
         return new AuthenticateResponseContract
         {

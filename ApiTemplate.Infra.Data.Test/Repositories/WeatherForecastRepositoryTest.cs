@@ -1,8 +1,3 @@
-using ApiTemplate.Domain.Entities;
-using ApiTemplate.Domain.Repositories;
-using ApiTemplate.Infra.Data.Repositories;
-using ApiTemplate.Infra.Data.Test.Utils;
-
 namespace ApiTemplate.Infra.Data.Test.Repositories;
 
 public class WeatherForecastRepositoryTest
@@ -19,7 +14,8 @@ public class WeatherForecastRepositoryTest
     public void GetAll_ShouldReturnAllWeatherForecasts()
     {
         var weatherForecasts = _weatherForecastRepository.Get();
-        Assert.NotEmpty(weatherForecasts);
+        weatherForecasts.Should()
+            .NotBeEmpty();
     }
 
     [Fact]
@@ -33,7 +29,8 @@ public class WeatherForecastRepositoryTest
         var temperature = weatherForecast?.TemperatureCelsius ?? 0;
         var result = _weatherForecastRepository.Get(x => x.TemperatureCelsius < temperature).FirstOrDefault();
 
-        Assert.NotNull(result);
+        result.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -45,7 +42,8 @@ public class WeatherForecastRepositoryTest
 
         var result = _weatherForecastRepository.Get(x => x.Id == weatherForecast.Id).FirstOrDefault();
 
-        Assert.NotNull(result);
+        result.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -61,7 +59,9 @@ public class WeatherForecastRepositoryTest
         };
 
         _weatherForecastRepository.Add(weather);
-        Assert.NotEqual(defaultId, weather.Id);
+
+        weather.Id.Should()
+            .NotBe(defaultId);
     }
 
     [Fact]
@@ -77,7 +77,8 @@ public class WeatherForecastRepositoryTest
 
         var result = _weatherForecastRepository.Get(x => x.TemperatureCelsius < weatherForecast.TemperatureCelsius).FirstOrDefault();
 
-        Assert.NotNull(result);
+        result.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -91,6 +92,7 @@ public class WeatherForecastRepositoryTest
 
         var result = _weatherForecastRepository.Get(x => x.Id == weatherForecast.Id).FirstOrDefault();
 
-        Assert.Null(result);
+        result.Should()
+            .BeNull();
     }
 }

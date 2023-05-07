@@ -1,6 +1,3 @@
-using ApiTemplate.Shared.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace ApiTemplate.Shared.Test.Exceptions;
 
 public class DbRegisterExceptionTest
@@ -12,7 +9,8 @@ public class DbRegisterExceptionTest
         var exception = new DbRegisterExistsException();
 
         // Assert
-        Assert.NotNull(exception);
+        exception.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -25,7 +23,9 @@ public class DbRegisterExceptionTest
         var exception = new DbRegisterExistsException(expectedInnerException);
 
         // Assert
-        Assert.Equal(expectedInnerException, exception.InnerException);
+        exception.InnerException
+            .Should()
+            .Be(expectedInnerException);
     }
 
     [Fact]
@@ -38,24 +38,30 @@ public class DbRegisterExceptionTest
         var exception = new DbRegisterExistsException(expectedMessage);
 
         // Assert
-        Assert.Equal(expectedMessage, exception.Message);
+        exception.Message
+            .Should()
+            .Be(expectedMessage);
     }
 
     [Theory]
     [InlineData(true, "Exception message")]
-    [InlineData(false, "Exception message")]
     [InlineData(true, "")]
-    public void DbRegisterException_When_Meets_Condition(bool condition, string message)
+    public void Should_Throw_DbRegisterExistsException_When_Meets_Condition(bool condition, string message)
     {
-        if (condition)
-        {
-            Assert.Throws<DbRegisterExistsException>(() => { DbRegisterExistsException.ThrowIf(condition, message); });
-        }
-        else
-        {
-            DbRegisterExistsException.ThrowIf(condition, message);
-            Assert.True(true);
-        }
+        var act = () => DbRegisterExistsException.ThrowIf(condition, message);
+
+        act.Should()
+            .Throw<DbRegisterExistsException>();
+    }
+
+    [Theory]
+    [InlineData(false, "Exception message")]
+    public void Should_Not_Throw_DbRegisterExistsException_When_Meets_Condition(bool condition, string message)
+    {
+        var act = () => DbRegisterExistsException.ThrowIf(condition, message);
+
+        act.Should()
+            .NotThrow();
     }
 
     [Fact]
@@ -77,6 +83,8 @@ public class DbRegisterExceptionTest
         }
 
         // Assert
-        Assert.Equal(expectedMessage, e.Message);
+        e.Message
+            .Should()
+            .Be(expectedMessage);
     }
 }

@@ -1,5 +1,3 @@
-using ApiTemplate.Shared.Models;
-
 namespace ApiTemplate.Shared.Test.Models;
 
 public class ErrorModelTest
@@ -15,7 +13,8 @@ public class ErrorModelTest
             StackTrace = null
         };
 
-        Assert.NotNull(errorModel);
+        errorModel.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -30,7 +29,8 @@ public class ErrorModelTest
             StackTrace = exception.StackTrace
         };
 
-        Assert.NotNull(errorModel);
+        errorModel.Should()
+            .NotBeNull();
     }
 
     [Fact]
@@ -44,9 +44,24 @@ public class ErrorModelTest
             StackTrace = "stack trace test"
         };
 
-        Assert.True(errorModel.Code > 0
-                    && errorModel.Error != null
-                    && !string.IsNullOrEmpty(errorModel.Exception)
-                    && !string.IsNullOrEmpty(errorModel.StackTrace));
+        errorModel.Code
+            .Should()
+            .NotBe(0);
+
+        errorModel.Error
+            .Should()
+            .NotBeNull();
+
+        errorModel.Exception
+            .Should()
+            .NotBeNull()
+            .And
+            .NotBeEmpty();
+
+        errorModel.StackTrace
+            .Should()
+            .NotBeNull()
+            .And
+            .NotBeEmpty();
     }
 }
