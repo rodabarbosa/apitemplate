@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <LangVersion>default</LangVersion>
-        <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>default</LangVersion>
+    <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.2.2" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.5.2"/>
+  </ItemGroup>
 
 </Project>

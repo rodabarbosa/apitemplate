@@ -3,60 +3,51 @@ using ApiTemplate.Application.Services.WeatherForecasts;
 using ApiTemplate.Infra.Data.Repositories;
 using ApiTemplate.Shared.Exceptions;
 using ApiTemplate.WebApi.Controllers;
-using ApiTemplate.WebApi.Extensions;
 using ApiTemplate.WebApi.Test.Utils;
-using Microsoft.AspNetCore.Builder;
 
 namespace ApiTemplate.WebApi.Test.Controllers;
 
-public class WeatherForecastControllerTest
+public class WeatherForecastControllerTest : BaseControllerTest
 {
     private readonly WeatherForecastController _controller = new();
-
-    public WeatherForecastControllerTest()
-    {
-        var builder = WebApplication.CreateBuilder();
-        var serviceCollection = builder.Services;
-        var configuration = builder.Configuration;
-
-        serviceCollection.AddJwtService(configuration);
-        serviceCollection.AddDataProviders();
-        serviceCollection.ConfigureDefaultErrorHandler();
-        serviceCollection.ConfigureSwagger();
-    }
 
     [Theory]
     [InlineData(null)]
     [InlineData("date=[Equal,2030-01-01 00:00:00]")]
-    public async Task GetAll_ReturnsWeatherForecasts(string? param)
+    async public Task GetAll_ReturnsWeatherForecasts(string? param)
     {
         var context = ContextUtil.GetContext();
-        var reposity = new WeatherForecastRepository(context);
-        var service = new GetAllWeatherForecastsService(reposity);
+        var repository = new WeatherForecastRepository(context);
+        var service = new GetAllWeatherForecastsService(repository);
         _ = await _controller.GetAsync(service, param);
         Assert.True(true);
     }
 
     [Theory]
-    [InlineData("10fd1392-3b4c-431a-b6dc-19cfba4ea269", true)]
-    [InlineData("10fd1392-3b4c-431a-b6dc-19cfba4ea000", false)]
-    public async Task Get_ReturnsWeatherForecasts(Guid id, bool expected)
+    [InlineData("10fd1392-3b4c-431a-b6dc-19cfba4ea269")]
+    async public Task Get_ReturnsWeatherForecasts_Success(Guid id)
     {
         var context = ContextUtil.GetContext();
         var reposity = new WeatherForecastRepository(context);
         var service = new GetWeatherForecastService(reposity);
-        if (expected)
-        {
-            await _controller.GetASync(service, id);
-            Assert.True(true);
-            return;
-        }
+
+        await _controller.GetASync(service, id);
+        Assert.True(true);
+    }
+
+    [Theory]
+    [InlineData("10fd1392-3b4c-431a-b6dc-19cfba4ea000")]
+    async public Task Get_ReturnsWeatherForecasts_Fail(Guid id)
+    {
+        var context = ContextUtil.GetContext();
+        var reposity = new WeatherForecastRepository(context);
+        var service = new GetWeatherForecastService(reposity);
 
         await Assert.ThrowsAsync<NotFoundException>(() => _controller.GetASync(service, id));
     }
 
     [Fact]
-    public async Task Create_ReturnsWeatherForecasts()
+    async public Task Create_ReturnsWeatherForecasts()
     {
         var context = ContextUtil.GetContext();
         var reposity = new WeatherForecastRepository(context);

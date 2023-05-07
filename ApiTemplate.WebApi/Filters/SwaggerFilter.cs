@@ -20,7 +20,10 @@ public class SwaggerFilter : IOperationFilter
 
         foreach (var parameter in operation.Parameters)
         {
-            var description = context.ApiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
+            var description = context.ApiDescription
+                .ParameterDescriptions
+                .First(p => p.Name == parameter.Name);
+
             var routeInfo = description.RouteInfo;
 
             parameter.Description ??= description.ModelMetadata.Description;

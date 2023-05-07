@@ -1,27 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <LangVersion>default</LangVersion>
-        <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>default</LangVersion>
+    <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj" />
-      <ProjectReference Include="..\ApiTemplate.Infra.Data\ApiTemplate.Infra.Data.csproj" />
-      <ProjectReference Include="..\ApiTemplate.Shared\ApiTemplate.Shared.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj"/>
+    <ProjectReference Include="..\ApiTemplate.Infra.Data\ApiTemplate.Infra.Data.csproj"/>
+    <ProjectReference Include="..\ApiTemplate.Shared\ApiTemplate.Shared.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.2.2" />
-      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.23.1" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.5.2"/>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.30.0"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0"/>
+  </ItemGroup>
 
 </Project>

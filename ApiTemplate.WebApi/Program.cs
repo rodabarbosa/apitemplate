@@ -1,10 +1,13 @@
-using System.Text.Json.Serialization;
+using ApiTemplate.Application.Jwt.Models;
+using ApiTemplate.WebApi.Configs;
 using ApiTemplate.WebApi.Extensions;
 using ApiTemplate.WebApi.Filters;
 using ApiTemplate.WebApi.Middlewares;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Text.Json.Serialization;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.ConfigureDefaultErrorHandler();
@@ -22,13 +25,23 @@ builder.Services.AddControllers(options =>
         options.JsonSerializerOptions.WriteIndented = false;
     });
 
-builder.Services.AddJwtService(builder.Configuration);
+var configuration = builder.Configuration;
 
-builder.Services.ConfigureSwagger();
+var tokenConfigurations = new TokenConfiguration();
+new ConfigureFromConfigurationOptions<TokenConfiguration>(configuration.GetSection("TokenConfiguration"))
+    .Configure(tokenConfigurations);
+
+builder.Services.AddJwtService(tokenConfigurations);
+
+var apiDescriptionConfig = new ApiDescriptionConfig();
+new ConfigureFromConfigurationOptions<ApiDescriptionConfig>(configuration.GetSection("ApiDescription"))
+    .Configure(apiDescriptionConfig);
+
+builder.Services.ConfigureSwagger(apiDescriptionConfig);
 
 builder.Services.AddDataProviders();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 _ = app.UseSwagger();

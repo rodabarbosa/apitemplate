@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <LangVersion>default</LangVersion>
     <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+    <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml"/>
   </ItemGroup>
 
 </Project>
