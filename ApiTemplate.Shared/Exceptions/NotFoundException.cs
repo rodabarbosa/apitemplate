@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace ApiTemplate.Shared.Exceptions;
 
@@ -17,10 +16,6 @@ public class NotFoundException : Exception
     }
 
     public NotFoundException(string? message, Exception? innerException) : base(DefineMessage(message, DefaultMessage), innerException)
-    {
-    }
-
-    protected NotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

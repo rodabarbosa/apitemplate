@@ -20,10 +20,6 @@ public class DeleteFailureException : Exception
     {
     }
 
-    protected DeleteFailureException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
-
     private static string? DefineMessage(string? message, string? fallbackMessage)
     {
         return string.IsNullOrEmpty(message?.Trim()) ? fallbackMessage : message;

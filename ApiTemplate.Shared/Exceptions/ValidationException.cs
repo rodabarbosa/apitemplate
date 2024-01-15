@@ -41,10 +41,6 @@ public class ValidationException : Exception
         }
     }
 
-    protected ValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
-
     public IDictionary<string, string[]> Failures { get; } = new Dictionary<string, string[]>();
 
     static private string? DefineMessage(string? message, string? fallbackMessage)

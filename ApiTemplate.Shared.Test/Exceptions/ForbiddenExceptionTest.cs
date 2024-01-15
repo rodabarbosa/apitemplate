@@ -62,28 +62,4 @@ public class ForbiddenExceptionTest
         act.Should()
             .NotThrow();
     }
-
-    [Fact]
-    public void ForbiddenException_Serialization()
-    {
-        // Arrange
-        var expectedMessage = "Serialization test";
-        var e = new ForbiddenException(expectedMessage);
-
-        // Act
-        using (Stream s = new MemoryStream())
-        {
-            var formatter = new BinaryFormatter();
-#pragma warning disable SYSLIB0011
-            formatter.Serialize(s, e);
-            s.Position = 0; // Reset stream position
-            e = (ForbiddenException)formatter.Deserialize(s);
-#pragma warning restore SYSLIB0011
-        }
-
-        // Assert
-        e.Message
-            .Should()
-            .Be(expectedMessage);
-    }
 }

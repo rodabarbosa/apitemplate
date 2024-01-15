@@ -107,28 +107,4 @@ public class ValidationExceptionTest
         act.Should()
             .NotThrow();
     }
-
-    [Fact]
-    public void ValidationException_Serialization()
-    {
-        // Arrange
-        var expectedMessage = "One or more validation failure have occurred.";
-        var e = new ValidationException(Enumerable.Empty<ValidationFailure>());
-
-        // Act
-        using (Stream s = new MemoryStream())
-        {
-            var formatter = new BinaryFormatter();
-#pragma warning disable SYSLIB0011
-            formatter.Serialize(s, e);
-            s.Position = 0; // Reset stream position
-            e = (ValidationException)formatter.Deserialize(s);
-#pragma warning restore SYSLIB0011
-        }
-
-        // Assert
-        e.Message
-            .Should()
-            .Be(expectedMessage);
-    }
 }

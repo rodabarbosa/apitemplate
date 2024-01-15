@@ -1,16 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>default</LangVersion>
     <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml"/>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj"/>
@@ -19,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.5.2"/>
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.30.0"/>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0"/>
+    <PackageReference Include="FluentValidation" Version="11.9.0"/>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0"/>
   </ItemGroup>
 
 </Project>

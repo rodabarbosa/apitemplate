@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <LangVersion>default</LangVersion>
@@ -9,21 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SonarQubeSetting Include="sonar.coverage.exclusions">
-      <Value>Program.cs, Filters/*.cs, Middlewares/*.cs, Extensions/ServiceCollectionExtensions.cs</Value>
-    </SonarQubeSetting>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.0"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ApiTemplate.Application\ApiTemplate.Application.csproj" />
+    <ProjectReference Include="..\ApiTemplate.Application\ApiTemplate.Application.csproj"/>
   </ItemGroup>
 
 </Project>

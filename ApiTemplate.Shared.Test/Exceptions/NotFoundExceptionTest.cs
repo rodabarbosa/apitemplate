@@ -64,28 +64,4 @@ public class NotFoundExceptionTest
         act.Should()
             .NotThrow();
     }
-
-    [Fact]
-    public void NotFoundException_Serialization()
-    {
-        // Arrange
-        var expectedMessage = "Serialization test";
-        var e = new NotFoundException(expectedMessage);
-
-        // Act
-        using (Stream s = new MemoryStream())
-        {
-            var formatter = new BinaryFormatter();
-#pragma warning disable SYSLIB0011
-            formatter.Serialize(s, e);
-            s.Position = 0; // Reset stream position
-            e = (NotFoundException)formatter.Deserialize(s);
-#pragma warning restore SYSLIB0011
-        }
-
-        // Assert
-        e.Message
-            .Should()
-            .Be(expectedMessage);
-    }
 }

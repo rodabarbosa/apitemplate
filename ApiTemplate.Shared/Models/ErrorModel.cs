@@ -8,8 +8,7 @@ public sealed class ErrorModel
     [JsonPropertyName("error")] public object? Error { get; init; }
     [JsonPropertyName("exception")] public string? Exception { get; init; }
 
-#if !DEBUG
     [JsonIgnore]
-#endif
-    [JsonPropertyName("stacktrace")] public string? StackTrace { get; init; }
+    [JsonPropertyName("stacktrace")]
+    public string? StackTrace { get; init; }
 }

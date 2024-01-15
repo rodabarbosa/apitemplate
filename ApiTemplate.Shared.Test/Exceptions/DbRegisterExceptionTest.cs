@@ -63,28 +63,4 @@ public class DbRegisterExceptionTest
         act.Should()
             .NotThrow();
     }
-
-    [Fact]
-    public void DbRegisterExistsException_Serialization()
-    {
-        // Arrange
-        const string expectedMessage = "Serialization test";
-        var e = new DbRegisterExistsException(expectedMessage);
-
-        // Act
-        using (Stream s = new MemoryStream())
-        {
-            var formatter = new BinaryFormatter();
-#pragma warning disable SYSLIB0011
-            formatter.Serialize(s, e);
-            s.Position = 0; // Reset stream position
-            e = (DbRegisterExistsException)formatter.Deserialize(s);
-#pragma warning restore SYSLIB0011
-        }
-
-        // Assert
-        e.Message
-            .Should()
-            .Be(expectedMessage);
-    }
 }

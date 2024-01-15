@@ -1,22 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <CodeAnalysisRuleSet>..\.sonarlint\rodabarbosa_apitemplatecsharp.ruleset</CodeAnalysisRuleSet>
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <SonarQubeSetting Include="sonar.coverage.exclusions">
-      <Value>Extensions/*.cs</Value>
-    </SonarQubeSetting>
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\.sonarlint\rodabarbosa_apitemplate\CSharp\SonarLint.xml" Link="SonarLint.xml"/>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ApiTemplate.Domain\ApiTemplate.Domain.csproj"/>
@@ -25,13 +15,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.5"/>
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.5"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.1"/>
   </ItemGroup>
 
 </Project>
