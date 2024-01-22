@@ -8,6 +8,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services.Authentication;
@@ -37,9 +38,9 @@ public sealed class AuthenticateService : IAuthenticateService
     }
 
     /// <inheritdoc />
-    async public Task<AuthenticateResponseContract> Authenticate(AuthenticateRequestContract request)
+    async public Task<AuthenticateResponseContract> Authenticate(AuthenticateRequestContract request, CancellationToken cancellationToken)
     {
-        var validationResult = _validator.Validate(request);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         ValidationException.ThrowIf(!validationResult.IsValid, validationResult.Errors);
 
         var credentialsValidates = await _userRepository.IsUserValidAsync(request.Username!, request.Password!);

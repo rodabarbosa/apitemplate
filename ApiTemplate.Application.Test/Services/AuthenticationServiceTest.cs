@@ -35,7 +35,7 @@ public sealed class AuthenticationServiceTest : IDisposable
             Password = password
         };
 
-        var act = () => _authenticateService.Authenticate(request);
+        var act = () => _authenticateService.Authenticate(request, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();
@@ -52,7 +52,7 @@ public sealed class AuthenticationServiceTest : IDisposable
             Password = password
         };
 
-        var act = () => _authenticateService.Authenticate(request);
+        var act = () => _authenticateService.Authenticate(request, CancellationToken.None);
 
         await act.Should()
             .ThrowAsync<BadRequestException>();

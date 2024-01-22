@@ -27,9 +27,9 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
         return _context.WeatherForecasts!.SingleOrDefault(x => x.Id == id);
     }
 
-    public Task<WeatherForecast?> GetAsync(Guid id)
+    public Task<WeatherForecast?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        return _context.WeatherForecasts!.SingleOrDefaultAsync(x => x.Id == id);
+        return _context.WeatherForecasts!.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public void Add(WeatherForecast weatherForecast)
@@ -38,10 +38,10 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
         _context.SaveChanges();
     }
 
-    public Task AddAsync(WeatherForecast weatherForecast)
+    public Task AddAsync(WeatherForecast weatherForecast, CancellationToken cancellationToken)
     {
         AddCheckup(weatherForecast);
-        return _context.SaveChangesAsync();
+        return _context.SaveChangesAsync(cancellationToken);
     }
 
     public void Update(WeatherForecast weatherForecast)
@@ -50,10 +50,10 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
         _context.SaveChanges();
     }
 
-    public Task UpdateAsync(WeatherForecast weatherForecast)
+    public Task UpdateAsync(WeatherForecast weatherForecast, CancellationToken cancellationToken)
     {
         _context.WeatherForecasts!.Update(weatherForecast);
-        return _context.SaveChangesAsync();
+        return _context.SaveChangesAsync(cancellationToken);
     }
 
     public void Delete(Guid id)
@@ -73,21 +73,21 @@ public sealed class WeatherForecastRepository : IWeatherForecastRepository
         _context.SaveChanges();
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var weather = Get(id);
 
         DeleteFailureException.ThrowIf(weather is null, $"Weather forecast {id} not found");
 
-        return DeleteAsync(weather);
+        return DeleteAsync(weather, cancellationToken);
     }
 
-    public Task DeleteAsync(WeatherForecast? weatherForecast)
+    public Task DeleteAsync(WeatherForecast? weatherForecast, CancellationToken cancellationToken)
     {
         DeleteFailureException.ThrowIf(weatherForecast is null, "Weather forecast was not informed.");
 
         _context.WeatherForecasts!.Remove(weatherForecast!);
-        return _context.SaveChangesAsync();
+        return _context.SaveChangesAsync(cancellationToken);
     }
 
     private void AddCheckup(WeatherForecast weatherForecast)

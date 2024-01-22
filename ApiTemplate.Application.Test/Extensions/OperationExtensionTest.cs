@@ -32,7 +32,7 @@ public class OperationExtensionTest
         dateOperation.Should()
             .NotBeNull();
 
-        dateOperation.Value
+        dateOperation!.Value
             .Should()
             .Be(new DateTime(2019, 1, 1));
     }
@@ -46,11 +46,11 @@ public class OperationExtensionTest
         celsiusOperation.Should()
             .NotBeNull();
 
-        celsiusOperation.Operation
+        celsiusOperation!.Operation
             .Should()
             .Be(Operation.GreaterThan);
 
-        celsiusOperation.Value
+        celsiusOperation!.Value
             .Should()
             .Be(0);
     }
@@ -64,11 +64,11 @@ public class OperationExtensionTest
         fahrenheitOperation.Should()
             .NotBeNull();
 
-        fahrenheitOperation.Operation
+        fahrenheitOperation!.Operation
             .Should()
             .Be(Operation.Equal);
 
-        fahrenheitOperation.Value
+        fahrenheitOperation!.Value
             .Should()
             .Be(32);
     }

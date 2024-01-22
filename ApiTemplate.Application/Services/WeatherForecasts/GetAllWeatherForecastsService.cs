@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services.WeatherForecasts;
@@ -28,7 +29,45 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<GetWeatherForecastResponseContract>> GetAllWeatherForecastsAsync(string? param)
+    public async Task<IEnumerable<GetWeatherForecastResponseContract>> GetAllWeatherForecastsAsync(string? param, CancellationToken cancellationToken)
+    {
+        var weathers = GetWeatherForecast(param);
+
+        var returningFields = GetReturningFields(param);
+
+        var result = PrepareWeatherAsResult(returningFields, weathers);
+
+        return await result.ToListAsync(cancellationToken);
+    }
+
+    private static IQueryable<GetWeatherForecastResponseContract> PrepareWeatherAsResult(IEnumerable<string> returningFields, IQueryable<WeatherForecast> weathers)
+    {
+        var result = !returningFields.Any()
+            ? weathers.Select(x => new GetWeatherForecastResponseContract
+            {
+                Id = x.Id,
+                Date = x.Date,
+                TemperatureCelsius = x.TemperatureCelsius,
+                TemperatureFahrenheit = x.TemperatureCelsius.ToFahrenheit(),
+                Summary = x.Summary
+            })
+            : weathers.Select(x => new GetWeatherForecastResponseContract
+            {
+                Id = HasField(returningFields, "id") ? x.Id : null,
+                Date = HasField(returningFields, "date") ? x.Date : null,
+                TemperatureCelsius = HasField(returningFields, "temperatureCelsius") ? x.TemperatureCelsius : null,
+                TemperatureFahrenheit = HasField(returningFields, "temperatureFahrenheit") ? x.TemperatureCelsius.ToFahrenheit() : null,
+                Summary = HasField(returningFields, "summary") ? x.Summary : null
+            });
+        return result;
+    }
+
+    private static bool HasField(IEnumerable<string> returningFields, string fieldName)
+    {
+        return returningFields.Any(x => x.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private IQueryable<WeatherForecast> GetWeatherForecast(string? param)
     {
         var date = param?.ExtractDateParam();
         var temperatureCelsius = param?.ExtractTemperatureCelsiusParam();
@@ -38,15 +77,7 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
         weathers = FilterByDate(weathers, date);
         weathers = FilterByTemperatureCelsius(weathers, temperatureCelsius);
         weathers = FilterByTemperatureFahrenheit(weathers, temperatureFahrenheit);
-
-        return await weathers.Select(x => new GetWeatherForecastResponseContract
-            {
-                Id = x.Id,
-                Date = x.Date,
-                TemperatureCelsius = x.TemperatureCelsius,
-                Summary = x.Summary
-            })
-            .ToListAsync();
+        return weathers;
     }
 
     private static IQueryable<WeatherForecast> FilterByDate(IQueryable<WeatherForecast> weathers, OperationParam<DateTime>? filter)
@@ -89,5 +120,22 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
             Operation.LessThanOrEqual => weathers.Where(w => w.TemperatureCelsius.ToFahrenheit() <= filter.Value),
             _ => weathers
         };
+    }
+
+    private IEnumerable<string> GetReturningFields(string? param)
+    {
+        if (string.IsNullOrEmpty(param) || !param.Contains("fields="))
+            return Enumerable.Empty<string>();
+
+        var values = param.Split('&');
+        var fields = values
+            .First(x => x.StartsWith("fields="));
+        var aux = fields.Split("=");
+
+        return aux[1]
+            .TrimStart('[')
+            .TrimEnd(']')
+            .Split(',')
+            .Select(x => x.Trim());
     }
 }

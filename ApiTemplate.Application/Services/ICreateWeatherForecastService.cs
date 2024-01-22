@@ -1,4 +1,5 @@
 ﻿using ApiTemplate.Application.Contracts;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services;
@@ -12,6 +13,7 @@ public interface ICreateWeatherForecastService
     /// Create new weather forecast
     /// </summary>
     /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GetWeatherForecastResponseContract> CreateWeatherForecastAsync(CreateWeatherForecastRequestContract request);
+    Task<GetWeatherForecastResponseContract> CreateWeatherForecastAsync(CreateWeatherForecastRequestContract request, CancellationToken cancellationToken);
 }

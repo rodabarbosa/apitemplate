@@ -4,6 +4,7 @@ using ApiTemplate.Domain.Entities;
 using ApiTemplate.Domain.Repositories;
 using ApiTemplate.Shared.Exceptions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services.WeatherForecasts;
@@ -24,22 +25,22 @@ public class CreateWeatherForecastService : ICreateWeatherForecastService
     }
 
     /// <inheritdoc />
-    public async Task<GetWeatherForecastResponseContract> CreateWeatherForecastAsync(CreateWeatherForecastRequestContract request)
+    public async Task<GetWeatherForecastResponseContract> CreateWeatherForecastAsync(CreateWeatherForecastRequestContract request, CancellationToken cancellationToken)
     {
-        Validate(request);
+        Validate(request, cancellationToken);
 
-        var weather = await CreateWeatherForecast(request);
+        var weather = await CreateWeatherForecast(request, cancellationToken);
 
         return CreateResponse(weather);
     }
 
-    private void Validate(CreateWeatherForecastRequestContract request)
+    private async Task Validate(CreateWeatherForecastRequestContract request, CancellationToken cancellationToken)
     {
-        var validationResult = _validator.Validate(request);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         ValidationException.ThrowIf(!validationResult.IsValid, validationResult.Errors);
     }
 
-    private async Task<WeatherForecast> CreateWeatherForecast(CreateWeatherForecastRequestContract request)
+    private async Task<WeatherForecast> CreateWeatherForecast(CreateWeatherForecastRequestContract request, CancellationToken cancellationToken)
     {
         var weather = new WeatherForecast
         {
@@ -49,7 +50,7 @@ public class CreateWeatherForecastService : ICreateWeatherForecastService
             Summary = request.Summary
         };
 
-        await _weatherForecastRepository.AddAsync(weather);
+        await _weatherForecastRepository.AddAsync(weather, cancellationToken);
 
         return weather;
     }

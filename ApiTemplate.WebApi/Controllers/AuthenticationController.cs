@@ -20,10 +20,10 @@ public class AuthenticationController : BaseController
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthenticateResponseContract), StatusCodes.Status201Created)]
-    public async Task<ActionResult<AuthenticateResponseContract>> PostAsync([FromServices] IAuthenticateService service, [FromBody] AuthenticateRequestContract request)
+    public async Task<ActionResult<AuthenticateResponseContract>> PostAsync([FromServices] IAuthenticateService service, [FromBody] AuthenticateRequestContract request, CancellationToken cancellationToken)
     {
-        var response = await service.Authenticate(request);
+        var response = await service.Authenticate(request, cancellationToken);
 
-        return Created("authenticate", response);
+        return Created("/authenticate", response);
     }
 }

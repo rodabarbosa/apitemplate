@@ -1,5 +1,6 @@
 ﻿using ApiTemplate.Application.Contracts;
 using ApiTemplate.Application.Services.Authentication;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services;
@@ -12,5 +13,5 @@ public interface IAuthenticateService
     /// <summary>
     /// This method is used to authenticate the user.
     /// </summary>
-    Task<AuthenticateResponseContract> Authenticate(AuthenticateRequestContract request);
+    Task<AuthenticateResponseContract> Authenticate(AuthenticateRequestContract request, CancellationToken cancellationToken);
 }

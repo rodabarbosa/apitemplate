@@ -27,7 +27,7 @@ public class AuthenticationControllerTest : BaseControllerTest
             Password = password
         };
 
-        var act = () => _controller.PostAsync(service, request);
+        var act = () => _controller.PostAsync(service, request, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();
@@ -56,7 +56,7 @@ public class AuthenticationControllerTest : BaseControllerTest
             Password = password
         };
 
-        var act = () => _controller.PostAsync(service, request);
+        var act = () => _controller.PostAsync(service, request, CancellationToken.None);
         await act.Should()
             .ThrowAsync<Exception>();
     }

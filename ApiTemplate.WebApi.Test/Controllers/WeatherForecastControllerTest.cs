@@ -30,7 +30,7 @@ public class WeatherForecastControllerTest : BaseControllerTest
         var reposity = new WeatherForecastRepository(context);
         var service = new GetWeatherForecastService(reposity);
 
-        var act = () => _controller.GetASync(service, id);
+        var act = () => _controller.GetASync(service, id, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();
@@ -44,7 +44,7 @@ public class WeatherForecastControllerTest : BaseControllerTest
         var reposity = new WeatherForecastRepository(context);
         var service = new GetWeatherForecastService(reposity);
 
-        var act = () => _controller.GetASync(service, id);
+        var act = () => _controller.GetASync(service, id, CancellationToken.None);
         await act.Should()
             .ThrowAsync<NotFoundException>();
     }
@@ -63,7 +63,7 @@ public class WeatherForecastControllerTest : BaseControllerTest
             Summary = null
         };
 
-        var act = () => _controller.PostAsync(service, request);
+        var act = () => _controller.PostAsync(service, request, CancellationToken.None);
         await act.Should()
             .NotThrowAsync();
     }
@@ -84,7 +84,7 @@ public class WeatherForecastControllerTest : BaseControllerTest
             Summary = null
         };
 
-        var act = () => _controller.PutAsync(service, request.Id.Value, request);
+        var act = () => _controller.PutAsync(service, request.Id.Value, request, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();
@@ -98,7 +98,7 @@ public class WeatherForecastControllerTest : BaseControllerTest
         var service = new DeleteWeatherForecastService(reposity);
         var id = Guid.Parse("10fd1392-3b4c-431a-b6dc-19cfba4ea269");
 
-        var act = () => _controller.DeleteAsync(service, id);
+        var act = () => _controller.DeleteAsync(service, id, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();

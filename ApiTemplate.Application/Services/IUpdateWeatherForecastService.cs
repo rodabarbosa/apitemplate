@@ -1,5 +1,6 @@
 ﻿using ApiTemplate.Application.Contracts;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services;
@@ -14,6 +15,7 @@ public interface IUpdateWeatherForecastService
     /// </summary>
     /// <param name="weatherForecastId"></param>
     /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GetWeatherForecastResponseContract> UpdateWeatherForecastAsync(Guid? weatherForecastId, UpdateWeatherForecastRequestContract request);
+    Task<GetWeatherForecastResponseContract> UpdateWeatherForecastAsync(Guid? weatherForecastId, UpdateWeatherForecastRequestContract request, CancellationToken cancellationToken);
 }

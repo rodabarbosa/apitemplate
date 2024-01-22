@@ -41,8 +41,8 @@ public class UserRepositoryTest
     }
 
     [Theory]
-    [InlineData(false, "admin", "admin")]
-    async public Task Should_Not_Authenticate_Async(bool shouldAuthenticate, string username, string password)
+    [InlineData("admin", "admin")]
+    async public Task Should_Not_Authenticate_Async(string username, string password)
     {
         var authenticated = await _userRepository.IsUserValidAsync(username, password);
 

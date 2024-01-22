@@ -29,15 +29,15 @@ public sealed class JsonExtensionTest
         testObject.Should()
             .NotBeNull();
 
-        testObject.Code
+        testObject!.Code
             .Should()
             .Be(1);
 
-        testObject.Exception
+        testObject!.Exception
             .Should()
             .Be("Test Exception");
 
-        testObject.StackTrace
+        testObject!.StackTrace
             .Should()
             .Be("Test StackTrace");
     }

@@ -1,5 +1,6 @@
 ﻿using ApiTemplate.Application.Contracts;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services;
@@ -13,6 +14,7 @@ public interface IGetAllWeatherForecastsService
     /// Query all weather forecast
     /// </summary>
     /// <param name="param"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<GetWeatherForecastResponseContract>> GetAllWeatherForecastsAsync(string? param);
+    Task<IEnumerable<GetWeatherForecastResponseContract>> GetAllWeatherForecastsAsync(string? param, CancellationToken cancellationToken);
 }

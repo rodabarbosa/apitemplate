@@ -22,7 +22,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
     {
         var service = new GetWeatherForecastService(_weatherForecastRepository);
 
-        var act = () => service.GetWeatherForecastAsync(id);
+        var act = () => service.GetWeatherForecastAsync(id, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();
@@ -35,7 +35,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
         // Act
         var service = new GetWeatherForecastService(_weatherForecastRepository);
 
-        var act = () => service.GetWeatherForecastAsync(id);
+        var act = () => service.GetWeatherForecastAsync(id, CancellationToken.None);
 
         await act.Should()
             .ThrowAsync<NotFoundException>();
@@ -66,7 +66,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
 
         var param = $"dtInsert=[Equal,0]&dtUpdate=[Equal,0]&{key}=[{operation},{value}]";
 
-        var result = await service.GetAllWeatherForecastsAsync(param);
+        var result = await service.GetAllWeatherForecastsAsync(param, CancellationToken.None);
 
         result.Should()
             .NotBeNull()
@@ -84,7 +84,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
 
         var param = $"{key}=[NotEqual,{value}]";
 
-        var result = await service.GetAllWeatherForecastsAsync(param);
+        var result = await service.GetAllWeatherForecastsAsync(param, CancellationToken.None);
 
         result.Should()
             .NotBeNull()
@@ -106,7 +106,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
         };
 
         // Act
-        var result = await service.CreateWeatherForecastAsync(weatherForecast);
+        var result = await service.CreateWeatherForecastAsync(weatherForecast, CancellationToken.None);
 
         result.Should()
             .NotBeNull();
@@ -131,7 +131,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
             Summary = default
         };
 
-        var act = () => service.UpdateWeatherForecastAsync(id, request);
+        var act = () => service.UpdateWeatherForecastAsync(id, request, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();
@@ -147,7 +147,7 @@ public sealed class WeatherForecastServiceTest : IDisposable
         var id = Guid.Parse("10fd1392-3b4c-431a-b6dc-19cfba4ea269");
 
         // Assert
-        var act = () => service.DeleteWeatherForecastAsync(id);
+        var act = () => service.DeleteWeatherForecastAsync(id, CancellationToken.None);
 
         await act.Should()
             .NotThrowAsync();

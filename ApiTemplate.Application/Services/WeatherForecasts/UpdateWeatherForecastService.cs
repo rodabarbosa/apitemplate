@@ -4,6 +4,7 @@ using ApiTemplate.Domain.Entities;
 using ApiTemplate.Domain.Repositories;
 using ApiTemplate.Shared.Exceptions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services.WeatherForecasts;
@@ -24,15 +25,15 @@ public class UpdateWeatherForecastService : IUpdateWeatherForecastService
     }
 
     /// <inheritdoc />
-    public async Task<GetWeatherForecastResponseContract> UpdateWeatherForecastAsync(Guid? weatherForecastId, UpdateWeatherForecastRequestContract request)
+    public async Task<GetWeatherForecastResponseContract> UpdateWeatherForecastAsync(Guid? weatherForecastId, UpdateWeatherForecastRequestContract request, CancellationToken cancellationToken)
     {
         BadRequestException.ThrowIf(weatherForecastId != request.Id, "Weather forecast identification mismatch.");
 
         Validate(request);
 
-        var weather = GetDatabaseWeatherForecast(request);
+        var weather = await GetDatabaseWeatherForecast(request, cancellationToken);
 
-        await UpdateWeatherForecastAsync(weather);
+        await UpdateWeatherForecastAsync(weather, cancellationToken);
 
         return CreateRespoonse(weather);
     }
@@ -43,9 +44,9 @@ public class UpdateWeatherForecastService : IUpdateWeatherForecastService
         ValidationException.ThrowIf(!validationResult.IsValid, validationResult.Errors);
     }
 
-    private WeatherForecast GetDatabaseWeatherForecast(UpdateWeatherForecastRequestContract request)
+    private async Task<WeatherForecast> GetDatabaseWeatherForecast(UpdateWeatherForecastRequestContract request, CancellationToken cancellationToken)
     {
-        var databaseWeatherForecast = _weatherForecastRepository.Get(request.Id!.Value);
+        var databaseWeatherForecast = await _weatherForecastRepository.GetAsync(request.Id!.Value, cancellationToken);
 
         NotFoundException.ThrowIf(databaseWeatherForecast is null, "Weather forecast not found.");
 
@@ -56,9 +57,9 @@ public class UpdateWeatherForecastService : IUpdateWeatherForecastService
         return databaseWeatherForecast;
     }
 
-    private Task UpdateWeatherForecastAsync(WeatherForecast weatherForecast)
+    private Task UpdateWeatherForecastAsync(WeatherForecast weatherForecast, CancellationToken cancellationToken)
     {
-        return _weatherForecastRepository.UpdateAsync(weatherForecast);
+        return _weatherForecastRepository.UpdateAsync(weatherForecast, cancellationToken);
     }
 
     private static GetWeatherForecastResponseContract CreateRespoonse(WeatherForecast weatherForecast)

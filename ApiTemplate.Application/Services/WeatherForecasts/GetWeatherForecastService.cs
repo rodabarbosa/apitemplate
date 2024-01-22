@@ -2,6 +2,7 @@
 using ApiTemplate.Domain.Repositories;
 using ApiTemplate.Shared.Exceptions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services.WeatherForecasts;
@@ -21,11 +22,11 @@ public class GetWeatherForecastService : IGetWeatherForecastService
     }
 
     /// <inheritdoc />
-    public async Task<GetWeatherForecastResponseContract> GetWeatherForecastAsync(Guid? weatherForecastId)
+    public async Task<GetWeatherForecastResponseContract> GetWeatherForecastAsync(Guid? weatherForecastId, CancellationToken cancellationToken)
     {
         BadRequestException.ThrowIf(weatherForecastId is null, "Weather forecast identification is required.");
 
-        var weather = await _weatherForecastRepository.GetAsync(weatherForecastId!.Value);
+        var weather = await _weatherForecastRepository.GetAsync(weatherForecastId!.Value, cancellationToken);
 
         NotFoundException.ThrowIf(weather is null, $"No weather forecast found by id {weatherForecastId}");
 

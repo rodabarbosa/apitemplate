@@ -1,5 +1,4 @@
-﻿using ApiTemplate.Shared.Extensions;
-using System;
+﻿using System;
 
 namespace ApiTemplate.Application.Contracts;
 
@@ -11,25 +10,22 @@ public class GetWeatherForecastResponseContract
     /// <summary>
     /// Gets or sets weatherforecast identification
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
 
     /// <summary>
     /// Gets or sets weatherforecast date
     /// </summary>
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
 
     /// <summary>
     /// Gets or sets weatherforecast temperature in Celsius
     /// </summary>
-    public decimal TemperatureCelsius { get; set; }
+    public decimal? TemperatureCelsius { get; set; }
 
     /// <summary>
     /// Gets or sets weatherforecast temperature in Fahrenheit
     /// </summary>
-    public decimal TemperatureFahrenheit
-    {
-        get => TemperatureCelsius.ToFahrenheit();
-    }
+    public decimal? TemperatureFahrenheit { get; set; }
 
     /// <summary>
     /// Gets or sets weatherforecast summary

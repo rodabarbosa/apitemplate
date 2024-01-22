@@ -30,7 +30,7 @@ public class WeatherForecastValidatorTest
     [Theory]
     [InlineData(-1, 250, 150)]
     [InlineData(-1, 0, 5000)]
-    [InlineData(10, 220, null)]
+    [InlineData(10, 220, 0)]
     public void Should_Return_False_Validation(int removeFromHours, decimal temperatureCelsius, decimal temperatureFahrenheit)
     {
         var weather = new UpdateWeatherForecastRequestContract

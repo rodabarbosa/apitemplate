@@ -1,6 +1,7 @@
 ﻿using ApiTemplate.Domain.Repositories;
 using ApiTemplate.Shared.Exceptions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApiTemplate.Application.Services.WeatherForecasts;
@@ -20,10 +21,10 @@ public class DeleteWeatherForecastService : IDeleteWeatherForecastService
     }
 
     /// <inheritdoc />
-    public Task DeleteWeatherForecastAsync(Guid? weatherForecastId)
+    public Task DeleteWeatherForecastAsync(Guid? weatherForecastId, CancellationToken cancellationToken)
     {
         BadRequestException.ThrowIf(weatherForecastId is null, "Weather forecast identification is required.");
 
-        return _weatherForecastRepository.DeleteAsync(weatherForecastId!.Value);
+        return _weatherForecastRepository.DeleteAsync(weatherForecastId!.Value, cancellationToken);
     }
 }
