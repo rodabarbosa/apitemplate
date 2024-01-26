@@ -17,7 +17,7 @@ public class WeatherForecastController : BaseAuthController
     /// <remarks>
     ///     For returning fiels use: fields=[field1,field2,field3]
     ///
-    ///     Fields: id, date, temperatureCelsiues, semperatureFahrenheit, summary
+    ///     Fields: id, date, temperatureCelsiues, temperatureFahrenheit, summary
     ///
     ///     For query use: field=[operationType,value]
     ///
