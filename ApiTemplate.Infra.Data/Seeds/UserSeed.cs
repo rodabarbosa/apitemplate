@@ -10,13 +10,13 @@ public static class UserSeed
         {
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("afaf98be-62da-4975-9dd0-e9c50c871236"),
                 Name = "Test User",
                 Email = "admin@tester.com",
                 Username = "admin",
                 Password = "admin@123",
                 Role = "Tester",
-                CreatedAt = DateTime.Now,
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0),
                 Active = true
             }
         };

@@ -42,29 +42,7 @@ public class GetAllWeatherForecastsService : IGetAllWeatherForecastsService
 
     private static IQueryable<GetWeatherForecastResponseContract> PrepareWeatherAsResult(IEnumerable<string> returningFields, IQueryable<WeatherForecast> weathers)
     {
-        var result = !returningFields.Any()
-            ? weathers.Select(x => new GetWeatherForecastResponseContract
-            {
-                Id = x.Id,
-                Date = x.Date,
-                TemperatureCelsius = x.TemperatureCelsius,
-                TemperatureFahrenheit = x.TemperatureCelsius.ToFahrenheit(),
-                Summary = x.Summary
-            })
-            : weathers.Select(x => new GetWeatherForecastResponseContract
-            {
-                Id = HasField(returningFields, "id") ? x.Id : null,
-                Date = HasField(returningFields, "date") ? x.Date : null,
-                TemperatureCelsius = HasField(returningFields, "temperatureCelsius") ? x.TemperatureCelsius : null,
-                TemperatureFahrenheit = HasField(returningFields, "temperatureFahrenheit") ? x.TemperatureCelsius.ToFahrenheit() : null,
-                Summary = HasField(returningFields, "summary") ? x.Summary : null
-            });
-        return result;
-    }
-
-    private static bool HasField(IEnumerable<string> returningFields, string fieldName)
-    {
-        return returningFields.Any(x => x.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
+        return weathers.Select(x => x.ToContract(returningFields));
     }
 
     private IQueryable<WeatherForecast> GetWeatherForecast(string? param)
